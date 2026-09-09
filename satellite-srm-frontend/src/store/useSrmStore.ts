@@ -1,0 +1,216 @@
+import { create } from 'zustand';
+import { ProcessingJob, SatelliteMetadata, ValidationMetrics } from '../types/satellite';
+
+export const DEMO_METADATA: SatelliteMetadata = {
+  filename: "S2A_MSIL2A_20260515_T44QND_agriculture.tif",
+  fileSize: 1049664,
+  format: "GeoTIFF (Multispectral)",
+  width: 512,
+  height: 512,
+  bands: ["B02 (Blue)", "B03 (Green)", "B04 (Red)", "B08 (NIR)"],
+  nativeResolution: 10.0,
+  targetResolution: 3.33,
+  crs: "EPSG:32644 (UTM Zone 44N)",
+  bounds: {
+    minLon: 78.4520,
+    minLat: 17.3850,
+    maxLon: 78.5032,
+    maxLat: 17.4362
+  },
+  center: [17.4106, 78.4776],
+  sensor: "Sentinel-2 MSI Level-2A",
+  acquisitionDate: "2026-05-15 05:42 UTC"
+};
+
+export const DEMO_METRICS: ValidationMetrics = {
+  psnr_db: {
+    bicubic: 28.85,
+    model: 35.42,
+    gain: 6.57,
+    description: "Peak Signal-to-Noise Ratio (dB)",
+    unit: "dB",
+    higherIsBetter: true
+  },
+  ssim: {
+    bicubic: 0.7850,
+    model: 0.9320,
+    gain: 0.1470,
+    description: "Structural Similarity Index",
+    higherIsBetter: true
+  },
+  sam_deg: {
+    bicubic: 4.6200,
+    model: 1.7400,
+    gain: -2.8800,
+    description: "Spectral Angle Mapper",
+    unit: "deg",
+    higherIsBetter: false
+  },
+  ergas: {
+    bicubic: 4.1800,
+    model: 1.4500,
+    gain: -2.7300,
+    description: "Erreur Relative Globale Adimensionnelle de Synthèse",
+    higherIsBetter: false
+  },
+  ndvi_correlation: {
+    bicubic: 0.8840,
+    model: 0.9760,
+    gain: 0.0920,
+    description: "NDVI Pearson Correlation",
+    higherIsBetter: true
+  },
+  ndvi_mae: {
+    bicubic: 0.0680,
+    model: 0.0160,
+    gain: -0.0520,
+    description: "NDVI Mean Absolute Error",
+    higherIsBetter: false
+  },
+  scale_factor: 3.0,
+  hasReferenceData: true
+};
+
+export const DEMO_JOB: ProcessingJob = {
+  jobId: "SRM-NTRO-DEMO-01",
+  status: "completed",
+  currentStageId: "gis_export",
+  stageProgress: 100,
+  overallProgress: 100,
+  message: "Reconstruction mission completed successfully. All GIS GeoTIFF products compiled.",
+  telemetry: {
+    status: "STANDBY_READY",
+    model: "Multispectral SwinIR-SRM (NTRO PS-26142)",
+    inputGsd: "10.0 m",
+    targetGsd: "3.33 m (x3 Super-Resolution)",
+    bandCount: 4,
+    device: "CUDA RTX 4090 / PyTorch Fallback",
+    elapsedSeconds: 42,
+    tileProgress: "16 / 16 Overlapping Tiles Blended",
+    memoryAllocated: "3.82 GB VRAM",
+    activeOperation: "Export Finished"
+  },
+  metadata: DEMO_METADATA,
+  outputs: {
+    srGeoTiffUrl: "/api/v1/outputs/SR_product.tif",
+    uncertaintyGeoTiffUrl: "/api/v1/outputs/uncertainty_map.tif",
+    metricsJsonUrl: "/api/v1/outputs/metrics.json",
+    lrPreviewUrl: "/api/v1/outputs/lr.png",
+    srPreviewUrl: "/api/v1/outputs/sr.png",
+    uncertaintyPreviewUrl: "/api/v1/outputs/uncertainty.png",
+    ndviPreviewUrl: "/api/v1/outputs/ndvi_comparison.png",
+    validationReportUrl: "/api/v1/outputs/validation_report.html"
+  },
+  metrics: DEMO_METRICS,
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString()
+};
+
+interface SrmState {
+  uploadedFile: File | null;
+  uploadedFiles: File[];
+  metadata: SatelliteMetadata | null;
+  activeJob: ProcessingJob | null;
+  activeJobs: ProcessingJob[];
+  selectedJobId: string | null;
+  isMockMode: boolean;
+  selectedViewerTab: 'slider' | 'split' | 'uncertainty' | 'ndvi';
+  sliderPosition: number;
+  uncertaintyOpacity: number;
+  zoomLevel: number;
+  isPixelGridVisible: boolean;
+  panOffset: { x: number; y: number };
+
+  setUploadedFile: (file: File | null) => void;
+  setUploadedFiles: (files: File[]) => void;
+  addUploadedFiles: (files: File[]) => void;
+  removeUploadedFile: (index: number) => void;
+  setMetadata: (meta: SatelliteMetadata | null) => void;
+  setActiveJob: (job: ProcessingJob | null) => void;
+  setActiveJobs: (jobs: ProcessingJob[]) => void;
+  setSelectedJobId: (id: string | null) => void;
+  updateJobProgress: (update: Partial<ProcessingJob>) => void;
+  setMockMode: (mock: boolean) => void;
+  setSelectedViewerTab: (tab: 'slider' | 'split' | 'uncertainty' | 'ndvi') => void;
+  setSliderPosition: (pos: number) => void;
+  setUncertaintyOpacity: (opacity: number) => void;
+  setZoomLevel: (zoom: number) => void;
+  togglePixelGrid: () => void;
+  setPanOffset: (offset: { x: number; y: number }) => void;
+  loadDemoDataset: () => void;
+  resetAll: () => void;
+}
+
+export const useSrmStore = create<SrmState>((set) => ({
+  uploadedFile: null,
+  uploadedFiles: [],
+  metadata: null,
+  activeJob: null,
+  activeJobs: [],
+  selectedJobId: null,
+  isMockMode: false,
+  selectedViewerTab: 'slider',
+  sliderPosition: 50,
+  uncertaintyOpacity: 0.65,
+  zoomLevel: 1.0,
+  isPixelGridVisible: false,
+  panOffset: { x: 0, y: 0 },
+
+  setUploadedFile: (file) => set({ uploadedFile: file, uploadedFiles: file ? [file] : [] }),
+  setUploadedFiles: (files) => set({ uploadedFiles: files, uploadedFile: files[0] || null }),
+  addUploadedFiles: (newFiles) => set((state) => {
+    const combined = [...state.uploadedFiles, ...newFiles];
+    return { uploadedFiles: combined, uploadedFile: combined[0] || null };
+  }),
+  removeUploadedFile: (index) => set((state) => {
+    const updated = state.uploadedFiles.filter((_, i) => i !== index);
+    return { uploadedFiles: updated, uploadedFile: updated[0] || null };
+  }),
+  setMetadata: (meta) => set({ metadata: meta }),
+  setActiveJob: (job) => set({ activeJob: job, selectedJobId: job?.jobId || null }),
+  setActiveJobs: (jobs) => set({
+    activeJobs: jobs,
+    activeJob: jobs[0] || null,
+    selectedJobId: jobs[0]?.jobId || null,
+  }),
+  setSelectedJobId: (id) => set((state) => {
+    const found = state.activeJobs.find(j => j.jobId === id);
+    return {
+      selectedJobId: id,
+      ...(found ? { activeJob: found } : {})
+    };
+  }),
+  updateJobProgress: (update) => set((state) => {
+    const updatedActive = state.activeJob ? { ...state.activeJob, ...update, updatedAt: new Date().toISOString() } : null;
+    const updatedJobs = state.activeJobs.map(j => (j.jobId === updatedActive?.jobId ? updatedActive : j));
+    return { activeJob: updatedActive, activeJobs: updatedJobs };
+  }),
+  setMockMode: (mock) => set({ isMockMode: mock }),
+  setSelectedViewerTab: (tab) => set({ selectedViewerTab: tab }),
+  setSliderPosition: (pos) => set({ sliderPosition: pos }),
+  setUncertaintyOpacity: (opacity) => set({ uncertaintyOpacity: opacity }),
+  setZoomLevel: (zoom) => set({ zoomLevel: zoom }),
+  togglePixelGrid: () => set((state) => ({ isPixelGridVisible: !state.isPixelGridVisible })),
+  setPanOffset: (offset) => set({ panOffset: offset }),
+  loadDemoDataset: () => set({
+    uploadedFile: null,
+    uploadedFiles: [],
+    metadata: DEMO_METADATA,
+    activeJob: DEMO_JOB,
+    activeJobs: [DEMO_JOB],
+    selectedJobId: DEMO_JOB.jobId,
+    sliderPosition: 50,
+    zoomLevel: 1.0,
+  }),
+  resetAll: () => set({
+    uploadedFile: null,
+    uploadedFiles: [],
+    metadata: null,
+    activeJob: null,
+    activeJobs: [],
+    selectedJobId: null,
+    sliderPosition: 50,
+    zoomLevel: 1.0,
+    panOffset: { x: 0, y: 0 }
+  })
+}));

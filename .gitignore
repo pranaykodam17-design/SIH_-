@@ -1,0 +1,51 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+develop-eggs/
+dist-egg/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDEs & OS
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Dynamic runtime uploads/outputs (keep directory structure)
+data/uploads/*
+!data/uploads/.gitkeep
+data/outputs/*
+!data/outputs/.gitkeep
+satellite-srm-backend/data/uploads/*
+satellite-srm-backend/data/outputs/*
+
+# Local environment
+.env
+.env.local
