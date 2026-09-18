@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { FourBandFiles } from '../../types/satellite';
 import { useSrmStore } from '../../store/useSrmStore';
+import { MultispectralUploadViewer } from './MultispectralUploadViewer';
 
 interface FourBandUploaderProps {
   onValidate: () => Promise<void>;
@@ -265,6 +266,9 @@ export const FourBandUploader: React.FC<FourBandUploaderProps> = ({
           <span>{sampleError}</span>
         </div>
       )}
+
+      {/* ── 3D Multispectral Upload & Orbital Stream Animation ── */}
+      <MultispectralUploadViewer fourBands={fourBands} />
 
       {/* ── 4 Dedicated Band Upload Slots ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
