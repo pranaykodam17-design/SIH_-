@@ -7,7 +7,7 @@ import {
 
 const NAV_LINKS = [
   { label: 'Home',      to: '/'          },
-  { label: 'Enhance',   to: '/enhance'   },
+  { label: 'Platform',  to: '/platform'  },
   { label: 'Compare',   to: '/compare'   },
   { label: 'Analysis',  to: '/analysis'  },
   { label: 'Use Cases', to: '/use-cases' },
@@ -32,6 +32,7 @@ export const Navbar: React.FC = () => {
 
   const isActive = (to: string) => {
     if (to === '/') return location.pathname === '/';
+    if (to === '/platform') return location.pathname === '/platform' || location.pathname === '/enhance';
     return location.pathname.startsWith(to);
   };
 
@@ -103,7 +104,7 @@ export const Navbar: React.FC = () => {
             </button>
             <div className="w-px h-5 bg-white/10 mx-1" />
             <button
-              onClick={() => navigate('/enhance')}
+              onClick={() => navigate('/platform')}
               className="btn-primary text-xs py-2 px-4"
             >
               <Zap size={13} />
@@ -114,7 +115,7 @@ export const Navbar: React.FC = () => {
           {/* Mobile: Get Started + Hamburger */}
           <div className="flex lg:hidden items-center gap-2">
             <button
-              onClick={() => navigate('/enhance')}
+              onClick={() => navigate('/platform')}
               className="btn-primary text-xs py-2 px-3"
             >
               <Zap size={12} />

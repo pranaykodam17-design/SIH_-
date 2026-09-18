@@ -1,108 +1,481 @@
-import React from 'react';
-import { SRMOutputs } from '../../types/satellite';
-import { Card } from '../ui/Card';
-import { Badge } from '../ui/Badge';
-import { Button } from '../ui/Button';
-import { Download, FileCode, Layers, Shield, FileCheck, CheckCircle2 } from 'lucide-react';
+import React, { useState } from 'react';
+import {
+  Download, Map, CheckCircle2, Info, Package,
+  ShieldAlert, FileJson, Copy, Globe, Layers
+} from 'lucide-react';
+import { ProcessingJob, SRMOutputs, SatelliteMetadata } from '../../types/satellite';
+import { resolveApiUrl } from '../../api/client';
 
+/* ── types ──────────────────────────────────────────────────────── */
 interface GisProductsPanelProps {
-  outputs: SRMOutputs;
+  /** Accept either a full job OR the legacy (outputs-only) shape */
+  job?: ProcessingJob;
+  outputs?: SRMOutputs;
+  metadata?: SatelliteMetadata;
 }
 
-export const GisProductsPanel: React.FC<GisProductsPanelProps> = ({ outputs }) => {
-  const products = [
-    {
-      name: "SR_product.tif",
-      description: "Sub-4m multispectral super-resolved GeoTIFF raster with updated affine transformation.",
-      badge: "EPSG:32644",
-      size: "9.4 MB",
-      url: outputs.srGeoTiffUrl,
-      type: "GeoTIFF (4 Bands: B02, B03, B04, B08)"
-    },
-    {
-      name: "uncertainty_map.tif",
-      description: "Pixel-level Monte Carlo variance map for spatial confidence analysis in QGIS.",
-      badge: "FLOAT32 RASTER",
-      size: "2.4 MB",
-      url: outputs.uncertaintyGeoTiffUrl,
-      type: "GeoTIFF (1 Band Variance)"
-    },
-    {
-      name: "metrics.json",
-      description: "Quantitative remote sensing verification metrics comparing model vs bicubic baseline.",
-      badge: "JSON METADATA",
-      size: "1.2 KB",
-      url: outputs.metricsJsonUrl,
-      type: "Scientific Evaluation Results"
-    },
-    {
-      name: "preview.png",
-      description: "Full-resolution RGB rendered PNG preview for reports and documentation.",
-      badge: "PNG PREVIEW",
-      size: "1.3 MB",
-      url: outputs.srPreviewUrl,
-      type: "Rendered RGB Graphic"
-    }
-  ];
+/* ── helpers ─────────────────────────────────────────────────────── */
+
+/** Derive the 6-element GDAL GeoTransform from bounds + pixel size.
+ *  GT = [ulx, xRes, 0, uly, 0, -yRes]
+ *  Source of truth: backend bounds + targetResolution.
+ *  We do NOT invent these numbers — they are computed directly from
+ *  the metadata the backend returned.
+ */
+function deriveGeoTransform(
+  meta: SatelliteMetadata,
+): string | null {
+  const { bounds, targetResolution, width, height } = meta;
+  if (!bounds || !width || !height) return null;
+
+  // Upper-left corner in geographic coordinates
+  const ulx = bounds.minLon;
+  const uly = bounds.maxLat;
+
+  // Pixel size derived from geographic extent ÷ pixel count
+  const xRes = (bounds.maxLon - bounds.minLon) / width;
+  const yRes = (bounds.maxLat - bounds.minLat) / height;   // positive, GT stores negative
+
+  // If targetResolution is known in metres, include it as a note
+  const mNote = targetResolution ? ` (~${targetResolution.toFixed(2)} m)` : '';
 
   return (
-    <Card className="border-space-border bg-space-card p-6 shadow-2xl">
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-space-border mb-4">
+    `(${ulx.toFixed(6)}, ${xRes.toFixed(8)}, 0,\n` +
+    ` ${uly.toFixed(6)}, 0, -${yRes.toFixed(8)})${mNote}`
+  );
+}
+
+/** Parse a human-readable projection name out of the CRS string. */
+function parseProjection(crs?: string): string {
+  if (!crs) return 'Unknown';
+  // e.g. "EPSG:32644 (UTM Zone 44N)" → "Universal Transverse Mercator – Zone 44N"
+  const utmMatch = crs.match(/UTM\s+Zone\s+(\S+)/i);
+  if (utmMatch) return `Universal Transverse Mercator – Zone ${utmMatch[1]}`;
+  if (crs.includes('WGS 84') || crs.includes('4326')) return 'WGS 84 Geographic';
+  if (crs.includes('3857') || crs.includes('Web Mercator')) return 'Web Mercator (Pseudo)';
+  return crs;
+}
+
+/* ── small reusable row ─────────────────────────────────────────── */
+const MetaRow: React.FC<{
+  label: string;
+  value: React.ReactNode;
+  mono?: boolean;
+  copyable?: string;
+}> = ({ label, value, mono = true, copyable }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    if (!copyable) return;
+    navigator.clipboard.writeText(copyable).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    });
+  };
+
+  return (
+    <div className="flex items-start justify-between gap-3 py-2 border-b border-white/[0.05] last:border-0">
+      <span className="text-[11px] text-slate-500 shrink-0 w-28 pt-0.5">{label}</span>
+      <span
+        className={`text-[11px] text-slate-300 text-right flex-1 leading-snug ${
+          mono ? 'font-mono' : ''
+        }`}
+        style={{ whiteSpace: 'pre-line' }}
+      >
+        {value}
+      </span>
+      {copyable && (
+        <button
+          onClick={handleCopy}
+          title="Copy"
+          className="shrink-0 text-slate-600 hover:text-cyan-400 transition-colors mt-0.5"
+        >
+          {copied ? (
+            <CheckCircle2 size={12} className="text-emerald-400" />
+          ) : (
+            <Copy size={12} />
+          )}
+        </button>
+      )}
+    </div>
+  );
+};
+
+/* ── download button with success flash ─────────────────────────── */
+const DownloadButton: React.FC<{
+  label: string;
+  url: string | null | undefined;
+  filename: string;
+  icon: React.ReactNode;
+  variant?: 'primary' | 'secondary' | 'amber';
+  disabled?: boolean;
+}> = ({ label, url, filename, icon, variant = 'secondary', disabled }) => {
+  const [state, setState] = useState<'idle' | 'success'>('idle');
+
+  const handleClick = () => {
+    if (!url || disabled) return;
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setState('success');
+    setTimeout(() => setState('idle'), 2800);
+  };
+
+  const baseClass =
+    'flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer';
+
+  const variantClass =
+    variant === 'primary'
+      ? 'bg-cyan-500/15 border border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/25 hover:border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.08)]'
+      : variant === 'amber'
+      ? 'bg-amber-500/10 border border-amber-500/30 text-amber-300 hover:bg-amber-500/20'
+      : 'bg-white/[0.04] border border-white/[0.10] text-slate-300 hover:bg-white/[0.08] hover:border-white/[0.18]';
+
+  const disabledClass = (!url || disabled)
+    ? 'opacity-40 cursor-not-allowed pointer-events-none'
+    : '';
+
+  return (
+    <button
+      onClick={handleClick}
+      className={`${baseClass} ${state === 'success' ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-300' : variantClass} ${disabledClass}`}
+    >
+      {state === 'success' ? (
+        <>
+          <CheckCircle2 size={16} className="text-emerald-400" />
+          <span>Downloaded!</span>
+        </>
+      ) : (
+        <>
+          {icon}
+          <span>{label}</span>
+        </>
+      )}
+    </button>
+  );
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   MAIN COMPONENT
+═══════════════════════════════════════════════════════════════════ */
+export const GisProductsPanel: React.FC<GisProductsPanelProps> = ({
+  job,
+  outputs: outputsProp,
+  metadata: metadataProp,
+}) => {
+  /* Accept either a full job or the legacy outputs-only shape */
+  const outputs  = job?.outputs  ?? outputsProp;
+  const metadata = job?.metadata ?? metadataProp;
+
+  const tifUrl         = resolveApiUrl(outputs?.srGeoTiffUrl)         || null;
+  const uncertaintyUrl = resolveApiUrl(outputs?.uncertaintyGeoTiffUrl)|| null;
+  const metricsUrl     = resolveApiUrl(outputs?.metricsJsonUrl)       || null;
+  const srPngUrl       = resolveApiUrl(outputs?.srPreviewUrl)         || null;
+  const b02Url         = resolveApiUrl(outputs?.b02PreviewUrl)        || null;
+  const b03Url         = resolveApiUrl(outputs?.b03PreviewUrl)        || null;
+  const b04Url         = resolveApiUrl(outputs?.b04PreviewUrl)        || null;
+  const b08Url         = resolveApiUrl(outputs?.b08PreviewUrl)        || null;
+
+  /* Filename base derived from backend metadata — never invented */
+  const fileBase = metadata?.filename?.replace(/\.[^.]+$/, '') || 'SRM_product';
+
+  /* GIS metadata values from backend metadata only */
+  const crs        = metadata?.crs          || null;
+  const projection = crs ? parseProjection(crs) : null;
+  const geoTransform = metadata ? deriveGeoTransform(metadata) : null;
+  const imageDims  = metadata?.width && metadata?.height
+    ? `${metadata.width} × ${metadata.height} px` : null;
+  const pixelSizeSR = metadata?.targetResolution != null
+    ? `${metadata.targetResolution.toFixed(2)} m GSD` : null;
+  const pixelSizeSrc = metadata?.nativeResolution != null
+    ? `${metadata.nativeResolution.toFixed(1)} m GSD (input)` : null;
+  const bandList = metadata?.bands?.join(', ') ?? null;
+  const sensor   = metadata?.sensor ?? null;
+
+  return (
+    <div className="space-y-5">
+
+      {/* ── Section Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-4">
         <div>
-          <h3 className="text-base font-bold font-mono text-white">
-            GIS-READY SCIENTIFIC PRODUCTS
-          </h3>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Preserves spatial reference metadata and geocoded tags for standard GIS software.
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-6 h-6 rounded-lg bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center">
+              <Globe size={13} className="text-emerald-400" />
+            </div>
+            <span className="text-xs font-mono font-bold tracking-wider text-emerald-400 uppercase">
+              GIS Export
+            </span>
+          </div>
+          <h3 className="text-xl font-bold text-white tracking-tight">Export Results</h3>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Georeferenced products ready for QGIS, ArcGIS and other GIS software
           </p>
         </div>
-        <Badge variant="cyan">QGIS & ARCGIS COMPATIBLE</Badge>
+        <div className="flex items-center gap-2">
+          <span className="px-2.5 py-1 rounded-full text-xs font-mono bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center gap-1.5">
+            <CheckCircle2 size={11} /> QGIS / ArcGIS Ready
+          </span>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {products.map((item, idx) => (
-          <div
-            key={idx}
-            className="p-4 rounded-xl bg-space-elevated border border-space-border flex flex-col justify-between hover:border-cyan-500/40 transition-colors"
-          >
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="font-mono text-xs font-bold text-cyan-300">
-                  {item.name}
-                </span>
-                <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-space-darkest text-slate-400 border border-space-border">
-                  {item.badge}
-                </span>
-              </div>
-              <p className="text-xs text-slate-300 leading-relaxed mb-3">
-                {item.description}
-              </p>
-              <div className="flex items-center justify-between font-mono text-[11px] text-slate-400 mb-4">
-                <span>{item.type}</span>
-                <span>{item.size}</span>
-              </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        {/* ── LEFT: Download Buttons ── */}
+        <div className="space-y-4">
+
+          {/* Primary: Enhanced GeoTIFF */}
+          <div className="glass rounded-2xl p-5 border border-white/[0.08] space-y-4 hover:border-emerald-500/25 transition-all duration-300">
+            <div className="flex items-center gap-2 border-b border-white/[0.06] pb-3">
+              <Map size={15} className="text-emerald-400" />
+              <h4 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+                Download Enhanced GeoTIFF
+              </h4>
             </div>
 
-            <a
-              href={item.url}
-              download={item.name}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 w-full py-2 px-3 rounded-lg bg-space-darkest hover:bg-cyan-950/60 border border-cyan-500/40 hover:border-cyan-400 text-cyan-300 text-xs font-mono font-semibold transition-all"
-            >
-              <Download className="h-3.5 w-3.5" />
-              <span>Download {item.name}</span>
-            </a>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Super-resolved 4-band multispectral GeoTIFF with updated affine transform
+              ({pixelSizeSR ?? '~3.33m GSD'}). Preserves EPSG CRS, NoData flags, and
+              band metadata for direct GIS ingestion.
+            </p>
+
+            <div className="flex flex-wrap gap-2 text-[10px] font-mono">
+              {crs && (
+                <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                  {crs.split(' ')[0]}
+                </span>
+              )}
+              <span className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.08] text-slate-400">
+                4-Band RGBA TIFF
+              </span>
+              {metadata?.bands?.length && (
+                <span className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.08] text-slate-400">
+                  {metadata.bands.length} Bands
+                </span>
+              )}
+            </div>
+
+            <DownloadButton
+              label="Download Enhanced GeoTIFF"
+              url={tifUrl}
+              filename={`${fileBase}_SR.tif`}
+              icon={<Download size={16} />}
+              variant="primary"
+            />
           </div>
-        ))}
+
+          {/* GIS Bundle */}
+          <div className="glass rounded-2xl p-5 border border-white/[0.08] space-y-4 hover:border-cyan-500/25 transition-all duration-300">
+            <div className="flex items-center gap-2 border-b border-white/[0.06] pb-3">
+              <Package size={15} className="text-cyan-400" />
+              <h4 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+                Download GIS Bundle
+              </h4>
+            </div>
+
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Full scientific output package: SR GeoTIFF, RGB preview, spectral band previews
+              (B02, B03, B04, B08), false-color composite, and metrics JSON — all in one download.
+            </p>
+
+            {/* Individual bundle items */}
+            <div className="space-y-1.5">
+              {[
+                { label: 'SR GeoTIFF (.tif)',    url: tifUrl,     ext: 'TIF', color: 'text-emerald-400' },
+                { label: 'SR RGB Preview (.png)', url: srPngUrl,  ext: 'PNG', color: 'text-cyan-400'    },
+                { label: 'B02 Blue Band (.png)',  url: b02Url,     ext: 'PNG', color: 'text-blue-400'   },
+                { label: 'B03 Green Band (.png)', url: b03Url,     ext: 'PNG', color: 'text-emerald-400'},
+                { label: 'B04 Red Band (.png)',   url: b04Url,     ext: 'PNG', color: 'text-red-400'    },
+                { label: 'B08 NIR Band (.png)',   url: b08Url,     ext: 'PNG', color: 'text-violet-400' },
+                { label: 'Metrics JSON (.json)',  url: metricsUrl, ext: 'JSON',color: 'text-amber-400'  },
+              ].map(({ label, url, ext, color }) => (
+                url ? (
+                  <a
+                    key={label}
+                    href={url}
+                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2.5 px-3 py-2 bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.05] hover:border-white/[0.12] rounded-lg transition-all group"
+                  >
+                    <Layers size={11} className={`${color} shrink-0`} />
+                    <span className="text-[11px] text-slate-400 group-hover:text-slate-200 transition-colors flex-1">{label}</span>
+                    <span className="text-[9px] font-mono text-slate-600 group-hover:text-slate-400">{ext}</span>
+                    <Download size={10} className="text-slate-600 group-hover:text-slate-300 shrink-0" />
+                  </a>
+                ) : null
+              ))}
+            </div>
+          </div>
+
+          {/* Uncertainty Map (conditional) */}
+          {uncertaintyUrl && (
+            <div className="glass rounded-2xl p-5 border border-white/[0.08] space-y-4 hover:border-amber-500/25 transition-all duration-300">
+              <div className="flex items-center gap-2 border-b border-white/[0.06] pb-3">
+                <ShieldAlert size={15} className="text-amber-400" />
+                <h4 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+                  Download Uncertainty Map
+                </h4>
+              </div>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Float32 GeoTIFF of Monte Carlo Dropout spatial variance. Each pixel encodes model
+                confidence (0 = high confidence, 1 = low confidence). Use for masking uncertain
+                regions in downstream analysis.
+              </p>
+              <DownloadButton
+                label="Download Uncertainty Map"
+                url={uncertaintyUrl}
+                filename={`${fileBase}_uncertainty.tif`}
+                icon={<ShieldAlert size={16} />}
+                variant="amber"
+              />
+            </div>
+          )}
+
+          {/* Metrics JSON */}
+          {metricsUrl && (
+            <div className="glass rounded-2xl p-5 border border-white/[0.08] space-y-3 hover:border-violet-500/25 transition-all duration-300">
+              <div className="flex items-center gap-2 border-b border-white/[0.06] pb-3">
+                <FileJson size={15} className="text-violet-400" />
+                <h4 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+                  Download Metrics JSON
+                </h4>
+              </div>
+              <p className="text-xs text-slate-400">
+                Scientific quality metrics (PSNR, SSIM, SAM, ERGAS, NDVI correlation) vs. bicubic baseline.
+              </p>
+              <DownloadButton
+                label="Download metrics.json"
+                url={metricsUrl}
+                filename={`${fileBase}_metrics.json`}
+                icon={<FileJson size={16} />}
+                variant="secondary"
+              />
+            </div>
+          )}
+        </div>
+
+        {/* ── RIGHT: GIS Metadata Panel ── */}
+        <div className="glass rounded-2xl p-5 border border-white/[0.08] space-y-4 hover:border-white/[0.14] transition-all duration-300">
+          <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+            <div className="flex items-center gap-2">
+              <Globe size={15} className="text-cyan-400" />
+              <h4 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+                Geospatial Metadata
+              </h4>
+            </div>
+            <span className="text-[10px] font-mono text-slate-500">Backend Source of Truth</span>
+          </div>
+
+          <div className="space-y-0.5">
+            {/* CRS */}
+            {crs ? (
+              <MetaRow label="CRS" value={crs} copyable={crs} />
+            ) : (
+              <MetaRow label="CRS" value={<span className="text-slate-600 italic">Not available</span>} />
+            )}
+
+            {/* Projection */}
+            {projection ? (
+              <MetaRow label="Projection" value={projection} mono={false} />
+            ) : (
+              <MetaRow label="Projection" value={<span className="text-slate-600 italic">Not available</span>} mono={false} />
+            )}
+
+            {/* GeoTransform */}
+            {geoTransform ? (
+              <MetaRow
+                label="GeoTransform"
+                value={geoTransform}
+                copyable={geoTransform.replace(/\n\s*/g, ' ')}
+              />
+            ) : (
+              <MetaRow
+                label="GeoTransform"
+                value={<span className="text-slate-600 italic">Not available for this input</span>}
+              />
+            )}
+
+            {/* Image dimensions */}
+            {imageDims ? (
+              <MetaRow label="Dimensions" value={imageDims} />
+            ) : (
+              <MetaRow label="Dimensions" value={<span className="text-slate-600 italic">Not available</span>} />
+            )}
+
+            {/* Pixel size */}
+            {pixelSizeSR ? (
+              <MetaRow label="Pixel Size (SR)" value={pixelSizeSR} />
+            ) : (
+              <MetaRow label="Pixel Size (SR)" value={<span className="text-slate-600 italic">Not available</span>} />
+            )}
+            {pixelSizeSrc && (
+              <MetaRow label="Pixel Size (src)" value={pixelSizeSrc} />
+            )}
+
+            {/* Bounding box */}
+            {metadata?.bounds && (
+              <MetaRow
+                label="Bounding Box"
+                value={
+                  `N ${metadata.bounds.maxLat.toFixed(4)}°, S ${metadata.bounds.minLat.toFixed(4)}°\n` +
+                  `E ${metadata.bounds.maxLon.toFixed(4)}°, W ${metadata.bounds.minLon.toFixed(4)}°`
+                }
+              />
+            )}
+
+            {/* Band layout */}
+            {bandList && (
+              <MetaRow label="Bands" value={bandList} />
+            )}
+
+            {/* Sensor */}
+            {sensor && (
+              <MetaRow label="Sensor" value={sensor} mono={false} />
+            )}
+          </div>
+
+          {/* GeoTransform derivation note */}
+          {metadata?.bounds && (
+            <div className="flex items-start gap-2 px-3 py-2.5 bg-blue-500/[0.05] border border-blue-500/15 rounded-xl mt-2">
+              <Info size={11} className="text-blue-400 flex-shrink-0 mt-0.5" />
+              <p className="text-[11px] text-blue-400/75 leading-relaxed">
+                GeoTransform is derived directly from backend-returned geographic bounds
+                and image dimensions. CRS and coordinates are not modified by the frontend.
+              </p>
+            </div>
+          )}
+
+          {/* Compatibility badges */}
+          <div className="pt-2 border-t border-white/[0.05]">
+            <p className="text-[10px] text-slate-600 uppercase tracking-widest mb-2 font-mono">Compatible with</p>
+            <div className="flex flex-wrap gap-2">
+              {['QGIS 3.x', 'ArcGIS Pro', 'GDAL/OGR', 'Google Earth Engine', 'ENVI'].map((tool) => (
+                <span
+                  key={tool}
+                  className="px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.07] text-[10px] font-mono text-slate-400"
+                >
+                  {tool}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="mt-4 pt-4 border-t border-space-border/60 text-xs font-mono text-slate-400 flex items-center gap-2">
-        <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-        <span>
-          Affine projection parameters & NoData flags are written into the GeoTIFF header for direct GIS alignment.
-        </span>
+      {/* ── Footer disclaimer ── */}
+      <div className="flex items-start gap-2.5 px-4 py-3 bg-white/[0.02] border border-white/[0.06] rounded-xl">
+        <CheckCircle2 size={13} className="text-emerald-400 flex-shrink-0 mt-0.5" />
+        <p className="text-[11px] text-slate-500 leading-relaxed">
+          Affine projection parameters and NoData flags are embedded in the GeoTIFF header for direct
+          GIS alignment. The backend is the sole source of truth for all geospatial metadata — no
+          coordinates are reconstructed or modified by the frontend.
+        </p>
       </div>
-    </Card>
+    </div>
   );
 };

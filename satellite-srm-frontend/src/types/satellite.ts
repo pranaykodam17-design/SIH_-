@@ -153,6 +153,11 @@ export interface ValidationMetrics {
   ergas: MetricEntry;
   ndvi_correlation: MetricEntry;
   ndvi_mae: MetricEntry;
+  uncertainty?: {
+    mean: number;
+    max: number;
+    min?: number;
+  };
   scale_factor: number;
   hasReferenceData: boolean;
 }
@@ -165,6 +170,7 @@ export interface TelemetryData {
   bandCount: number;
   device: string;
   elapsedSeconds: number;
+  inferenceSeconds?: number;
   tileProgress: string;
   memoryAllocated: string;
   activeOperation: string;
@@ -179,6 +185,11 @@ export interface SRMOutputs {
   uncertaintyPreviewUrl: string;
   ndviPreviewUrl: string;
   validationReportUrl?: string;
+  b02PreviewUrl?: string;
+  b03PreviewUrl?: string;
+  b04PreviewUrl?: string;
+  b08PreviewUrl?: string;
+  falseColorPreviewUrl?: string;
 }
 
 export interface ProcessingJob {
@@ -214,4 +225,58 @@ export interface ApplicationUseCase {
   impactMetrics: string[];
   keyBands: string[];
   image: string;
+}
+
+export interface FourBandFiles {
+  b02: File | null;
+  b03: File | null;
+  b04: File | null;
+  b08: File | null;
+}
+
+export interface SingleBandMetadata {
+  band: string;
+  filename: string;
+  fileSize: number;
+  width: number;
+  height: number;
+  format: string;
+  nativeResolution: number;
+  crs: string;
+  bounds: {
+    minLon: number;
+    minLat: number;
+    maxLon: number;
+    maxLat: number;
+  };
+  readable: boolean;
+  error?: string | null;
+}
+
+export interface FourBandValidationResult {
+  valid: boolean;
+  mode?: string;
+  message?: string;
+  error?: string;
+  metadata?: {
+    b02?: SingleBandMetadata;
+    b03?: SingleBandMetadata;
+    b04?: SingleBandMetadata;
+    b08?: SingleBandMetadata;
+    common?: {
+      width: number;
+      height: number;
+      crs: string;
+      nativeResolution: number;
+      targetResolution: number;
+      bounds: {
+        minLon: number;
+        minLat: number;
+        maxLon: number;
+        maxLat: number;
+      };
+      bands: string[];
+      sensor: string;
+    };
+  };
 }

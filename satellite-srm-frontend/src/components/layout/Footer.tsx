@@ -4,7 +4,7 @@ import { Satellite, Github, ExternalLink, Mail } from 'lucide-react';
 
 const FOOTER_LINKS = [
   { label: 'Home', to: '/' },
-  { label: 'Enhance', to: '/enhance' },
+  { label: 'Platform', to: '/platform' },
   { label: 'Compare', to: '/compare' },
   { label: 'Analysis', to: '/analysis' },
   { label: 'Use Cases', to: '/use-cases' },

@@ -36,10 +36,12 @@ def run_tests():
     print(f"[5] GET /api/v1/jobs -> status {res.status_code}, jobs: {len(res.json())}")
     assert res.status_code == 200
 
-    # 5. Output asset
-    res = client.get("/api/v1/outputs/sr.png")
-    print(f"[6] GET /api/v1/outputs/sr.png -> status {res.status_code}, size: {len(res.content)} bytes")
-    assert res.status_code == 200
+    # 5. Output assets (True Color, Real Bands, False Color)
+    for band_file in ["sr.png", "b02.png", "b03.png", "b04.png", "b08.png", "false_color.png"]:
+        res = client.get(f"/api/v1/outputs/{band_file}")
+        print(f"[6] GET /api/v1/outputs/{band_file} -> status {res.status_code}, size: {len(res.content)} bytes")
+        assert res.status_code == 200
+        assert len(res.content) > 1000
 
     # 6. Test Super-Resolution Upload API
     tif_file = Path("./test_image.tif")

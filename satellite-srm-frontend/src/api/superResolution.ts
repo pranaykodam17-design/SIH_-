@@ -71,3 +71,62 @@ export async function startSuperResolution(
     referenceFile: params.referenceFile,
   });
 }
+
+export async function checkBackendHealth(): Promise<boolean> {
+  try {
+    const res = await fetch('/health');
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+export async function validateBandsApi(
+  bands: { b02?: File | null; b03?: File | null; b04?: File | null; b08?: File | null }
+): Promise<import('../types/satellite').FourBandValidationResult> {
+  const formData = new FormData();
+  if (bands.b02) formData.append('b02', bands.b02, bands.b02.name);
+  if (bands.b03) formData.append('b03', bands.b03, bands.b03.name);
+  if (bands.b04) formData.append('b04', bands.b04, bands.b04.name);
+  if (bands.b08) formData.append('b08', bands.b08, bands.b08.name);
+
+  return apiClient<import('../types/satellite').FourBandValidationResult>(
+    '/api/v1/validate-bands',
+    {
+      method: 'POST',
+      body: formData,
+    }
+  );
+}
+
+export async function startFourBandSuperResolution(
+  bands: { b02: File; b03: File; b04: File; b08: File },
+  options: {
+    model?: string;
+    enableUncertainty?: boolean;
+    scaleFactor?: number;
+  } = {}
+): Promise<SuperResolutionResponse> {
+  const formData = new FormData();
+  formData.append('b02', bands.b02, bands.b02.name);
+  formData.append('b03', bands.b03, bands.b03.name);
+  formData.append('b04', bands.b04, bands.b04.name);
+  formData.append('b08', bands.b08, bands.b08.name);
+
+  if (options.model) {
+    formData.append('model', options.model);
+  }
+  formData.append('enable_uncertainty', String(options.enableUncertainty ?? true));
+  if (options.scaleFactor) {
+    formData.append('scale_factor', String(options.scaleFactor));
+  }
+
+  return apiClient<SuperResolutionResponse>(
+    '/api/v1/super-resolution',
+    {
+      method: 'POST',
+      body: formData,
+    }
+  );
+}
+

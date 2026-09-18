@@ -1,103 +1,148 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Sparkles, Satellite, Compass, Layers, ShieldCheck, Play } from 'lucide-react';
-import { Button } from '../ui/Button';
-import { Badge } from '../ui/Badge';
-import { InteractiveTransformVisual } from './InteractiveTransformVisual';
-import { useSrmStore } from '../../store/useSrmStore';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { ArrowRight, ChevronDown, Sparkles, Cpu, Satellite, Radio } from 'lucide-react';
+import { EarthScene, EarthVisualFallback } from './EarthScene';
+import { ErrorBoundary } from '../scene/ErrorBoundary';
 
 export const Hero: React.FC = () => {
-  const navigate = useNavigate();
-  const { loadDemoDataset } = useSrmStore();
-
-  const handleDemo = () => {
-    loadDemoDataset();
-    navigate('/app/results/SRM-NTRO-DEMO-01');
+  const scrollToHowItWorks = () => {
+    const el = document.querySelector('#challenge');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
-    <section className="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-28">
-      
-      {/* Background radial glow & coordinate grid */}
-      <div className="absolute inset-0 -z-10 bg-grid-pattern opacity-25"></div>
-      <div className="absolute top-1/4 left-1/2 -z-10 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr from-cyan-600/15 via-blue-600/10 to-transparent blur-3xl"></div>
+    <section
+      id="hero"
+      className="relative min-h-screen w-full flex items-center pt-24 pb-16 lg:py-0 overflow-hidden bg-[#020b18]"
+    >
+      {/* Background Deep Space Radial Glows */}
+      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-blue-600/[0.07] blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/2 right-1/4 w-[600px] h-[600px] rounded-full bg-cyan-500/[0.08] blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-10 left-1/3 w-[500px] h-[500px] rounded-full bg-indigo-600/[0.05] blur-[120px] pointer-events-none" />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-        
-        {/* Eyebrow badge */}
-        <div className="inline-flex items-center gap-2 mb-6">
-          <Badge variant="cyan" dot className="py-1 px-3 text-xs tracking-widest uppercase">
-            AI-POWERED EARTH OBSERVATION
-          </Badge>
-          <span className="text-xs font-mono text-slate-400 hidden sm:inline">NTRO PS-26142</span>
-        </div>
+      {/* Subtle coordinate / telemetry grid overlay */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
 
-        {/* Main Heading */}
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-4xl mx-auto leading-tight sm:leading-none">
-          From 10m Satellite Pixels <br className="hidden sm:block" />
-          to <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-emerald-400 glow-cyan">Sub-4m</span> Intelligence.
-        </h1>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-4 items-center min-h-[calc(100vh-6rem)]">
+          {/* ── LEFT SIDE: Typography & Actions (5-6 cols) ── */}
+          <div className="lg:col-span-6 xl:col-span-5 flex flex-col justify-center text-left pt-6 lg:pt-0">
+            {/* Small Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 w-fit mb-6 shadow-[0_0_20px_rgba(0,212,255,0.15)]"
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400" />
+              </span>
+              <span className="font-mono text-[11px] font-semibold tracking-wider text-cyan-300 uppercase">
+                SATELLITE INTELLIGENCE PLATFORM
+              </span>
+            </motion.div>
 
-        {/* Concise scientific supporting text */}
-        <p className="mt-6 max-w-2xl mx-auto text-base sm:text-lg text-slate-300 leading-relaxed font-sans">
-          Reconstruct fine spatial details from medium-resolution multispectral satellite imagery using deep learning, while preserving strict spectral fidelity, geospatial projections, and quantified pixel-level uncertainty.
-        </p>
+            {/* Large Headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
+              className="text-4xl sm:text-5xl md:text-6xl xl:text-[68px] font-black text-white tracking-tight leading-[1.08] mb-6"
+            >
+              See Earth in{' '}
+              <span className="block mt-1 bg-gradient-to-r from-cyan-300 via-blue-400 to-indigo-300 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(0,212,255,0.4)]">
+                Higher
+              </span>{' '}
+              <span className="block bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-500 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(0,212,255,0.4)]">
+                Resolution.
+              </span>
+            </motion.h1>
 
-        {/* CTAs */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Button
-            size="lg"
-            variant="primary"
-            onClick={() => navigate('/app/upload')}
-            className="w-full sm:w-auto font-mono font-bold"
+            {/* Supporting Text */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}
+              className="text-base sm:text-lg text-slate-300/90 leading-relaxed max-w-xl mb-8 font-normal"
+            >
+              AI-powered multispectral super-resolution for transforming satellite
+              imagery into enhanced high-resolution spatial intelligence.
+            </motion.p>
+
+            {/* Buttons Row */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.45, ease: 'easeOut' }}
+              className="flex flex-wrap items-center gap-4 mb-10"
+            >
+              <Link
+                to="/platform"
+                className="group inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-400 bg-[length:200%_auto] hover:bg-right text-slate-950 font-bold text-sm sm:text-base shadow-[0_0_30px_rgba(0,212,255,0.4)] hover:shadow-[0_0_45px_rgba(0,212,255,0.7)] transition-all duration-300 transform hover:-translate-y-0.5"
+              >
+                <span>Explore Platform</span>
+                <ArrowRight size={17} className="group-hover:translate-x-1.5 transition-transform duration-200" />
+              </Link>
+
+              <button
+                onClick={scrollToHowItWorks}
+                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.09] text-slate-200 hover:text-white font-semibold text-sm sm:text-base border border-white/10 hover:border-white/20 backdrop-blur-md transition-all duration-200"
+              >
+                <span>How It Works</span>
+                <ChevronDown size={17} className="text-cyan-400" />
+              </button>
+            </motion.div>
+
+            {/* Quick Metrics / Spec Strip */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="pt-6 border-t border-white/[0.08] grid grid-cols-3 gap-4"
+            >
+              <div>
+                <div className="text-2xl font-black text-cyan-300 font-mono">3×</div>
+                <div className="text-xs text-slate-400 mt-0.5">Spatial Scale</div>
+              </div>
+              <div>
+                <div className="text-2xl font-black text-white font-mono">10m→3m</div>
+                <div className="text-xs text-slate-400 mt-0.5">GSD Detail</div>
+              </div>
+              <div>
+                <div className="text-2xl font-black text-indigo-300 font-mono">4-Band</div>
+                <div className="text-xs text-slate-400 mt-0.5">B, G, R, NIR</div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* ── RIGHT SIDE: Large Interactive 3D Earth (6-7 cols) ── */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.1, delay: 0.2, ease: 'easeOut' }}
+            className="lg:col-span-6 xl:col-span-7 relative flex items-center justify-center min-h-[480px] sm:min-h-[560px] lg:min-h-[640px] xl:min-h-[700px]"
           >
-            Start Reconstruction
-            <ArrowRight className="h-4 w-4 ml-2" />
-          </Button>
+            {/* Radial glow backdrop behind 3D Earth */}
+            <div className="absolute w-[85%] h-[85%] rounded-full bg-gradient-radial from-cyan-500/15 via-blue-600/5 to-transparent blur-2xl pointer-events-none" />
 
-          <Button
-            size="lg"
-            variant="secondary"
-            onClick={handleDemo}
-            className="w-full sm:w-auto font-mono"
-          >
-            <Play className="h-4 w-4 mr-2 text-cyan-400" />
-            Explore Live Demo
-          </Button>
-
-          <a
-            href="#pipeline"
-            className="text-xs font-mono text-slate-400 hover:text-cyan-400 underline underline-offset-4 transition-colors"
-          >
-            Explore the Technology ↓
-          </a>
+            {/* Live Three.js WebGL Earth Scene wrapped in ErrorBoundary */}
+            <div className="w-full h-[460px] sm:h-[540px] lg:h-[620px] xl:h-[680px]">
+              <ErrorBoundary fallback={<EarthVisualFallback />}>
+                <EarthScene
+                  interactive={true}
+                  enableZoom={true}
+                  autoRotateSpeed={0.7}
+                  className="w-full h-full"
+                  showHint={true}
+                />
+              </ErrorBoundary>
+            </div>
+          </motion.div>
         </div>
-
-        {/* Telemetry pill specs */}
-        <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto text-left font-mono">
-          <div className="rounded-lg border border-space-border bg-space-card/60 p-3">
-            <span className="text-[10px] text-slate-400 uppercase">Input Imagery</span>
-            <p className="text-sm font-bold text-white">10m Sentinel-2</p>
-          </div>
-          <div className="rounded-lg border border-space-border bg-space-card/60 p-3">
-            <span className="text-[10px] text-slate-400 uppercase">Target Resolution</span>
-            <p className="text-sm font-bold text-cyan-300">&lt; 4m Enhanced GSD</p>
-          </div>
-          <div className="rounded-lg border border-space-border bg-space-card/60 p-3">
-            <span className="text-[10px] text-slate-400 uppercase">Fidelity Constraint</span>
-            <p className="text-sm font-bold text-emerald-400">Spectral Loss (NDVI)</p>
-          </div>
-          <div className="rounded-lg border border-space-border bg-space-card/60 p-3">
-            <span className="text-[10px] text-slate-400 uppercase">Reliability Metric</span>
-            <p className="text-sm font-bold text-amber-300">MC-Dropout Uncertainty</p>
-          </div>
-        </div>
-
-        {/* Interactive Satellite Visual */}
-        <div className="mt-14">
-          <InteractiveTransformVisual />
-        </div>
-
       </div>
     </section>
   );

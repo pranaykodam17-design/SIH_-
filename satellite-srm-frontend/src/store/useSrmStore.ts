@@ -67,6 +67,11 @@ export const DEMO_METRICS: ValidationMetrics = {
     description: "NDVI Mean Absolute Error",
     higherIsBetter: false
   },
+  uncertainty: {
+    mean: 0.0842,
+    max: 0.4820,
+    min: 0.0120
+  },
   scale_factor: 3.0,
   hasReferenceData: true
 };
@@ -86,6 +91,7 @@ export const DEMO_JOB: ProcessingJob = {
     bandCount: 4,
     device: "CUDA RTX 4090 / PyTorch Fallback",
     elapsedSeconds: 42,
+    inferenceSeconds: 2.4,
     tileProgress: "16 / 16 Overlapping Tiles Blended",
     memoryAllocated: "3.82 GB VRAM",
     activeOperation: "Export Finished"
@@ -99,6 +105,11 @@ export const DEMO_JOB: ProcessingJob = {
     srPreviewUrl: "/api/v1/outputs/sr.png",
     uncertaintyPreviewUrl: "/api/v1/outputs/uncertainty.png",
     ndviPreviewUrl: "/api/v1/outputs/ndvi_comparison.png",
+    b02PreviewUrl: "/api/v1/outputs/b02.png",
+    b03PreviewUrl: "/api/v1/outputs/b03.png",
+    b04PreviewUrl: "/api/v1/outputs/b04.png",
+    b08PreviewUrl: "/api/v1/outputs/b08.png",
+    falseColorPreviewUrl: "/api/v1/outputs/false_color.png",
     validationReportUrl: "/api/v1/outputs/validation_report.html"
   },
   metrics: DEMO_METRICS,
@@ -109,6 +120,8 @@ export const DEMO_JOB: ProcessingJob = {
 interface SrmState {
   uploadedFile: File | null;
   uploadedFiles: File[];
+  fourBands: import('../types/satellite').FourBandFiles;
+  validationResult: import('../types/satellite').FourBandValidationResult | null;
   metadata: SatelliteMetadata | null;
   activeJob: ProcessingJob | null;
   activeJobs: ProcessingJob[];
@@ -125,6 +138,9 @@ interface SrmState {
   setUploadedFiles: (files: File[]) => void;
   addUploadedFiles: (files: File[]) => void;
   removeUploadedFile: (index: number) => void;
+  setFourBand: (band: 'b02' | 'b03' | 'b04' | 'b08', file: File | null) => void;
+  setAllFourBands: (bands: import('../types/satellite').FourBandFiles) => void;
+  setValidationResult: (res: import('../types/satellite').FourBandValidationResult | null) => void;
   setMetadata: (meta: SatelliteMetadata | null) => void;
   setActiveJob: (job: ProcessingJob | null) => void;
   setActiveJobs: (jobs: ProcessingJob[]) => void;
@@ -144,6 +160,8 @@ interface SrmState {
 export const useSrmStore = create<SrmState>((set) => ({
   uploadedFile: null,
   uploadedFiles: [],
+  fourBands: { b02: null, b03: null, b04: null, b08: null },
+  validationResult: null,
   metadata: null,
   activeJob: null,
   activeJobs: [],
@@ -156,6 +174,12 @@ export const useSrmStore = create<SrmState>((set) => ({
   isPixelGridVisible: false,
   panOffset: { x: 0, y: 0 },
 
+  setFourBand: (band, file) => set((state) => ({
+    fourBands: { ...state.fourBands, [band]: file },
+    validationResult: null
+  })),
+  setAllFourBands: (bands) => set({ fourBands: bands, validationResult: null }),
+  setValidationResult: (res) => set({ validationResult: res }),
   setUploadedFile: (file) => set({ uploadedFile: file, uploadedFiles: file ? [file] : [] }),
   setUploadedFiles: (files) => set({ uploadedFiles: files, uploadedFile: files[0] || null }),
   addUploadedFiles: (newFiles) => set((state) => {
@@ -195,6 +219,8 @@ export const useSrmStore = create<SrmState>((set) => ({
   loadDemoDataset: () => set({
     uploadedFile: null,
     uploadedFiles: [],
+    fourBands: { b02: null, b03: null, b04: null, b08: null },
+    validationResult: null,
     metadata: DEMO_METADATA,
     activeJob: DEMO_JOB,
     activeJobs: [DEMO_JOB],
@@ -205,6 +231,8 @@ export const useSrmStore = create<SrmState>((set) => ({
   resetAll: () => set({
     uploadedFile: null,
     uploadedFiles: [],
+    fourBands: { b02: null, b03: null, b04: null, b08: null },
+    validationResult: null,
     metadata: null,
     activeJob: null,
     activeJobs: [],

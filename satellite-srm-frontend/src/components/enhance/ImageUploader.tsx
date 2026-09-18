@@ -1,5 +1,9 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { Upload, FileImage, X, AlertCircle, CheckCircle, Plus } from 'lucide-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  Upload, FileImage, X, AlertCircle, CheckCircle2,
+  Layers, HardDrive, Compass, Target, ShieldCheck, RefreshCw, FileText
+} from 'lucide-react';
+import { inspectAndValidateRaster, RasterMetadata, RasterInspectionResult } from '../../lib/rasterInspection';
 
 interface ImageUploaderProps {
   onFileSelect?: (file: File) => void;
@@ -8,11 +12,9 @@ interface ImageUploaderProps {
   selectedFiles?: File[];
   onRemoveFile?: (index: number) => void;
   onClear?: () => void;
+  onValidationChange?: (isValid: boolean, error: string | null, metadata?: RasterMetadata | null) => void;
   disabled?: boolean;
 }
-
-const ACCEPTED_TYPES = ['image/tiff', 'image/png', 'image/jpeg', '.tif', '.tiff', '.geotiff'];
-const MAX_SIZE_MB = 500;
 
 export const ImageUploader: React.FC<ImageUploaderProps> = ({
   onFileSelect,
@@ -21,40 +23,71 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   selectedFiles = [],
   onRemoveFile,
   onClear,
+  onValidationChange,
   disabled = false,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragActive, setIsDragActive] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [isInspecting, setIsInspecting] = useState(false);
+  const [inspectionResults, setInspectionResults] = useState<Map<string, RasterInspectionResult>>(new Map());
+  const [generalError, setGeneralError] = useState<string | null>(null);
 
   // Normalize files array: if selectedFiles has items use it, else fallback to selectedFile
   const allFiles = selectedFiles.length > 0 ? selectedFiles : (selectedFile ? [selectedFile] : []);
 
-  const validate = (file: File): string | null => {
-    const ext = file.name.toLowerCase().split('.').pop() || '';
-    const allowed = ['tif', 'tiff', 'png', 'jpg', 'jpeg'];
-    if (!allowed.includes(ext) && !ACCEPTED_TYPES.includes(file.type)) {
-      return `"${file.name}": Unsupported format. Please upload GeoTIFF, TIFF, PNG, or JPG.`;
-    }
-    if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-      return `"${file.name}" is too large. Maximum size is ${MAX_SIZE_MB}MB.`;
-    }
-    return null;
-  };
+  // Inspect file(s) whenever allFiles changes
+  useEffect(() => {
+    let isCancelled = false;
 
-  const processFiles = useCallback((files: File[]) => {
-    for (const f of files) {
-      const err = validate(f);
-      if (err) {
-        setError(err);
-        return;
-      }
+    if (allFiles.length === 0) {
+      setInspectionResults(new Map());
+      setGeneralError(null);
+      onValidationChange?.(false, null, null);
+      return;
     }
-    setError(null);
+
+    const inspectAll = async () => {
+      setIsInspecting(true);
+      const resultsMap = new Map<string, RasterInspectionResult>();
+      let allValid = true;
+      let firstError: string | null = null;
+      let primaryMetadata: RasterMetadata | null = null;
+
+      for (const file of allFiles) {
+        const result = await inspectAndValidateRaster(file);
+        if (isCancelled) return;
+        resultsMap.set(file.name, result);
+
+        if (!result.isValid) {
+          allValid = false;
+          if (!firstError) firstError = result.error || `Invalid satellite raster "${file.name}"`;
+        } else if (!primaryMetadata && result.metadata) {
+          primaryMetadata = result.metadata;
+        }
+      }
+
+      if (isCancelled) return;
+      setInspectionResults(resultsMap);
+      setGeneralError(firstError);
+      setIsInspecting(false);
+      onValidationChange?.(allValid, firstError, primaryMetadata);
+    };
+
+    inspectAll();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [allFiles]); // eslint-disable-line
+
+  const handleFiles = useCallback((files: File[]) => {
+    if (files.length === 0) return;
+    setGeneralError(null);
+
     if (onFilesSelect) {
       onFilesSelect(files);
     }
-    if (onFileSelect && files.length > 0) {
+    if (onFileSelect) {
       onFileSelect(files[0]);
     }
   }, [onFilesSelect, onFileSelect]);
@@ -64,17 +97,18 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     setIsDragActive(false);
     if (disabled) return;
     const droppedFiles = Array.from(e.dataTransfer.files);
-    if (droppedFiles.length > 0) processFiles(droppedFiles);
-  }, [disabled, processFiles]);
+    if (droppedFiles.length > 0) handleFiles(droppedFiles);
+  }, [disabled, handleFiles]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputFiles = e.target.files ? Array.from(e.target.files) : [];
-    if (inputFiles.length > 0) processFiles(inputFiles);
+    if (inputFiles.length > 0) handleFiles(inputFiles);
     e.target.value = '';
   };
 
   const handleClear = () => {
-    setError(null);
+    setGeneralError(null);
+    setInspectionResults(new Map());
     onClear?.();
   };
 
@@ -84,131 +118,302 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
   };
 
-  // If one or more files are selected — show multi-file list state
+  // ── Selected File(s) View: Shows Metadata Card & Validation Status ──
   if (allFiles.length > 0) {
+    const primaryFile = allFiles[0];
+    const primaryResult = inspectionResults.get(primaryFile.name);
+    const meta = primaryResult?.metadata;
+    const isPrimaryValid = primaryResult?.isValid ?? true;
+
     return (
-      <div className="space-y-3">
+      <div className="space-y-4">
+        {/* Header bar */}
         <div className="flex items-center justify-between px-1">
           <div className="flex items-center gap-2">
-            <CheckCircle size={15} className="text-emerald-400" />
-            <span className="text-xs font-semibold text-emerald-400">
-              {allFiles.length} {allFiles.length === 1 ? 'Satellite Raster Selected' : 'Satellite Rasters Selected (Batch Mode)'}
+            {isInspecting ? (
+              <RefreshCw size={15} className="text-cyan-400 animate-spin" />
+            ) : isPrimaryValid ? (
+              <CheckCircle2 size={16} className="text-emerald-400" />
+            ) : (
+              <AlertCircle size={16} className="text-rose-400" />
+            )}
+            <span className={`text-xs font-bold ${
+              isInspecting ? 'text-cyan-400' : isPrimaryValid ? 'text-emerald-400' : 'text-rose-400'
+            }`}>
+              {isInspecting
+                ? 'Inspecting Satellite Metadata…'
+                : isPrimaryValid
+                ? allFiles.length > 1
+                  ? `${allFiles.length} Satellite Rasters Selected (Batch Mode)`
+                  : 'Satellite Raster Verified & Ready'
+                : 'Validation Failed'}
             </span>
           </div>
+
           <button
+            type="button"
             onClick={handleClear}
-            className="text-xs text-slate-500 hover:text-red-400 transition-colors"
+            className="text-xs text-slate-400 hover:text-rose-400 transition-colors font-medium"
           >
-            Clear All
+            Clear File
           </button>
         </div>
 
-        <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
-          {allFiles.map((file, idx) => (
-            <div
-              key={`${file.name}-${idx}`}
-              className="flex items-center justify-between p-3 rounded-xl border border-white/[0.08] bg-white/[0.03] hover:border-cyan-500/30 transition-all"
-            >
+        {/* Validation Error Alert */}
+        {generalError && (
+          <div className="flex items-start gap-3 p-3.5 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-300">
+            <AlertCircle size={17} className="text-rose-400 flex-shrink-0 mt-0.5" />
+            <div className="text-xs leading-relaxed">
+              <span className="font-bold block mb-0.5">Validation Error</span>
+              <span>{generalError}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Primary File Metadata Card */}
+        {meta && (
+          <div className="rounded-2xl border border-cyan-500/30 bg-[#07172b]/80 p-5 shadow-[0_0_30px_rgba(0,212,255,0.06)] space-y-4">
+            {/* File title & type badge */}
+            <div className="flex items-start justify-between gap-4 pb-3 border-b border-white/[0.08]">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-10 h-10 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center flex-shrink-0">
-                  <FileImage size={18} className="text-cyan-400" />
+                <div className="w-10 h-10 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_rgba(0,212,255,0.2)]">
+                  <FileImage size={20} className="text-cyan-300" />
                 </div>
                 <div className="min-w-0">
-                  <div className="text-xs font-medium text-slate-200 truncate max-w-xs" title={file.name}>
-                    {file.name}
-                  </div>
-                  <div className="flex items-center gap-2 mt-0.5 text-[10px] text-slate-500">
-                    <span>{formatSize(file.size)}</span>
-                    <span>·</span>
-                    <span className="font-mono uppercase">{file.name.split('.').pop()}</span>
-                    <span>·</span>
-                    <span className="text-cyan-400 font-mono">Bands: B2, B3, B4, B8</span>
-                  </div>
+                  <h4 className="text-sm font-bold text-white truncate max-w-sm" title={meta.filename}>
+                    {meta.filename}
+                  </h4>
+                  <p className="text-[11px] text-cyan-300 font-mono mt-0.5">
+                    {meta.fileType}
+                  </p>
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={() => onRemoveFile ? onRemoveFile(idx) : handleClear()}
-                className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-400/10 transition-all duration-200 flex-shrink-0 ml-2"
-                title="Remove this image"
-              >
-                <X size={14} />
-              </button>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-mono px-2 py-1 rounded bg-white/[0.05] border border-white/10 text-slate-300">
+                  {formatSize(meta.fileSize)}
+                </span>
+                {meta.bandCount === 4 && (
+                  <span className="text-[10px] font-bold px-2 py-1 rounded bg-emerald-500/15 border border-emerald-500/30 text-emerald-300">
+                    4-Band Native
+                  </span>
+                )}
+              </div>
             </div>
-          ))}
-        </div>
 
-        {/* Add more files button */}
-        <button
-          type="button"
-          onClick={() => inputRef.current?.click()}
-          className="w-full py-2 px-3 border border-dashed border-white/10 hover:border-cyan-500/40 rounded-xl text-xs text-slate-400 hover:text-cyan-400 flex items-center justify-center gap-2 transition-all bg-white/[0.01] hover:bg-cyan-500/[0.03]"
-        >
-          <Plus size={14} />
-          Add More Images to Batch
-        </button>
+            {/* Extracted Metadata Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+              {/* Dimensions */}
+              <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+                <div className="text-[10px] uppercase font-mono tracking-wider text-slate-400 mb-1 flex items-center gap-1">
+                  <Target size={11} className="text-cyan-400" /> Dimensions
+                </div>
+                <div className="font-bold text-white font-mono text-xs">
+                  {meta.dimensions}
+                </div>
+              </div>
+
+              {/* Number of Bands */}
+              <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+                <div className="text-[10px] uppercase font-mono tracking-wider text-slate-400 mb-1 flex items-center gap-1">
+                  <Layers size={11} className="text-cyan-400" /> Spectral Bands
+                </div>
+                <div className="font-bold text-white font-mono text-xs">
+                  {meta.bandCount} Channels
+                </div>
+              </div>
+
+              {/* Spatial Resolution */}
+              <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+                <div className="text-[10px] uppercase font-mono tracking-wider text-slate-400 mb-1 flex items-center gap-1">
+                  <HardDrive size={11} className="text-cyan-400" /> Resolution (GSD)
+                </div>
+                <div className="font-bold text-amber-300 font-mono text-xs truncate" title={meta.spatialResolution}>
+                  {meta.spatialResolution}
+                </div>
+              </div>
+
+              {/* CRS / Projection */}
+              <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+                <div className="text-[10px] uppercase font-mono tracking-wider text-slate-400 mb-1 flex items-center gap-1">
+                  <Compass size={11} className="text-cyan-400" /> CRS / Projection
+                </div>
+                <div className="font-bold text-emerald-300 font-mono text-xs truncate" title={meta.crs}>
+                  {meta.crs}
+                </div>
+              </div>
+            </div>
+
+            {/* Spectral Band Breakdown Strip */}
+            <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] flex flex-wrap items-center justify-between gap-2 text-[11px]">
+              <div className="flex items-center gap-2">
+                <ShieldCheck size={14} className="text-cyan-400 flex-shrink-0" />
+                <span className="text-slate-300 font-medium">
+                  {meta.bandsDescription}
+                </span>
+              </div>
+              {meta.bitsPerSample && (
+                <span className="text-[10px] font-mono text-slate-400 bg-black/40 px-2 py-0.5 rounded border border-white/5">
+                  {meta.bitsPerSample}
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* If multiple batch files are uploaded, list them */}
+        {allFiles.length > 1 && (
+          <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-1">
+              Batch Queue ({allFiles.length} files)
+            </div>
+            {allFiles.map((file, idx) => {
+              const res = inspectionResults.get(file.name);
+              const isValid = res?.isValid ?? true;
+              return (
+                <div
+                  key={`${file.name}-${idx}`}
+                  className={`flex items-center justify-between p-2.5 rounded-xl border transition-all ${
+                    isValid
+                      ? 'border-white/[0.08] bg-white/[0.02] hover:border-cyan-500/30'
+                      : 'border-rose-500/30 bg-rose-500/5'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <FileImage size={15} className={isValid ? 'text-cyan-400' : 'text-rose-400'} />
+                    <div className="min-w-0">
+                      <div className="text-xs font-medium text-slate-200 truncate max-w-xs" title={file.name}>
+                        {file.name}
+                      </div>
+                      <div className="text-[10px] text-slate-400 font-mono">
+                        {formatSize(file.size)} {res?.metadata ? `· ${res.metadata.dimensions} · ${res.metadata.bandCount} bands` : ''}
+                      </div>
+                    </div>
+                  </div>
+
+                  {onRemoveFile && (
+                    <button
+                      type="button"
+                      onClick={() => onRemoveFile(idx)}
+                      className="w-6 h-6 flex items-center justify-center rounded text-slate-500 hover:text-rose-400 hover:bg-rose-400/10"
+                      title="Remove file"
+                    >
+                      <X size={13} />
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Change file action */}
+        <div className="flex items-center justify-between pt-1">
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors font-medium flex items-center gap-1.5"
+          >
+            <span>Replace / Select Different File</span>
+          </button>
+        </div>
 
         <input
           ref={inputRef}
-          id="satellite-file-input-more"
+          id="satellite-file-input-change"
           type="file"
-          accept=".tif,.tiff,.png,.jpg,.jpeg"
-          multiple
+          accept=".tif,.tiff"
           onChange={handleInputChange}
           className="hidden"
+          disabled={disabled}
         />
       </div>
     );
   }
 
-  // Empty state — show drag-and-drop zone
+  // ── Empty State: Follows the exact requested UI specifications ──
   return (
-    <div>
+    <div className="space-y-4">
       <div
-        className={`upload-zone relative ${isDragActive ? 'drag-active' : ''} ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+        className={`relative rounded-2xl border-2 border-dashed transition-all duration-300 cursor-pointer overflow-hidden ${
+          isDragActive
+            ? 'border-cyan-400 bg-cyan-500/10 shadow-[0_0_30px_rgba(0,212,255,0.2)]'
+            : 'border-white/[0.12] bg-[#071525]/60 hover:border-cyan-500/40 hover:bg-[#07172b]/80'
+        } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
         onDragEnter={(e) => { e.preventDefault(); if (!disabled) setIsDragActive(true); }}
         onDragOver={(e) => { e.preventDefault(); if (!disabled) setIsDragActive(true); }}
         onDragLeave={(e) => { e.preventDefault(); setIsDragActive(false); }}
         onDrop={handleDrop}
         onClick={() => { if (!disabled) inputRef.current?.click(); }}
       >
-        <div className="flex flex-col items-center justify-center py-14 px-6 text-center">
-          {/* Icon */}
-          <div className={`relative mb-5 transition-transform duration-300 ${isDragActive ? 'scale-110' : ''}`}>
-            <div className="w-16 h-16 rounded-2xl bg-white/[0.04] border border-white/[0.1] flex items-center justify-center">
-              <Upload size={28} className={`transition-colors duration-300 ${isDragActive ? 'text-cyan-400' : 'text-slate-500'}`} />
-            </div>
-            {isDragActive && (
-              <div className="absolute inset-0 rounded-2xl border-2 border-cyan-400 animate-ping opacity-30" />
-            )}
-          </div>
-
-          <div className="mb-2">
-            <span className={`text-base font-semibold transition-colors duration-300 ${isDragActive ? 'text-cyan-400' : 'text-slate-200'}`}>
-              {isDragActive ? 'Drop your image here' : 'Upload Your Satellite Image'}
+        <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
+          {/* Header Title */}
+          <div className="mb-4 inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/30">
+            <Upload size={13} className="text-cyan-300" />
+            <span className="font-mono text-xs font-bold tracking-widest text-cyan-300 uppercase">
+              UPLOAD 4-BAND GEOTIFF
             </span>
           </div>
-          <p className="text-sm text-slate-500 mb-5 max-w-xs leading-relaxed">
-            Drag & drop a GeoTIFF, TIFF, PNG or JPG file here, or click to browse
+
+          {/* Main prompt */}
+          <h3 className="text-base sm:text-lg font-bold text-white mb-2">
+            Upload 4-Band Sentinel-2 GeoTIFF
+          </h3>
+          <p className="text-xs text-slate-400 mb-5 max-w-sm leading-relaxed">
+            Provide a single GeoTIFF containing all four Sentinel-2 spectral bands:
+            Band 1 = B02 Blue, Band 2 = B03 Green, Band 3 = B04 Red, Band 4 = B08 NIR.
           </p>
 
+          {/* Workflow steps */}
+          <div className="flex flex-wrap items-center justify-center gap-1.5 mb-6 text-[10px] font-mono">
+            {[
+              'Upload 4-Band GeoTIFF',
+              'Validate Sentinel-2 Bands',
+              'Run Super Resolution',
+              'Before / After',
+              'RGB / NIR / False Color',
+              'Download SR GeoTIFF',
+            ].map((step, i, arr) => (
+              <React.Fragment key={step}>
+                <span className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.07] text-slate-400">
+                  {step}
+                </span>
+                {i < arr.length - 1 && (
+                  <span className="text-slate-600">↓</span>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+
+          {/* Choose File button */}
           <button
             type="button"
-            className="btn-secondary text-sm px-5 py-2.5"
+            className="group relative inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-400 bg-[length:200%_auto] hover:bg-right text-slate-950 font-bold text-sm shadow-[0_0_20px_rgba(0,212,255,0.35)] hover:shadow-[0_0_30px_rgba(0,212,255,0.6)] transition-all duration-300"
             onClick={(e) => { e.stopPropagation(); inputRef.current?.click(); }}
+            disabled={disabled}
           >
-            Choose File
+            <span>Choose GeoTIFF File</span>
           </button>
 
-          {/* Format badges */}
-          <div className="flex items-center gap-1.5 mt-5 flex-wrap justify-center">
-            {['GeoTIFF', 'TIFF', 'PNG', 'JPG'].map((fmt) => (
-              <span key={fmt} className="px-2 py-0.5 text-[10px] font-medium text-slate-600 bg-white/[0.03] border border-white/[0.07] rounded">
-                {fmt}
+          {/* Supported formats */}
+          <div className="mt-8 pt-6 border-t border-white/[0.08] w-full max-w-md">
+            <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-2 font-semibold">
+              Accepted Input:
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-2 text-xs">
+              <span className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-cyan-500/25 text-cyan-300 font-medium">
+                .tif / .tiff (GeoTIFF)
               </span>
-            ))}
-            <span className="px-2 py-0.5 text-[10px] text-slate-700">Max {MAX_SIZE_MB}MB</span>
+              <span className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-cyan-500/25 text-cyan-300 font-medium">
+                4 bands: B02, B03, B04, B08
+              </span>
+              <span className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/10 text-slate-400 font-medium">
+                Georeferenced (EPSG embedded)
+              </span>
+            </div>
+            <div className="text-[10px] text-slate-500 mt-2">
+              Max file size: 500 MB • Output: 4-band georeferenced GeoTIFF at 3× resolution
+            </div>
           </div>
         </div>
 
@@ -216,21 +421,21 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
           ref={inputRef}
           id="satellite-file-input"
           type="file"
-          accept=".tif,.tiff,.png,.jpg,.jpeg"
-          multiple
+          accept=".tif,.tiff"
           onChange={handleInputChange}
           className="hidden"
           disabled={disabled}
         />
       </div>
 
-      {/* Error */}
-      {error && (
-        <div className="mt-3 flex items-center gap-2 px-4 py-3 bg-red-500/8 border border-red-500/20 rounded-xl">
-          <AlertCircle size={14} className="text-red-400 flex-shrink-0" />
-          <span className="text-sm text-red-400">{error}</span>
+      {/* Error display */}
+      {generalError && (
+        <div className="flex items-center gap-2 px-4 py-3 bg-rose-500/10 border border-rose-500/25 rounded-xl text-xs text-rose-300">
+          <AlertCircle size={15} className="text-rose-400 flex-shrink-0" />
+          <span>{generalError}</span>
         </div>
       )}
     </div>
   );
 };
+

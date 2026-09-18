@@ -114,9 +114,13 @@ export const ComparePage: React.FC = () => {
                 afterUrl={lrUrl}
                 beforeLabel={`SRM Enhanced · <${meta?.targetResolution?.toFixed(1) || '3.3'}m`}
                 afterLabel={`Sentinel-2 · ${meta?.nativeResolution?.toFixed(0) || '10'}m`}
-                height="520px"
-                showControls={true}
-                initialPosition={55}
+                ndviUrl={resolveApiUrl(job.outputs?.ndviPreviewUrl)}
+                uncertaintyUrl={resolveApiUrl(job.outputs?.uncertaintyPreviewUrl)}
+                height="560px"
+                initialPosition={50}
+                bounds={meta?.bounds}
+                center={meta?.center}
+                crs={meta?.crs}
               />
             )}
 

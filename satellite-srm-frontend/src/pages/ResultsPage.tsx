@@ -158,7 +158,7 @@ export const ResultsPage: React.FC = () => {
       />
 
       {/* GIS Products Download Panel */}
-      <GisProductsPanel outputs={outputs} />
+      <GisProductsPanel job={currentJob} />
 
     </div>
   );
