@@ -22,28 +22,28 @@ export const SplitScreenComparison: React.FC<SplitScreenComparisonProps> = ({ lr
   };
 
   return (
-    <div className="w-full rounded-xl border border-space-border bg-space-card p-4 shadow-2xl">
-      <div className="flex items-center justify-between pb-3 border-b border-space-border text-xs font-mono mb-3">
-        <span className="text-slate-300 font-bold">SYNCHRONIZED SIDE-BY-SIDE INSPECTION</span>
+    <div className="w-full rounded-xl border border-blue-100 bg-white p-4 shadow-sm">
+      <div className="flex items-center justify-between pb-3 border-b border-blue-100 text-xs font-mono mb-3">
+        <span className="text-[#425873] font-bold">SYNCHRONIZED SIDE-BY-SIDE INSPECTION</span>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setZoom(prev => Math.max(1, prev - 0.25))}
-            className="p-1 rounded bg-space-elevated hover:bg-space-border text-slate-300"
+            className="p-1 rounded bg-white hover:bg-space-border text-[#425873]"
             title="Zoom Out"
           >
             <ZoomOut className="h-3.5 w-3.5" />
           </button>
-          <span className="text-cyan-300">{zoom.toFixed(1)}x</span>
+          <span className="text-cyan-700">{zoom.toFixed(1)}x</span>
           <button
             onClick={() => setZoom(prev => Math.min(3, prev + 0.25))}
-            className="p-1 rounded bg-space-elevated hover:bg-space-border text-slate-300"
+            className="p-1 rounded bg-white hover:bg-space-border text-[#425873]"
             title="Zoom In"
           >
             <ZoomIn className="h-3.5 w-3.5" />
           </button>
           <button
             onClick={() => setZoom(1.0)}
-            className="p-1 rounded bg-space-elevated hover:bg-space-border text-slate-400"
+            className="p-1 rounded bg-white hover:bg-space-border text-[#526A82]"
             title="Reset"
           >
             <RotateCcw className="h-3 w-3" />
@@ -57,7 +57,7 @@ export const SplitScreenComparison: React.FC<SplitScreenComparisonProps> = ({ lr
         <div
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          className="relative h-80 sm:h-96 rounded-lg border border-space-border overflow-hidden bg-slate-950 cursor-crosshair"
+          className="relative h-80 sm:h-96 rounded-lg border border-blue-100 overflow-hidden bg-[#F5FAFF] cursor-crosshair"
         >
           <img
             src={lrUrl}
@@ -65,7 +65,7 @@ export const SplitScreenComparison: React.FC<SplitScreenComparisonProps> = ({ lr
             className="h-full w-full object-cover"
             style={{ transform: `scale(${zoom})` }}
           />
-          <div className="absolute top-2 left-2 rounded bg-space-darkest/80 px-2 py-1 text-[11px] font-mono text-amber-300 border border-amber-500/40">
+          <div className="absolute top-2 left-2 rounded bg-white/80 px-2 py-1 text-[11px] font-mono text-amber-700 border border-amber-500/40">
             10m SENTINEL-2 L2A
           </div>
 
@@ -81,7 +81,7 @@ export const SplitScreenComparison: React.FC<SplitScreenComparisonProps> = ({ lr
         <div
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          className="relative h-80 sm:h-96 rounded-lg border border-space-border overflow-hidden bg-slate-950 cursor-crosshair"
+          className="relative h-80 sm:h-96 rounded-lg border border-blue-100 overflow-hidden bg-[#F5FAFF] cursor-crosshair"
         >
           <img
             src={srUrl}
@@ -89,7 +89,7 @@ export const SplitScreenComparison: React.FC<SplitScreenComparisonProps> = ({ lr
             className="h-full w-full object-cover"
             style={{ transform: `scale(${zoom})` }}
           />
-          <div className="absolute top-2 left-2 rounded bg-space-darkest/80 px-2 py-1 text-[11px] font-mono text-cyan-300 border border-cyan-500/40">
+          <div className="absolute top-2 left-2 rounded bg-white/80 px-2 py-1 text-[11px] font-mono text-cyan-700 border border-cyan-200">
             SUB-4m RECONSTRUCTION
           </div>
 

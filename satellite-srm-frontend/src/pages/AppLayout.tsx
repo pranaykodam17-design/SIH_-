@@ -21,10 +21,10 @@ export const AppLayout: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-space-darkest flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
       
       {/* Sub-Header Mission Navigation Bar */}
-      <div className="border-b border-space-border bg-space-card/80 backdrop-blur-sm sticky top-16 z-40">
+      <div className="border-b border-blue-100 bg-white/80 backdrop-blur-sm sticky top-16 z-40">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between overflow-x-auto py-2.5 gap-4">
           
           <div className="flex items-center gap-1 sm:gap-2">
@@ -37,8 +37,8 @@ export const AppLayout: React.FC = () => {
                   to={item.path}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all shrink-0 ${
                     isActive
-                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
-                      : 'text-slate-400 hover:text-white hover:bg-space-elevated'
+                      ? 'bg-[#1677FF]/20 text-cyan-700 border border-cyan-200 shadow-sm'
+                      : 'text-[#526A82] hover:text-blue-700 hover:bg-white'
                   }`}
                 >
                   <Icon className="h-3.5 w-3.5" />
@@ -49,8 +49,8 @@ export const AppLayout: React.FC = () => {
           </div>
 
           <div className="hidden md:flex items-center gap-2 font-mono text-xs shrink-0">
-            <span className="text-slate-500">ACTIVE TARGET:</span>
-            <span className="text-cyan-300 font-bold">{currentJobId}</span>
+            <span className="text-[#6B7F95]">ACTIVE TARGET:</span>
+            <span className="text-cyan-700 font-bold">{currentJobId}</span>
           </div>
 
         </div>

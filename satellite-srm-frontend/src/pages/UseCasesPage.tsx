@@ -69,19 +69,19 @@ export const UseCasesPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#020c1b]">
+    <div className="min-h-screen bg-[#F5FAFF]">
       {/* Header */}
-      <div className="border-b border-white/[0.06] bg-[#071525]/60 backdrop-blur-sm sticky top-[68px] z-40">
+      <div className="border-b border-[#D7E6F4] bg-white/60 backdrop-blur-sm sticky top-[68px] z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex items-center gap-4">
           <button
             onClick={() => navigate(-1)}
-            className="w-9 h-9 flex items-center justify-center rounded-xl text-slate-500 hover:text-slate-300 hover:bg-white/5 transition-all"
+            className="w-9 h-9 flex items-center justify-center rounded-xl text-[#6B7F95] hover:text-[#425873] hover:bg-white transition-all"
           >
             <ArrowLeft size={18} />
           </button>
           <div>
-            <h1 className="text-xl font-black text-white leading-none">Use Cases</h1>
-            <p className="text-xs text-slate-500 mt-0.5">Real-world applications of SRM</p>
+            <h1 className="text-xl font-black text-[#10233F] leading-none">Use Cases</h1>
+            <p className="text-xs text-[#6B7F95] mt-0.5">Real-world applications of SRM</p>
           </div>
         </div>
       </div>
@@ -92,15 +92,15 @@ export const UseCasesPage: React.FC = () => {
           <div key={uc.id} className={`grid md:grid-cols-2 gap-10 items-center anim-fade-up delay-${(i % 3) + 1}`}>
             
             {/* Image Side */}
-            <div className={`relative rounded-3xl overflow-hidden border border-white/[0.08] shadow-glow-${uc.color} h-[400px] ${i % 2 !== 0 ? 'md:order-2' : ''}`}>
+            <div className={`relative rounded-3xl overflow-hidden border border-[#D7E6F4] shadow-glow-${uc.color} h-[400px] ${i % 2 !== 0 ? 'md:order-2' : ''}`}>
               <img src={uc.image} alt={uc.title} className="absolute inset-0 w-full h-full object-cover opacity-80 mix-blend-screen" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#020c1b] via-[#020c1b]/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-srm-surface via-srm-base to-transparent" />
               
               <div className="absolute bottom-6 left-6 flex items-center gap-4">
                 <div className={`w-14 h-14 rounded-2xl bg-${uc.color}-500/20 border border-${uc.color}-500/40 flex items-center justify-center text-${uc.color}-400 backdrop-blur-md`}>
                   {uc.icon}
                 </div>
-                <h2 className="text-2xl font-black text-white">{uc.title}</h2>
+                <h2 className="text-2xl font-black text-[#10233F]">{uc.title}</h2>
               </div>
             </div>
 
@@ -108,24 +108,24 @@ export const UseCasesPage: React.FC = () => {
             <div className={`space-y-6 ${i % 2 !== 0 ? 'md:order-1' : ''}`}>
               
               <div>
-                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">The Problem</h3>
-                <p className="text-slate-300 leading-relaxed text-sm bg-white/[0.02] p-4 rounded-xl border border-white/[0.05]">
+                <h3 className="text-sm font-bold text-[#526A82] uppercase tracking-widest mb-2">The Problem</h3>
+                <p className="text-[#425873] leading-relaxed text-sm bg-white p-4 rounded-xl border border-[#D7E6F4]">
                   {uc.problem}
                 </p>
               </div>
 
               <div>
-                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">How SRM Helps</h3>
+                <h3 className="text-sm font-bold text-[#526A82] uppercase tracking-widest mb-2">How SRM Helps</h3>
                 <p className={`text-${uc.color}-300 leading-relaxed text-sm bg-${uc.color}-500/[0.05] p-4 rounded-xl border border-${uc.color}-500/15`}>
                   {uc.solution}
                 </p>
               </div>
 
               <div>
-                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-3">Key Benefits</h3>
+                <h3 className="text-sm font-bold text-[#526A82] uppercase tracking-widest mb-3">Key Benefits</h3>
                 <ul className="space-y-2.5">
                   {uc.benefits.map((b, idx) => (
-                    <li key={idx} className="flex items-start gap-2.5 text-sm text-slate-300">
+                    <li key={idx} className="flex items-start gap-2.5 text-sm text-[#425873]">
                       <ArrowRight size={16} className={`text-${uc.color}-400 mt-0.5 flex-shrink-0`} />
                       {b}
                     </li>

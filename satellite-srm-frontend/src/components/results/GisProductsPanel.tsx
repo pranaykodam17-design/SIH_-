@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { ProcessingJob, SRMOutputs, SatelliteMetadata } from '../../types/satellite';
 import { resolveApiUrl } from '../../api/client';
+import { GisExportModal } from './GisExportModal';
 
 /* ── types ──────────────────────────────────────────────────────── */
 interface GisProductsPanelProps {
@@ -74,10 +75,10 @@ const MetaRow: React.FC<{
   };
 
   return (
-    <div className="flex items-start justify-between gap-3 py-2 border-b border-white/[0.05] last:border-0">
-      <span className="text-[11px] text-slate-500 shrink-0 w-28 pt-0.5">{label}</span>
+    <div className="flex items-start justify-between gap-3 py-2 border-b border-[#D7E6F4] last:border-0">
+      <span className="text-[11px] text-[#6B7F95] shrink-0 w-28 pt-0.5">{label}</span>
       <span
-        className={`text-[11px] text-slate-300 text-right flex-1 leading-snug ${
+        className={`text-[11px] text-[#425873] text-right flex-1 leading-snug ${
           mono ? 'font-mono' : ''
         }`}
         style={{ whiteSpace: 'pre-line' }}
@@ -88,10 +89,10 @@ const MetaRow: React.FC<{
         <button
           onClick={handleCopy}
           title="Copy"
-          className="shrink-0 text-slate-600 hover:text-cyan-400 transition-colors mt-0.5"
+          className="shrink-0 text-[#526A82] hover:text-[#1677FF] transition-colors mt-0.5"
         >
           {copied ? (
-            <CheckCircle2 size={12} className="text-emerald-400" />
+            <CheckCircle2 size={12} className="text-emerald-600" />
           ) : (
             <Copy size={12} />
           )}
@@ -131,10 +132,10 @@ const DownloadButton: React.FC<{
 
   const variantClass =
     variant === 'primary'
-      ? 'bg-cyan-500/15 border border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/25 hover:border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.08)]'
+      ? 'bg-[#1677FF]/20 border border-cyan-200 text-cyan-700 hover:bg-[#1677FF]/25 hover:border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.08)]'
       : variant === 'amber'
-      ? 'bg-amber-500/10 border border-amber-500/30 text-amber-300 hover:bg-amber-500/20'
-      : 'bg-white/[0.04] border border-white/[0.10] text-slate-300 hover:bg-white/[0.08] hover:border-white/[0.18]';
+      ? 'bg-amber-500/20 border border-amber-500/30 text-amber-700 hover:bg-amber-500/20'
+      : 'bg-white border border-[#D7E6F4] text-[#425873] hover:bg-white hover:border-[#D7E6F4]';
 
   const disabledClass = (!url || disabled)
     ? 'opacity-40 cursor-not-allowed pointer-events-none'
@@ -143,11 +144,11 @@ const DownloadButton: React.FC<{
   return (
     <button
       onClick={handleClick}
-      className={`${baseClass} ${state === 'success' ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-300' : variantClass} ${disabledClass}`}
+      className={`${baseClass} ${state === 'success' ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-700' : variantClass} ${disabledClass}`}
     >
       {state === 'success' ? (
         <>
-          <CheckCircle2 size={16} className="text-emerald-400" />
+          <CheckCircle2 size={16} className="text-emerald-600" />
           <span>Downloaded!</span>
         </>
       ) : (
@@ -171,6 +172,7 @@ export const GisProductsPanel: React.FC<GisProductsPanelProps> = ({
   /* Accept either a full job or the legacy outputs-only shape */
   const outputs  = job?.outputs  ?? outputsProp;
   const metadata = job?.metadata ?? metadataProp;
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
   const tifUrl         = resolveApiUrl(outputs?.srGeoTiffUrl)         || null;
   const uncertaintyUrl = resolveApiUrl(outputs?.uncertaintyGeoTiffUrl)|| null;
@@ -201,23 +203,23 @@ export const GisProductsPanel: React.FC<GisProductsPanelProps> = ({
     <div className="space-y-5">
 
       {/* ── Section Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#D7E6F4] pb-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <div className="w-6 h-6 rounded-lg bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center">
-              <Globe size={13} className="text-emerald-400" />
+              <Globe size={13} className="text-emerald-600" />
             </div>
-            <span className="text-xs font-mono font-bold tracking-wider text-emerald-400 uppercase">
+            <span className="text-xs font-mono font-bold tracking-wider text-emerald-600 uppercase">
               GIS Export
             </span>
           </div>
-          <h3 className="text-xl font-bold text-white tracking-tight">Export Results</h3>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <h3 className="text-xl font-bold text-[#10233F] tracking-tight">Export Results</h3>
+          <p className="text-xs text-[#6B7F95] mt-0.5">
             Georeferenced products ready for QGIS, ArcGIS and other GIS software
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="px-2.5 py-1 rounded-full text-xs font-mono bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center gap-1.5">
+          <span className="px-2.5 py-1 rounded-full text-xs font-mono bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 flex items-center gap-1.5">
             <CheckCircle2 size={11} /> QGIS / ArcGIS Ready
           </span>
         </div>
@@ -229,15 +231,15 @@ export const GisProductsPanel: React.FC<GisProductsPanelProps> = ({
         <div className="space-y-4">
 
           {/* Primary: Enhanced GeoTIFF */}
-          <div className="glass rounded-2xl p-5 border border-white/[0.08] space-y-4 hover:border-emerald-500/25 transition-all duration-300">
-            <div className="flex items-center gap-2 border-b border-white/[0.06] pb-3">
-              <Map size={15} className="text-emerald-400" />
-              <h4 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+          <div className="glass rounded-2xl p-5 border border-[#D7E6F4] space-y-4 hover:border-emerald-500/25 transition-all duration-300">
+            <div className="flex items-center gap-2 border-b border-[#D7E6F4] pb-3">
+              <Map size={15} className="text-emerald-600" />
+              <h4 className="text-sm font-bold text-[#10233F] uppercase tracking-wider font-mono">
                 Download Enhanced GeoTIFF
               </h4>
             </div>
 
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-[#526A82] leading-relaxed">
               Super-resolved 4-band multispectral GeoTIFF with updated affine transform
               ({pixelSizeSR ?? '~3.33m GSD'}). Preserves EPSG CRS, NoData flags, and
               band metadata for direct GIS ingestion.
@@ -245,39 +247,39 @@ export const GisProductsPanel: React.FC<GisProductsPanelProps> = ({
 
             <div className="flex flex-wrap gap-2 text-[10px] font-mono">
               {crs && (
-                <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-600">
                   {crs.split(' ')[0]}
                 </span>
               )}
-              <span className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.08] text-slate-400">
+              <span className="px-2 py-0.5 rounded bg-white border border-[#D7E6F4] text-[#526A82]">
                 4-Band RGBA TIFF
               </span>
               {metadata?.bands?.length && (
-                <span className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.08] text-slate-400">
+                <span className="px-2 py-0.5 rounded bg-white border border-[#D7E6F4] text-[#526A82]">
                   {metadata.bands.length} Bands
                 </span>
               )}
             </div>
 
-            <DownloadButton
-              label="Download Enhanced GeoTIFF"
-              url={tifUrl}
-              filename={`${fileBase}_SR.tif`}
-              icon={<Download size={16} />}
-              variant="primary"
-            />
+            <button
+              onClick={() => setIsExportModalOpen(true)}
+              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer bg-[#1677FF]/20 border border-cyan-200 text-cyan-700 hover:bg-[#1677FF]/25 hover:border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.08)]"
+            >
+              <Download size={16} />
+              <span>Download Enhanced GeoTIFF</span>
+            </button>
           </div>
 
           {/* GIS Bundle */}
-          <div className="glass rounded-2xl p-5 border border-white/[0.08] space-y-4 hover:border-cyan-500/25 transition-all duration-300">
-            <div className="flex items-center gap-2 border-b border-white/[0.06] pb-3">
-              <Package size={15} className="text-cyan-400" />
-              <h4 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+          <div className="glass rounded-2xl p-5 border border-[#D7E6F4] space-y-4 hover:border-cyan-500/25 transition-all duration-300">
+            <div className="flex items-center gap-2 border-b border-[#D7E6F4] pb-3">
+              <Package size={15} className="text-[#1677FF]" />
+              <h4 className="text-sm font-bold text-[#10233F] uppercase tracking-wider font-mono">
                 Download GIS Bundle
               </h4>
             </div>
 
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-[#526A82] leading-relaxed">
               Full scientific output package: SR GeoTIFF, RGB preview, spectral band previews
               (B02, B03, B04, B08), false-color composite, and metrics JSON — all in one download.
             </p>
@@ -285,13 +287,13 @@ export const GisProductsPanel: React.FC<GisProductsPanelProps> = ({
             {/* Individual bundle items */}
             <div className="space-y-1.5">
               {[
-                { label: 'SR GeoTIFF (.tif)',    url: tifUrl,     ext: 'TIF', color: 'text-emerald-400' },
-                { label: 'SR RGB Preview (.png)', url: srPngUrl,  ext: 'PNG', color: 'text-cyan-400'    },
-                { label: 'B02 Blue Band (.png)',  url: b02Url,     ext: 'PNG', color: 'text-blue-400'   },
-                { label: 'B03 Green Band (.png)', url: b03Url,     ext: 'PNG', color: 'text-emerald-400'},
-                { label: 'B04 Red Band (.png)',   url: b04Url,     ext: 'PNG', color: 'text-red-400'    },
+                { label: 'SR GeoTIFF (.tif)',    url: tifUrl,     ext: 'TIF', color: 'text-emerald-600' },
+                { label: 'SR RGB Preview (.png)', url: srPngUrl,  ext: 'PNG', color: 'text-[#1677FF]'    },
+                { label: 'B02 Blue Band (.png)',  url: b02Url,     ext: 'PNG', color: 'text-[#1677FF]'   },
+                { label: 'B03 Green Band (.png)', url: b03Url,     ext: 'PNG', color: 'text-emerald-600'},
+                { label: 'B04 Red Band (.png)',   url: b04Url,     ext: 'PNG', color: 'text-red-600'    },
                 { label: 'B08 NIR Band (.png)',   url: b08Url,     ext: 'PNG', color: 'text-violet-400' },
-                { label: 'Metrics JSON (.json)',  url: metricsUrl, ext: 'JSON',color: 'text-amber-400'  },
+                { label: 'Metrics JSON (.json)',  url: metricsUrl, ext: 'JSON',color: 'text-amber-600'  },
               ].map(({ label, url, ext, color }) => (
                 url ? (
                   <a
@@ -300,12 +302,12 @@ export const GisProductsPanel: React.FC<GisProductsPanelProps> = ({
                     download
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2.5 px-3 py-2 bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.05] hover:border-white/[0.12] rounded-lg transition-all group"
+                    className="flex items-center gap-2.5 px-3 py-2 bg-white hover:bg-white border border-[#D7E6F4] hover:border-[#D7E6F4] rounded-lg transition-all group"
                   >
                     <Layers size={11} className={`${color} shrink-0`} />
-                    <span className="text-[11px] text-slate-400 group-hover:text-slate-200 transition-colors flex-1">{label}</span>
-                    <span className="text-[9px] font-mono text-slate-600 group-hover:text-slate-400">{ext}</span>
-                    <Download size={10} className="text-slate-600 group-hover:text-slate-300 shrink-0" />
+                    <span className="text-[11px] text-[#526A82] group-hover:text-[#425873] transition-colors flex-1">{label}</span>
+                    <span className="text-[9px] font-mono text-[#526A82] group-hover:text-[#526A82]">{ext}</span>
+                    <Download size={10} className="text-[#526A82] group-hover:text-[#425873] shrink-0" />
                   </a>
                 ) : null
               ))}
@@ -314,14 +316,14 @@ export const GisProductsPanel: React.FC<GisProductsPanelProps> = ({
 
           {/* Uncertainty Map (conditional) */}
           {uncertaintyUrl && (
-            <div className="glass rounded-2xl p-5 border border-white/[0.08] space-y-4 hover:border-amber-500/25 transition-all duration-300">
-              <div className="flex items-center gap-2 border-b border-white/[0.06] pb-3">
-                <ShieldAlert size={15} className="text-amber-400" />
-                <h4 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+            <div className="glass rounded-2xl p-5 border border-[#D7E6F4] space-y-4 hover:border-amber-500/25 transition-all duration-300">
+              <div className="flex items-center gap-2 border-b border-[#D7E6F4] pb-3">
+                <ShieldAlert size={15} className="text-amber-600" />
+                <h4 className="text-sm font-bold text-[#10233F] uppercase tracking-wider font-mono">
                   Download Uncertainty Map
                 </h4>
               </div>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <p className="text-xs text-[#526A82] leading-relaxed">
                 Float32 GeoTIFF of Monte Carlo Dropout spatial variance. Each pixel encodes model
                 confidence (0 = high confidence, 1 = low confidence). Use for masking uncertain
                 regions in downstream analysis.
@@ -338,14 +340,14 @@ export const GisProductsPanel: React.FC<GisProductsPanelProps> = ({
 
           {/* Metrics JSON */}
           {metricsUrl && (
-            <div className="glass rounded-2xl p-5 border border-white/[0.08] space-y-3 hover:border-violet-500/25 transition-all duration-300">
-              <div className="flex items-center gap-2 border-b border-white/[0.06] pb-3">
+            <div className="glass rounded-2xl p-5 border border-[#D7E6F4] space-y-3 hover:border-violet-500/25 transition-all duration-300">
+              <div className="flex items-center gap-2 border-b border-[#D7E6F4] pb-3">
                 <FileJson size={15} className="text-violet-400" />
-                <h4 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+                <h4 className="text-sm font-bold text-[#10233F] uppercase tracking-wider font-mono">
                   Download Metrics JSON
                 </h4>
               </div>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[#526A82]">
                 Scientific quality metrics (PSNR, SSIM, SAM, ERGAS, NDVI correlation) vs. bicubic baseline.
               </p>
               <DownloadButton
@@ -360,15 +362,15 @@ export const GisProductsPanel: React.FC<GisProductsPanelProps> = ({
         </div>
 
         {/* ── RIGHT: GIS Metadata Panel ── */}
-        <div className="glass rounded-2xl p-5 border border-white/[0.08] space-y-4 hover:border-white/[0.14] transition-all duration-300">
-          <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+        <div className="glass rounded-2xl p-5 border border-[#D7E6F4] space-y-4 hover:border-[#D7E6F4] transition-all duration-300">
+          <div className="flex items-center justify-between border-b border-[#D7E6F4] pb-3">
             <div className="flex items-center gap-2">
-              <Globe size={15} className="text-cyan-400" />
-              <h4 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+              <Globe size={15} className="text-[#1677FF]" />
+              <h4 className="text-sm font-bold text-[#10233F] uppercase tracking-wider font-mono">
                 Geospatial Metadata
               </h4>
             </div>
-            <span className="text-[10px] font-mono text-slate-500">Backend Source of Truth</span>
+            <span className="text-[10px] font-mono text-[#6B7F95]">Backend Source of Truth</span>
           </div>
 
           <div className="space-y-0.5">
@@ -376,14 +378,14 @@ export const GisProductsPanel: React.FC<GisProductsPanelProps> = ({
             {crs ? (
               <MetaRow label="CRS" value={crs} copyable={crs} />
             ) : (
-              <MetaRow label="CRS" value={<span className="text-slate-600 italic">Not available</span>} />
+              <MetaRow label="CRS" value={<span className="text-[#526A82] italic">Not available</span>} />
             )}
 
             {/* Projection */}
             {projection ? (
               <MetaRow label="Projection" value={projection} mono={false} />
             ) : (
-              <MetaRow label="Projection" value={<span className="text-slate-600 italic">Not available</span>} mono={false} />
+              <MetaRow label="Projection" value={<span className="text-[#526A82] italic">Not available</span>} mono={false} />
             )}
 
             {/* GeoTransform */}
@@ -396,7 +398,7 @@ export const GisProductsPanel: React.FC<GisProductsPanelProps> = ({
             ) : (
               <MetaRow
                 label="GeoTransform"
-                value={<span className="text-slate-600 italic">Not available for this input</span>}
+                value={<span className="text-[#526A82] italic">Not available for this input</span>}
               />
             )}
 
@@ -404,14 +406,14 @@ export const GisProductsPanel: React.FC<GisProductsPanelProps> = ({
             {imageDims ? (
               <MetaRow label="Dimensions" value={imageDims} />
             ) : (
-              <MetaRow label="Dimensions" value={<span className="text-slate-600 italic">Not available</span>} />
+              <MetaRow label="Dimensions" value={<span className="text-[#526A82] italic">Not available</span>} />
             )}
 
             {/* Pixel size */}
             {pixelSizeSR ? (
               <MetaRow label="Pixel Size (SR)" value={pixelSizeSR} />
             ) : (
-              <MetaRow label="Pixel Size (SR)" value={<span className="text-slate-600 italic">Not available</span>} />
+              <MetaRow label="Pixel Size (SR)" value={<span className="text-[#526A82] italic">Not available</span>} />
             )}
             {pixelSizeSrc && (
               <MetaRow label="Pixel Size (src)" value={pixelSizeSrc} />
@@ -441,9 +443,9 @@ export const GisProductsPanel: React.FC<GisProductsPanelProps> = ({
 
           {/* GeoTransform derivation note */}
           {metadata?.bounds && (
-            <div className="flex items-start gap-2 px-3 py-2.5 bg-blue-500/[0.05] border border-blue-500/15 rounded-xl mt-2">
-              <Info size={11} className="text-blue-400 flex-shrink-0 mt-0.5" />
-              <p className="text-[11px] text-blue-400/75 leading-relaxed">
+            <div className="flex items-start gap-2 px-3 py-2.5 bg-[#1677FF]/[0.05] border border-blue-500/15 rounded-xl mt-2">
+              <Info size={11} className="text-[#1677FF] flex-shrink-0 mt-0.5" />
+              <p className="text-[11px] text-[#1677FF]/75 leading-relaxed">
                 GeoTransform is derived directly from backend-returned geographic bounds
                 and image dimensions. CRS and coordinates are not modified by the frontend.
               </p>
@@ -451,13 +453,13 @@ export const GisProductsPanel: React.FC<GisProductsPanelProps> = ({
           )}
 
           {/* Compatibility badges */}
-          <div className="pt-2 border-t border-white/[0.05]">
-            <p className="text-[10px] text-slate-600 uppercase tracking-widest mb-2 font-mono">Compatible with</p>
+          <div className="pt-2 border-t border-[#D7E6F4]">
+            <p className="text-[10px] text-[#526A82] uppercase tracking-widest mb-2 font-mono">Compatible with</p>
             <div className="flex flex-wrap gap-2">
               {['QGIS 3.x', 'ArcGIS Pro', 'GDAL/OGR', 'Google Earth Engine', 'ENVI'].map((tool) => (
                 <span
                   key={tool}
-                  className="px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.07] text-[10px] font-mono text-slate-400"
+                  className="px-2.5 py-1 rounded-lg bg-white border border-[#D7E6F4] text-[10px] font-mono text-[#526A82]"
                 >
                   {tool}
                 </span>
@@ -468,14 +470,25 @@ export const GisProductsPanel: React.FC<GisProductsPanelProps> = ({
       </div>
 
       {/* ── Footer disclaimer ── */}
-      <div className="flex items-start gap-2.5 px-4 py-3 bg-white/[0.02] border border-white/[0.06] rounded-xl">
-        <CheckCircle2 size={13} className="text-emerald-400 flex-shrink-0 mt-0.5" />
-        <p className="text-[11px] text-slate-500 leading-relaxed">
+      <div className="flex items-start gap-2.5 px-4 py-3 bg-white border border-[#D7E6F4] rounded-xl">
+        <CheckCircle2 size={13} className="text-emerald-600 flex-shrink-0 mt-0.5" />
+        <p className="text-[11px] text-[#6B7F95] leading-relaxed">
           Affine projection parameters and NoData flags are embedded in the GeoTIFF header for direct
           GIS alignment. The backend is the sole source of truth for all geospatial metadata — no
           coordinates are reconstructed or modified by the frontend.
         </p>
       </div>
+
+      {/* ── Animation 9: GIS Export Animation Modal ── */}
+      <GisExportModal
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+        tifUrl={tifUrl}
+        filename={`${fileBase}_SR.tif`}
+        crs={crs || 'EPSG:32644 (UTM Zone 44N)'}
+        dimensions={imageDims || '2048 × 2048 px'}
+        resolution={pixelSizeSR || '~3.33m GSD'}
+      />
     </div>
   );
 };

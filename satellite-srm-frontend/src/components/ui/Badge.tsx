@@ -14,12 +14,12 @@ export const Badge: React.FC<BadgeProps> = ({
   ...props
 }) => {
   const styles = {
-    cyan: 'bg-cyan-950/60 text-cyan-300 border-cyan-500/30',
-    emerald: 'bg-emerald-950/60 text-emerald-300 border-emerald-500/30',
-    amber: 'bg-amber-950/60 text-amber-300 border-amber-500/30',
-    purple: 'bg-indigo-950/60 text-indigo-300 border-indigo-500/30',
-    slate: 'bg-slate-900/80 text-slate-300 border-slate-700/50',
-    red: 'bg-red-950/60 text-red-300 border-red-500/30',
+    cyan: 'bg-cyan-950/60 text-cyan-700 border-cyan-200',
+    emerald: 'bg-emerald-950/60 text-emerald-700 border-emerald-500/30',
+    amber: 'bg-amber-950/60 text-amber-700 border-amber-500/30',
+    purple: 'bg-indigo-950/60 text-indigo-700 border-indigo-500/30',
+    slate: 'bg-[#EEF7FF] text-[#425873] border-[#D7E6F4]',
+    red: 'bg-red-950/60 text-red-700 border-red-500/30',
   };
 
   const dotStyles = {

@@ -2,166 +2,155 @@ import React, { useRef, useState, useEffect, Suspense } from 'react';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
-// ── RECOGNIZABLE EARTH-OBSERVATION SATELLITE ──
-// High-tech Earth remote-sensing satellite (chassis, solar wings, nadir optical camera, communications dish)
+// ── UPGRADED REALISTIC EARTH-OBSERVATION SATELLITE ──
+// Oriented so that local +Z points directly at the Earth (Nadir)
 export const ProceduralSatellite: React.FC = () => {
   return (
-    <group scale={1.2}>
-      {/* 1. Main Satellite Bus (Deep metallic space titanium with gold thermal MLI foil) */}
+    <group scale={1.8}>
+      {/* 1. Main Spacecraft Bus (Hexagonal/Rectangular Aerospace Chassis) */}
       <mesh castShadow receiveShadow>
-        <boxGeometry args={[0.08, 0.09, 0.13]} />
+        {/* Main body elongated along Z (pointing to Earth) */}
+        <boxGeometry args={[0.12, 0.12, 0.18]} />
         <meshStandardMaterial
-          color="#1e293b"
-          roughness={0.25}
-          metalness={0.85}
+          color="#f8fafc" // Clean white aerospace coating
+          roughness={0.2}
+          metalness={0.5}
         />
       </mesh>
 
-      {/* Gold Multi-Layer Insulation (MLI) Thermal Blanket Top Panel */}
-      <mesh position={[0, 0.046, 0]}>
-        <boxGeometry args={[0.075, 0.003, 0.12]} />
+      {/* Subtle structural paneling/lines on the bus */}
+      <mesh>
+        <boxGeometry args={[0.122, 0.122, 0.12]} />
         <meshStandardMaterial
-          color="#f59e0b"
-          roughness={0.35}
-          metalness={0.9}
+          color="#e2e8f0"
+          roughness={0.3}
+          metalness={0.6}
+          wireframe={true} // Creates a subtle structural grid effect
+          transparent
+          opacity={0.15}
         />
       </mesh>
 
-      {/* 2. Multispectral Observation Camera Payload (Pointing down along nadir to Earth) */}
-      {/* Positioned on the Earth-facing nadir side */}
-      <group position={[0, -0.05, 0.02]} rotation={[Math.PI / 2, 0, 0]}>
-        {/* Telescope Baffle Barrel */}
-        <mesh>
-          <cylinderGeometry args={[0.026, 0.03, 0.038, 24]} />
+      {/* 2. Optical Imaging Sensor Payload (Mounted on +Z face, pointing directly at Earth) */}
+      <group position={[0, 0, 0.1]}>
+        {/* Primary Optical Telescope Housing */}
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.045, 0.045, 0.06, 32]} />
           <meshStandardMaterial
-            color="#0f172a"
-            metalness={0.92}
-            roughness={0.18}
+            color="#0f172a" // Dark carbon/metallic housing
+            roughness={0.3}
+            metalness={0.8}
           />
         </mesh>
-        {/* Optical Sensor Glass Aperture (Emits subtle cyan glow) */}
-        <mesh position={[0, 0.02, 0]}>
-          <cylinderGeometry args={[0.024, 0.024, 0.003, 24]} />
+        {/* Secondary Inner Baffle */}
+        <mesh position={[0, 0, 0.031]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.038, 0.038, 0.005, 32]} />
           <meshStandardMaterial
-            color="#00f0ff"
-            emissive="#00e5ff"
-            emissiveIntensity={1.2}
-            roughness={0.1}
-            metalness={0.95}
-          />
-        </mesh>
-      </group>
-
-      {/* 3. Communications Parabolic Dish Antenna */}
-      <group position={[0, 0.055, -0.04]} rotation={[-0.45, 0.35, 0]}>
-        {/* Gimbal Mount Mast */}
-        <mesh position={[0, 0.02, 0]}>
-          <cylinderGeometry args={[0.004, 0.004, 0.032, 8]} />
-          <meshStandardMaterial color="#94a3b8" metalness={0.85} roughness={0.25} />
-        </mesh>
-        {/* Parabolic Dish Reflector */}
-        <mesh position={[0, 0.04, 0]} rotation={[Math.PI, 0, 0]}>
-          <coneGeometry args={[0.04, 0.018, 24, 1, true]} />
-          <meshStandardMaterial
-            color="#e2e8f0"
-            metalness={0.92}
-            roughness={0.2}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-        {/* Antenna Feed Horn */}
-        <mesh position={[0, 0.048, 0]}>
-          <cylinderGeometry args={[0.003, 0.003, 0.015, 8]} />
-          <meshStandardMaterial color="#00e5ff" emissive="#00e5ff" emissiveIntensity={0.8} />
-        </mesh>
-      </group>
-
-      {/* 4. Left Solar Array Wing */}
-      <group position={[-0.04, 0, 0]}>
-        {/* Carbon Fiber Array Yoke */}
-        <mesh position={[-0.035, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.005, 0.005, 0.07, 8]} />
-          <meshStandardMaterial color="#64748b" metalness={0.85} roughness={0.25} />
-        </mesh>
-        {/* Solar Panel Wing (Photovoltaic cells) */}
-        <mesh position={[-0.16, 0, 0]}>
-          <boxGeometry args={[0.2, 0.006, 0.085]} />
-          <meshStandardMaterial
-            color="#081c36"
-            roughness={0.2}
+            color="#1e293b"
+            roughness={0.4}
             metalness={0.7}
           />
         </mesh>
-        {/* Solar Cell Grid Detailing (Photovoltaic blue) */}
-        <mesh position={[-0.16, 0.0035, 0]}>
-          <boxGeometry args={[0.194, 0.001, 0.08]} />
+        {/* Main Glass Lens Aperture (Reflective optical element) */}
+        <mesh position={[0, 0, 0.034]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.032, 0.032, 0.002, 32]} />
           <meshStandardMaterial
-            color="#0284c7"
-            emissive="#0369a1"
-            emissiveIntensity={0.3}
-            roughness={0.15}
-            metalness={0.85}
+            color="#020617" // Deep black glass
+            roughness={0.02}
+            metalness={1.0}
+            envMapIntensity={2.0}
           />
         </mesh>
       </group>
 
-      {/* 5. Right Solar Array Wing */}
-      <group position={[0.04, 0, 0]}>
-        {/* Carbon Fiber Array Yoke */}
-        <mesh position={[0.035, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.005, 0.005, 0.07, 8]} />
-          <meshStandardMaterial color="#64748b" metalness={0.85} roughness={0.25} />
+      {/* 3. Star Trackers / Attitude Sensors (Small details on -Z face) */}
+      <group position={[0, 0, -0.09]}>
+        <mesh position={[0.03, 0.03, 0]} rotation={[0, 0, 0]}>
+          <boxGeometry args={[0.02, 0.02, 0.02]} />
+          <meshStandardMaterial color="#64748b" metalness={0.6} roughness={0.4} />
         </mesh>
-        {/* Solar Panel Wing */}
-        <mesh position={[0.16, 0, 0]}>
-          <boxGeometry args={[0.2, 0.006, 0.085]} />
-          <meshStandardMaterial
-            color="#081c36"
-            roughness={0.2}
-            metalness={0.7}
-          />
-        </mesh>
-        {/* Solar Cell Grid Detailing */}
-        <mesh position={[0.16, 0.0035, 0]}>
-          <boxGeometry args={[0.194, 0.001, 0.08]} />
-          <meshStandardMaterial
-            color="#0284c7"
-            emissive="#0369a1"
-            emissiveIntensity={0.3}
-            roughness={0.15}
-            metalness={0.85}
-          />
+        {/* High-gain communications dish (Pointing to space/relay) */}
+        <mesh position={[-0.03, -0.02, -0.01]} rotation={[Math.PI, 0.2, 0]}>
+          <cylinderGeometry args={[0.03, 0.005, 0.02, 16]} />
+          <meshStandardMaterial color="#cbd5e1" metalness={0.8} roughness={0.3} />
         </mesh>
       </group>
 
-      {/* 6. Avionics Status LEDs & Emissive Beacons */}
-      {/* Navigation Strobe Light */}
-      <mesh position={[0, 0.048, 0.06]}>
-        <sphereGeometry args={[0.008, 12, 12]} />
+      {/* 4. Left Solar Array Wing (Extending along -X) */}
+      <group position={[-0.06, 0, 0]}>
+        {/* Deployment Boom */}
+        <mesh position={[-0.05, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.005, 0.005, 0.1, 8]} />
+          <meshStandardMaterial color="#94a3b8" metalness={0.8} roughness={0.2} />
+        </mesh>
+        {/* Solar Panel Assembly */}
+        <group position={[-0.22, 0, 0]}>
+          {/* Backing Structure */}
+          <mesh>
+            <boxGeometry args={[0.26, 0.006, 0.14]} />
+            <meshStandardMaterial color="#0f172a" roughness={0.2} metalness={0.5} />
+          </mesh>
+          {/* Photovoltaic Cells (Deep Blue) */}
+          <mesh position={[0, 0.0035, 0]}>
+            <boxGeometry args={[0.25, 0.001, 0.13]} />
+            <meshStandardMaterial color="#1e3a8a" roughness={0.15} metalness={0.7} />
+          </mesh>
+          {/* Cell Grid Lines */}
+          <mesh position={[0, 0.0041, 0]}>
+            <boxGeometry args={[0.25, 0.0005, 0.13]} />
+            <meshStandardMaterial
+              color="#3b82f6"
+              roughness={0.3}
+              metalness={0.8}
+              wireframe={true}
+              transparent
+              opacity={0.4}
+            />
+          </mesh>
+        </group>
+      </group>
+
+      {/* 5. Right Solar Array Wing (Extending along +X) */}
+      <group position={[0.06, 0, 0]}>
+        {/* Deployment Boom */}
+        <mesh position={[0.05, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.005, 0.005, 0.1, 8]} />
+          <meshStandardMaterial color="#94a3b8" metalness={0.8} roughness={0.2} />
+        </mesh>
+        {/* Solar Panel Assembly */}
+        <group position={[0.22, 0, 0]}>
+          {/* Backing Structure */}
+          <mesh>
+            <boxGeometry args={[0.26, 0.006, 0.14]} />
+            <meshStandardMaterial color="#0f172a" roughness={0.2} metalness={0.5} />
+          </mesh>
+          {/* Photovoltaic Cells (Deep Blue) */}
+          <mesh position={[0, 0.0035, 0]}>
+            <boxGeometry args={[0.25, 0.001, 0.13]} />
+            <meshStandardMaterial color="#1e3a8a" roughness={0.15} metalness={0.7} />
+          </mesh>
+          {/* Cell Grid Lines */}
+          <mesh position={[0, 0.0041, 0]}>
+            <boxGeometry args={[0.25, 0.0005, 0.13]} />
+            <meshStandardMaterial
+              color="#3b82f6"
+              roughness={0.3}
+              metalness={0.8}
+              wireframe={true}
+              transparent
+              opacity={0.4}
+            />
+          </mesh>
+        </group>
+      </group>
+
+      {/* 6. Avionics Status Beacon (Subtle pulsing LED on +Y top) */}
+      <mesh position={[0, 0.065, 0]}>
+        <sphereGeometry args={[0.005, 12, 12]} />
         <meshStandardMaterial
           color="#ffffff"
-          emissive="#00f0ff"
-          emissiveIntensity={2.5}
-        />
-      </mesh>
-      {/* Telemetry Status Beacon */}
-      <mesh position={[0.035, 0.048, -0.06]}>
-        <sphereGeometry args={[0.006, 12, 12]} />
-        <meshStandardMaterial
-          color="#10b981"
-          emissive="#10b981"
-          emissiveIntensity={2.0}
-        />
-      </mesh>
-      {/* Subtle Blue Emissive Glow Aura */}
-      <mesh>
-        <sphereGeometry args={[0.22, 16, 16]} />
-        <meshBasicMaterial
-          color="#00d4ff"
-          transparent
-          opacity={0.06}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
+          emissive="#bfdbfe"
+          emissiveIntensity={1.0}
         />
       </mesh>
     </group>

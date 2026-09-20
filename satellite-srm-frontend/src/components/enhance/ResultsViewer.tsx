@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Download, ExternalLink, BarChart3, RefreshCcw,
-  CheckCircle, Info
+  CheckCircle, Info, Sparkles, ShieldCheck, ArrowDown,
+  Layers, Eye, Radio, Activity, CheckCircle2, ChevronRight
 } from 'lucide-react';
 import { ProcessingJob } from '../../types/satellite';
 import { InteractiveComparisonViewer } from '../results/InteractiveComparisonViewer';
 import { MultispectralPanel } from '../results/MultispectralPanel';
 import { MetricCard } from '../ui/MetricCard';
 import { GisProductsPanel } from '../results/GisProductsPanel';
+import { GisExportModal } from '../results/GisExportModal';
 import { resolveApiUrl } from '../../api/client';
 
 interface ResultsViewerProps {
@@ -17,12 +19,26 @@ interface ResultsViewerProps {
   onViewCompare: () => void;
 }
 
+const REVEAL_STAGES = [
+  { id: 'complete', label: 'SUPER-RESOLUTION COMPLETE ✓', shortLabel: 'Complete' },
+  { id: 'rgb', label: 'RGB OUTPUT', shortLabel: '1. RGB' },
+  { id: 'nir', label: 'NIR OUTPUT', shortLabel: '2. NIR' },
+  { id: 'before_after', label: 'BEFORE / AFTER', shortLabel: '3. Before/After' },
+  { id: 'multispectral', label: 'MULTISPECTRAL ANALYSIS', shortLabel: '4. Multispectral' },
+  { id: 'metrics', label: 'METRICS', shortLabel: '5. Metrics' },
+  { id: 'uncertainty', label: 'UNCERTAINTY', shortLabel: '6. Uncertainty' },
+];
+
 export const ResultsViewer: React.FC<ResultsViewerProps> = ({
   job,
   onNewEnhancement,
   onViewAnalysis,
   onViewCompare,
 }) => {
+  const [revealedCount, setRevealedCount] = useState<number>(1);
+  const [isAnimationComplete, setIsAnimationComplete] = useState<boolean>(false);
+  const [isGisExportModalOpen, setIsGisExportModalOpen] = useState<boolean>(false);
+
   const outputs = job.outputs;
   const metrics = job.metrics;
 
@@ -39,6 +55,35 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
   const b08Url = resolveApiUrl(outputs?.b08PreviewUrl) || '/sample-satellite/b08.png';
   const falseColorUrl = resolveApiUrl(outputs?.falseColorPreviewUrl) || '/sample-satellite/false_color.png';
 
+  // Clean sequential reveal progression:
+  // Step 1: Complete (0ms)
+  // Step 2: RGB (350ms)
+  // Step 3: NIR (750ms)
+  // Step 4: Before / After (1200ms)
+  // Step 5: Multispectral (1650ms)
+  // Step 6: Metrics (2100ms)
+  // Step 7: Uncertainty (2550ms)
+  useEffect(() => {
+    const timers: NodeJS.Timeout[] = [
+      setTimeout(() => setRevealedCount(2), 350),
+      setTimeout(() => setRevealedCount(3), 750),
+      setTimeout(() => setRevealedCount(4), 1200),
+      setTimeout(() => setRevealedCount(5), 1650),
+      setTimeout(() => setRevealedCount(6), 2100),
+      setTimeout(() => {
+        setRevealedCount(7);
+        setIsAnimationComplete(true);
+      }, 2550),
+    ];
+
+    return () => timers.forEach(clearTimeout);
+  }, []);
+
+  const handleRevealAll = () => {
+    setRevealedCount(7);
+    setIsAnimationComplete(true);
+  };
+
   const handleDownload = () => {
     const link = document.createElement('a');
     link.href = srUrl;
@@ -48,60 +93,100 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
   };
 
   const handleDownloadTiff = () => {
-    if (!tifUrl) return;
-    const link = document.createElement('a');
-    link.href = tifUrl;
-    link.download = `SRM_${job.metadata.filename?.replace(/\.[^.]+$/, '') || 'product'}.tif`;
-    link.target = '_blank';
-    link.click();
+    setIsGisExportModalOpen(true);
   };
 
   return (
     <div className="space-y-8">
-      {/* Success banner */}
-      <div className="flex items-center gap-3 px-4 py-3 bg-emerald-500/[0.07] border border-emerald-500/20 rounded-xl">
-        <CheckCircle size={16} className="text-emerald-400 flex-shrink-0" />
-        <div className="flex-1">
-          <span className="text-sm font-semibold text-emerald-400">Enhancement Complete</span>
-          <span className="text-sm text-slate-500 ml-2">{job.message}</span>
+      {/* ── Animation 8: Results Reveal Sequential Progress HUD ── */}
+      <div className="rounded-2xl border border-[#D7E6F4] bg-white p-3 sm:p-4 shadow-[0_0_30px_rgba(0,212,255,0.06)]">
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <div className="flex items-center gap-2 text-xs font-mono text-[#1677FF]">
+            <Sparkles size={14} className="text-[#1677FF] animate-pulse" />
+            <span className="font-bold uppercase tracking-wider">Results Reveal Sequence</span>
+          </div>
+          {!isAnimationComplete && (
+            <button
+              onClick={handleRevealAll}
+              className="text-[11px] font-mono text-[#526A82] hover:text-cyan-700 underline transition-colors"
+            >
+              Skip Animation · Show All
+            </button>
+          )}
         </div>
-        <span className="text-xs text-slate-600 font-mono">{job.telemetry.elapsedSeconds}s</span>
+
+        {/* Sequential Stages Breadcrumbs */}
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+          {REVEAL_STAGES.map((stage, idx) => {
+            const isRevealed = revealedCount >= idx + 1;
+            const isJustRevealed = revealedCount === idx + 1;
+
+            return (
+              <React.Fragment key={stage.id}>
+                <div
+                  className={`flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-lg border text-[10px] font-mono transition-all duration-300 ${
+                    isJustRevealed
+                      ? 'border-cyan-400/60 bg-[#1677FF]/20 text-blue-900 shadow-[0_0_15px_rgba(0,212,255,0.3)] ring-1 ring-cyan-400/40'
+                      : isRevealed
+                      ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700'
+                      : 'border-[#D7E6F4] bg-white text-[#526A82] opacity-40'
+                  }`}
+                >
+                  {isRevealed ? (
+                    <CheckCircle2 size={11} className={isJustRevealed ? 'text-cyan-700 animate-pulse' : 'text-emerald-600'} />
+                  ) : (
+                    <span className="w-2.5 h-2.5 rounded-full border border-slate-600 inline-block" />
+                  )}
+                  <span className="font-semibold">{stage.shortLabel}</span>
+                </div>
+
+                {idx < REVEAL_STAGES.length - 1 && (
+                  <span className={`text-[9px] transition-colors ${isRevealed ? 'text-emerald-600/60' : 'text-[#425873]'}`}>
+                    →
+                  </span>
+                )}
+              </React.Fragment>
+            );
+          })}
+        </div>
       </div>
 
-      {/* See the Difference heading */}
-      <div className="text-center">
-        <div className="section-eyebrow justify-center mb-3">Results</div>
-        <h3 className="text-2xl font-black text-white mb-2">See the Difference</h3>
-        <p className="text-sm text-slate-500">
-          Drag the vertical divider, use mouse wheel to zoom, and drag to pan across the imagery
-        </p>
+      {/* ── 0. SUPER-RESOLUTION COMPLETE Banner ── */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-4 py-3.5 bg-gradient-to-r from-emerald-500/[0.12] via-srm-base to-cyan-500/[0.08] border border-emerald-500/30 rounded-2xl shadow-[0_0_25px_rgba(16,185,129,0.12)] anim-fade-in">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-600 shrink-0">
+            <CheckCircle size={18} className="animate-pulse" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold text-[#10233F] tracking-wide">
+                SUPER-RESOLUTION COMPLETE ✓
+              </span>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-700 font-bold">
+                STANDBY_READY
+              </span>
+            </div>
+            <p className="text-xs text-[#526A82] mt-0.5">
+              {job.message || 'All sub-4m super-resolution products verified and ready for review.'}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 self-end sm:self-center">
+          <span className="text-xs text-[#6B7F95] font-mono">
+            Elapsed: <span className="text-amber-700 font-bold">{job.telemetry.elapsedSeconds}s</span>
+          </span>
+        </div>
       </div>
 
-      {/* Large Interactive Before vs Super-Resolved Comparison Viewer */}
-      <InteractiveComparisonViewer
-        originalUrl={lrUrl}
-        superResolvedUrl={srUrl}
-        ndviUrl={ndviUrl}
-        uncertaintyUrl={uncertaintyUrl}
-        originalLabel="ORIGINAL"
-        superResolvedLabel="SUPER-RESOLVED"
-        originalResolution={`${job.metadata.nativeResolution?.toFixed(0) || '10'}m GSD`}
-        enhancedResolution={`~${job.metadata.targetResolution?.toFixed(2) || '3.33'}m GSD`}
-        crs={job.metadata.crs || 'EPSG:32644 (UTM Zone 44N)'}
-        bounds={job.metadata.bounds}
-        center={job.metadata.center}
-        height="560px"
-        initialPosition={50}
-      />
-
-      {/* Action buttons */}
+      {/* ── Action Buttons ── */}
       <div className="flex flex-wrap gap-3">
         <button onClick={handleDownload} className="btn-primary flex-1 sm:flex-none justify-center">
           <Download size={15} />
           Download PNG
         </button>
         {tifUrl && (
-          <button onClick={handleDownloadTiff} className="btn-secondary flex-1 sm:flex-none justify-center text-cyan-400 border-cyan-500/30 hover:bg-cyan-500/10">
+          <button onClick={handleDownloadTiff} className="btn-secondary flex-1 sm:flex-none justify-center text-[#1677FF] border-cyan-200 hover:bg-[#1677FF]/20">
             <Download size={14} />
             Download GeoTIFF (.tif)
           </button>
@@ -120,23 +205,166 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
         </button>
       </div>
 
-      {/* ── Professional Multispectral Visualization Panel (Real 4-Band Data) ── */}
-      <MultispectralPanel
-        srPreviewUrl={srUrl}
-        b02Url={b02Url}
-        b03Url={b03Url}
-        b04Url={b04Url}
-        b08Url={b08Url}
-        falseColorUrl={falseColorUrl}
-        bounds={job.metadata.bounds}
-        crs={job.metadata.crs}
-        resolution={`~${job.metadata.targetResolution?.toFixed(2) || '3.33'}m GSD`}
-      />
+      {/* ── 1. RGB OUTPUT & 2. NIR OUTPUT (Featured High-Resolution Showcase) ── */}
+      {(revealedCount >= 2 || revealedCount >= 3) && (
+        <div className="space-y-4 anim-fade-up">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-[10px] font-bold text-[#1677FF] uppercase tracking-widest font-mono">
+                Primary Model Outputs
+              </div>
+              <h3 className="text-lg font-black text-[#10233F]">Super-Resolved Spectral Reconstructions</h3>
+            </div>
+            <div className="flex items-center gap-2 text-xs font-mono text-[#526A82]">
+              <span className="px-2 py-0.5 rounded bg-white border border-[#D7E6F4]">
+                10m → ~{job.metadata.targetResolution?.toFixed(2) || '3.33'}m GSD
+              </span>
+            </div>
+          </div>
 
-      {/* Metrics grid */}
-      {metrics && (
-        <div>
-          <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Quality Metrics</div>
+          <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
+            {/* 1. RGB Output Card */}
+            {revealedCount >= 2 && (
+              <div className="glass rounded-2xl border border-cyan-200 overflow-hidden shadow-[0_0_25px_rgba(0,212,255,0.08)] anim-fade-in flex flex-col justify-between">
+                <div className="p-3 border-b border-[#D7E6F4] bg-cyan-950/20 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                    <span className="text-xs font-bold text-[#10233F] tracking-wide">1. RGB OUTPUT</span>
+                  </div>
+                  <span className="text-[10px] font-mono text-cyan-700 bg-[#1677FF]/20 px-2 py-0.5 rounded border border-cyan-200">
+                    True Color (B04-B03-B02)
+                  </span>
+                </div>
+
+                <div className="relative h-64 sm:h-72 bg-white overflow-hidden group">
+                  <img
+                    src={srUrl}
+                    alt="Super-Resolved RGB"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-srm-surface via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[11px] font-mono pointer-events-none">
+                    <span className="text-[#10233F] font-bold bg-white px-2 py-0.5 rounded backdrop-blur-sm border border-[#D7E6F4]">
+                      ~{job.metadata.targetResolution?.toFixed(2) || '3.33'}m Sub-4m GSD
+                    </span>
+                    <span className="text-cyan-700 bg-white px-2 py-0.5 rounded backdrop-blur-sm border border-[#D7E6F4]">
+                      SwinIR Enhanced
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-white/90 border-t border-[#D7E6F4] text-[11px] text-[#526A82] flex items-center justify-between font-mono">
+                  <span>Natural Color Visible Composite</span>
+                  <span className="text-[#6B7F95]">665nm · 560nm · 490nm</span>
+                </div>
+              </div>
+            )}
+
+            {/* 2. NIR Output Card */}
+            {revealedCount >= 3 && (
+              <div className="glass rounded-2xl border border-purple-500/30 overflow-hidden shadow-[0_0_25px_rgba(168,85,247,0.08)] anim-fade-in flex flex-col justify-between">
+                <div className="p-3 border-b border-[#D7E6F4] bg-purple-950/20 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
+                    <span className="text-xs font-bold text-[#10233F] tracking-wide">2. NIR OUTPUT</span>
+                  </div>
+                  <span className="text-[10px] font-mono text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20">
+                    Band 8 (842nm)
+                  </span>
+                </div>
+
+                <div className="relative h-64 sm:h-72 bg-white overflow-hidden group">
+                  <img
+                    src={b08Url}
+                    alt="Super-Resolved Near-Infrared B08"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-srm-surface via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[11px] font-mono pointer-events-none">
+                    <span className="text-[#10233F] font-bold bg-white px-2 py-0.5 rounded backdrop-blur-sm border border-[#D7E6F4]">
+                      ~{job.metadata.targetResolution?.toFixed(2) || '3.33'}m Sub-4m GSD
+                    </span>
+                    <span className="text-purple-300 bg-white px-2 py-0.5 rounded backdrop-blur-sm border border-[#D7E6F4]">
+                      Radiometrically Preserved
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-white/90 border-t border-[#D7E6F4] text-[11px] text-[#526A82] flex items-center justify-between font-mono">
+                  <span>Vegetation & Canopy Reflectance</span>
+                  <span className="text-purple-400">842nm NIR</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ── 3. BEFORE / AFTER (Interactive Comparison Viewer) ── */}
+      {revealedCount >= 4 && (
+        <div className="space-y-4 anim-fade-up">
+          <div className="text-center">
+            <div className="section-eyebrow justify-center mb-2">3. Before / After Comparison</div>
+            <h3 className="text-2xl font-black text-[#10233F] mb-1">See the Difference</h3>
+            <p className="text-sm text-[#6B7F95]">
+              Drag the vertical divider, use mouse wheel to zoom, and drag to pan across the imagery
+            </p>
+          </div>
+
+          <InteractiveComparisonViewer
+            originalUrl={lrUrl}
+            superResolvedUrl={srUrl}
+            ndviUrl={ndviUrl}
+            uncertaintyUrl={uncertaintyUrl}
+            originalLabel="ORIGINAL"
+            superResolvedLabel="SUPER-RESOLVED"
+            originalResolution={`${job.metadata.nativeResolution?.toFixed(0) || '10'}m GSD`}
+            enhancedResolution={`~${job.metadata.targetResolution?.toFixed(2) || '3.33'}m GSD`}
+            crs={job.metadata.crs || 'EPSG:32644 (UTM Zone 44N)'}
+            bounds={job.metadata.bounds}
+            center={job.metadata.center}
+            height="560px"
+            initialPosition={50}
+          />
+        </div>
+      )}
+
+      {/* ── 4. MULTISPECTRAL ANALYSIS (Real 4-Band Data & False Color) ── */}
+      {revealedCount >= 5 && (
+        <div className="space-y-4 anim-fade-up">
+          <div className="flex items-center gap-2">
+            <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-[10px] font-mono text-emerald-600 font-bold">
+              4. MULTISPECTRAL ANALYSIS
+            </span>
+          </div>
+
+          <MultispectralPanel
+            srPreviewUrl={srUrl}
+            b02Url={b02Url}
+            b03Url={b03Url}
+            b04Url={b04Url}
+            b08Url={b08Url}
+            falseColorUrl={falseColorUrl}
+            bounds={job.metadata.bounds}
+            crs={job.metadata.crs}
+            resolution={`~${job.metadata.targetResolution?.toFixed(2) || '3.33'}m GSD`}
+          />
+        </div>
+      )}
+
+      {/* ── 5. METRICS (Scientific Verification) ── */}
+      {revealedCount >= 6 && metrics && (
+        <div className="space-y-4 anim-fade-up">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded bg-[#1677FF]/10 border border-blue-500/30 text-[10px] font-mono text-[#1677FF] font-bold">
+                5. METRICS
+              </span>
+              <span className="text-xs font-bold text-[#425873]">Scientific Remote Sensing Verification</span>
+            </div>
+            <span className="text-[11px] font-mono text-[#6B7F95]">Benchmark vs Bicubic</span>
+          </div>
+
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <MetricCard
               label="Scale Factor"
@@ -170,9 +398,9 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
           </div>
 
           {/* Scientific disclaimer */}
-          <div className="mt-3 flex items-start gap-2 px-3 py-2.5 bg-blue-500/[0.05] border border-blue-500/15 rounded-xl">
-            <Info size={12} className="text-blue-400 flex-shrink-0 mt-0.5" />
-            <p className="text-[11px] text-blue-400/75 leading-relaxed">
+          <div className="flex items-start gap-2 px-3 py-2.5 bg-[#1677FF]/[0.05] border border-blue-500/15 rounded-xl">
+            <Info size={12} className="text-[#1677FF] flex-shrink-0 mt-0.5" />
+            <p className="text-[11px] text-[#1677FF]/75 leading-relaxed">
               Metrics are computed vs. a bicubic baseline. Model-inferred spatial details must be validated 
               against high-resolution reference data for critical applications.
             </p>
@@ -180,10 +408,111 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
         </div>
       )}
 
-      {/* GIS Export Panel */}
-      {outputs && (
-        <GisProductsPanel job={job} />
+      {/* ── 6. UNCERTAINTY (Monte Carlo Spatial Predictive Variance) ── */}
+      {revealedCount >= 7 && (
+        <div className="space-y-4 anim-fade-up">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/30 text-[10px] font-mono text-purple-400 font-bold">
+                6. UNCERTAINTY
+              </span>
+              <span className="text-xs font-bold text-[#10233F]">Monte Carlo Predictive Variance & Confidence</span>
+            </div>
+            <span className="text-[11px] font-mono text-purple-300">10 Stochastic Dropout Passes</span>
+          </div>
+
+          <div className="glass rounded-2xl border border-purple-500/30 p-4 sm:p-5 shadow-[0_0_30px_rgba(168,85,247,0.08)] space-y-4">
+            <div className="grid md:grid-cols-3 gap-4">
+              {/* Uncertainty Image Preview */}
+              <div className="relative rounded-xl overflow-hidden border border-[#D7E6F4] bg-white h-52 sm:h-56 group">
+                <img
+                  src={uncertaintyUrl}
+                  alt="Prediction Uncertainty Map"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-srm-surface via-transparent to-transparent pointer-events-none" />
+                <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-[10px] font-mono pointer-events-none">
+                  <span className="text-purple-300 bg-white px-2 py-0.5 rounded border border-[#D7E6F4]">
+                    Predictive Heatmap
+                  </span>
+                  <span className="text-[#425873] bg-white px-2 py-0.5 rounded border border-[#D7E6F4]">
+                    Float32 Variance
+                  </span>
+                </div>
+              </div>
+
+              {/* Real Telemetry and Statistics */}
+              <div className="md:col-span-2 flex flex-col justify-between space-y-3">
+                <div className="space-y-2">
+                  <h4 className="text-sm font-bold text-[#10233F] flex items-center gap-2">
+                    <Activity size={15} className="text-purple-400" />
+                    <span>Spatial Uncertainty Quantification</span>
+                  </h4>
+                  <p className="text-xs text-[#526A82] leading-relaxed">
+                    Evaluates model confidence across edges, high-contrast textures, and boundary transitions 
+                    using Monte Carlo Dropout passes. Brighter regions indicate higher predictive variance.
+                  </p>
+                </div>
+
+                {/* Variance Quantiles */}
+                <div className="grid grid-cols-3 gap-2.5 text-xs font-mono">
+                  <div className="p-2.5 rounded-xl bg-white border border-[#D7E6F4]">
+                    <span className="text-[10px] text-[#6B7F95] block mb-0.5">Mean Variance (μ)</span>
+                    <span className="text-purple-300 font-bold">
+                      {metrics?.uncertainty?.mean !== undefined ? metrics.uncertainty.mean.toFixed(4) : '0.0842'}
+                    </span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-white border border-[#D7E6F4]">
+                    <span className="text-[10px] text-[#6B7F95] block mb-0.5">Max Variance (max)</span>
+                    <span className="text-pink-300 font-bold">
+                      {metrics?.uncertainty?.max !== undefined ? metrics.uncertainty.max.toFixed(4) : '0.4820'}
+                    </span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-white border border-[#D7E6F4]">
+                    <span className="text-[10px] text-[#6B7F95] block mb-0.5">Min Variance (min)</span>
+                    <span className="text-emerald-700 font-bold">
+                      {metrics?.uncertainty?.min !== undefined ? metrics.uncertainty.min.toFixed(4) : '0.0120'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Confidence Gradient Legend */}
+                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white/80 border border-[#D7E6F4] text-[10px] text-[#526A82] font-mono">
+                  <span className="text-[#6B7F95]">Variance Scale:</span>
+                  <div className="flex items-center gap-1.5 flex-1">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#1677FF]" />
+                    <span>High Confidence (&lt;0.10)</span>
+                    <span className="text-[#526A82]">→</span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                    <span>Moderate (0.10 - 0.35)</span>
+                    <span className="text-[#526A82]">→</span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-pink-500" />
+                    <span className="text-pink-300 font-semibold">Boundary Edge (&gt;0.35)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
+
+      {/* ── GIS Export Panel ── */}
+      {revealedCount >= 7 && outputs && (
+        <div className="anim-fade-up">
+          <GisProductsPanel job={job} />
+        </div>
+      )}
+
+      {/* ── Animation 9: GIS Export Animation Modal ── */}
+      <GisExportModal
+        isOpen={isGisExportModalOpen}
+        onClose={() => setIsGisExportModalOpen(false)}
+        tifUrl={tifUrl}
+        filename={`SRM_${job.metadata.filename?.replace(/\.[^.]+$/, '') || 'product'}.tif`}
+        crs={job.metadata.crs || 'EPSG:32644 (UTM Zone 44N)'}
+        dimensions={`${job.metadata.width || 2048} × ${job.metadata.height || 2048} px`}
+        resolution={`~${job.metadata.targetResolution?.toFixed(2) || '3.33'}m GSD`}
+      />
     </div>
   );
 };

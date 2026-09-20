@@ -5,17 +5,17 @@ import { Badge } from '../ui/Badge';
 
 export const ProblemSection: React.FC = () => {
   return (
-    <section id="mission" className="py-20 border-t border-space-border/60 bg-space-darkest/70">
+    <section id="mission" className="py-20 border-t border-blue-100/60 bg-white/70">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         <div className="text-center max-w-3xl mx-auto mb-16">
           <Badge variant="amber" className="mb-3 uppercase tracking-wider">
             Operational Limitation
           </Badge>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#10233F]">
             The Geospatial Dilemma: Resolution vs. Revisit
           </h2>
-          <p className="mt-4 text-slate-300 leading-relaxed text-sm sm:text-base">
+          <p className="mt-4 text-[#425873] leading-relaxed text-sm sm:text-base">
             Earth observation constellations present an inherent physical trade-off between spatial resolution, coverage cadence, and operational cost.
           </p>
         </div>
@@ -24,42 +24,42 @@ export const ProblemSection: React.FC = () => {
           
           {/* Limitation 1 */}
           <Card className="border-amber-500/20 hover:border-amber-500/40 transition-colors">
-            <div className="h-10 w-10 rounded-lg bg-amber-950/60 border border-amber-500/30 flex items-center justify-center text-amber-400 mb-4">
+            <div className="h-10 w-10 rounded-lg bg-amber-950/60 border border-amber-500/30 flex items-center justify-center text-amber-600 mb-4">
               <EyeOff className="h-5 w-5" />
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">10m Coarse Pixels</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">
+            <h3 className="text-lg font-semibold text-[#10233F] mb-2">10m Coarse Pixels</h3>
+            <p className="text-sm text-[#526A82] leading-relaxed">
               Sentinel-2 MSI provides free 5-day global coverage, but its 10m GSD cannot resolve narrow irrigation canals, farm boundaries, individual buildings, or localized disaster damage paths.
             </p>
-            <div className="mt-4 pt-4 border-t border-space-border/60 font-mono text-xs text-amber-400/80">
+            <div className="mt-4 pt-4 border-t border-blue-100/60 font-mono text-xs text-amber-600/80">
               1 pixel = 100 m² ground area
             </div>
           </Card>
 
           {/* Limitation 2 */}
           <Card className="border-red-500/20 hover:border-red-500/40 transition-colors">
-            <div className="h-10 w-10 rounded-lg bg-red-950/60 border border-red-500/30 flex items-center justify-center text-red-400 mb-4">
+            <div className="h-10 w-10 rounded-lg bg-red-950/60 border border-red-500/30 flex items-center justify-center text-red-600 mb-4">
               <DollarSign className="h-5 w-5" />
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">High Cost of VHR Data</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">
+            <h3 className="text-lg font-semibold text-[#10233F] mb-2">High Cost of VHR Data</h3>
+            <p className="text-sm text-[#526A82] leading-relaxed">
               Commercial Very High Resolution (VHR) sensors (0.3m – 1.0m) cost thousands of dollars per scene, lack systematic monitoring cadences, and frequently miss critical multispectral NIR bands.
             </p>
-            <div className="mt-4 pt-4 border-t border-space-border/60 font-mono text-xs text-red-400/80">
+            <div className="mt-4 pt-4 border-t border-blue-100/60 font-mono text-xs text-red-600/80">
               &gt; $15-$30 / km² commercial cost
             </div>
           </Card>
 
           {/* Limitation 3 */}
-          <Card className="border-cyan-500/20 hover:border-cyan-500/40 transition-colors">
-            <div className="h-10 w-10 rounded-lg bg-cyan-950/60 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-4">
+          <Card className="border-cyan-200 hover:border-cyan-200 transition-colors">
+            <div className="h-10 w-10 rounded-lg bg-cyan-950/60 border border-cyan-200 flex items-center justify-center text-[#1677FF] mb-4">
               <HelpCircle className="h-5 w-5" />
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">AI Hallucination Risk</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">
+            <h3 className="text-lg font-semibold text-[#10233F] mb-2">AI Hallucination Risk</h3>
+            <p className="text-sm text-[#526A82] leading-relaxed">
               Standard image upscaling models (e.g. bicubic or generic computer vision GANs) distort multispectral radiometric values and invent false structures without estimating confidence.
             </p>
-            <div className="mt-4 pt-4 border-t border-space-border/60 font-mono text-xs text-cyan-400/80">
+            <div className="mt-4 pt-4 border-t border-blue-100/60 font-mono text-xs text-[#1677FF]/80">
               Severe spectral distortion in NDVI
             </div>
           </Card>

@@ -27,15 +27,15 @@ export const ResultsPage: React.FC = () => {
     <div className="space-y-8">
       
       {/* Top Completion Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-space-border">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-blue-100">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="flex h-3 w-3 rounded-full bg-emerald-400"></span>
-            <h1 className="text-2xl font-bold font-mono text-white">
+            <h1 className="text-2xl font-bold font-mono text-[#10233F]">
               RECONSTRUCTION COMPLETED: {currentJob.jobId}
             </h1>
           </div>
-          <p className="text-xs font-mono text-slate-400">
+          <p className="text-xs font-mono text-[#526A82]">
             Spatial magnification: 10m Sentinel-2 → Sub-4m (3.33m GSD) • Strict EPSG:32644 preservation
           </p>
         </div>
@@ -46,7 +46,7 @@ export const ResultsPage: React.FC = () => {
           </Badge>
           <Link
             to={`/app/validation/${currentJob.jobId}`}
-            className="px-3 py-1.5 rounded-lg border border-cyan-500/40 bg-space-elevated hover:bg-space-border text-cyan-300 text-xs font-mono font-bold transition-colors"
+            className="px-3 py-1.5 rounded-lg border border-cyan-200 bg-white hover:bg-space-border text-cyan-700 text-xs font-mono font-bold transition-colors"
           >
             Validation Suite →
           </Link>
@@ -62,14 +62,14 @@ export const ResultsPage: React.FC = () => {
       </div>
 
       {/* Visualization Tab Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-space-border pb-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-blue-100 pb-3">
         <div className="flex items-center gap-2">
           <button
             onClick={() => setActiveTab('slider')}
             className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-mono font-bold transition-all ${
               activeTab === 'slider'
-                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-space-elevated'
+                ? 'bg-[#1677FF]/20 text-cyan-700 border border-cyan-200 shadow-sm'
+                : 'text-[#526A82] hover:text-blue-700 hover:bg-white'
             }`}
           >
             <Sliders className="h-3.5 w-3.5" />
@@ -80,8 +80,8 @@ export const ResultsPage: React.FC = () => {
             onClick={() => setActiveTab('split')}
             className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-mono font-bold transition-all ${
               activeTab === 'split'
-                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-space-elevated'
+                ? 'bg-[#1677FF]/20 text-cyan-700 border border-cyan-200 shadow-sm'
+                : 'text-[#526A82] hover:text-blue-700 hover:bg-white'
             }`}
           >
             <SplitSquareVertical className="h-3.5 w-3.5" />
@@ -92,8 +92,8 @@ export const ResultsPage: React.FC = () => {
             onClick={() => setActiveTab('uncertainty')}
             className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-mono font-bold transition-all ${
               activeTab === 'uncertainty'
-                ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-space-elevated'
+                ? 'bg-indigo-500/20 text-indigo-700 border border-indigo-500/40 shadow-sm'
+                : 'text-[#526A82] hover:text-[#10233F] hover:bg-white'
             }`}
           >
             <ShieldAlert className="h-3.5 w-3.5" />
@@ -104,8 +104,8 @@ export const ResultsPage: React.FC = () => {
             onClick={() => setActiveTab('ndvi')}
             className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-mono font-bold transition-all ${
               activeTab === 'ndvi'
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-space-elevated'
+                ? 'bg-emerald-500/20 text-emerald-700 border border-emerald-500/40 shadow-sm'
+                : 'text-[#526A82] hover:text-[#10233F] hover:bg-white'
             }`}
           >
             <Sprout className="h-3.5 w-3.5" />
@@ -113,7 +113,7 @@ export const ResultsPage: React.FC = () => {
           </button>
         </div>
 
-        <div className="text-xs font-mono text-slate-500 hidden sm:block">
+        <div className="text-xs font-mono text-[#6B7F95] hidden sm:block">
           Sensor: {metadata.sensor}
         </div>
       </div>

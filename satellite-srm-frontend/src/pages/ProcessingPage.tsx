@@ -47,16 +47,16 @@ export const ProcessingPage: React.FC = () => {
 
           {/* Action on completion */}
           {isCompleted && (
-            <div className="p-6 rounded-2xl border border-emerald-500/50 bg-emerald-950/20 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4 shadow-2xl glow-box-emerald">
+            <div className="p-6 rounded-2xl border border-emerald-500/50 bg-emerald-950/20 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm glow-box-emerald">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-emerald-500/30 text-emerald-300 flex items-center justify-center">
+                <div className="h-10 w-10 rounded-full bg-emerald-500/30 text-emerald-700 flex items-center justify-center">
                   <CheckCircle2 className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold font-mono text-white">
+                  <h3 className="text-base font-bold font-mono text-[#10233F]">
                     RECONSTRUCTION MISSION COMPLETE
                   </h3>
-                  <p className="text-xs font-mono text-slate-300">
+                  <p className="text-xs font-mono text-[#425873]">
                     Sub-4m GeoTIFF, uncertainty map, and NDVI spectral analysis compiled.
                   </p>
                 </div>
@@ -75,10 +75,10 @@ export const ProcessingPage: React.FC = () => {
           )}
         </>
       ) : (
-        <div className="p-12 text-center rounded-2xl border border-space-border bg-space-card font-mono">
-          <RefreshCw className="h-8 w-8 text-cyan-400 animate-spin mx-auto mb-4" />
-          <h3 className="text-lg font-bold text-white mb-2">Connecting to Telemetry Stream...</h3>
-          <p className="text-xs text-slate-400">Fetching processing stage for Job {currentJobId}</p>
+        <div className="p-12 text-center rounded-2xl border border-blue-100 bg-white font-mono">
+          <RefreshCw className="h-8 w-8 text-[#1677FF] animate-spin mx-auto mb-4" />
+          <h3 className="text-lg font-bold text-[#10233F] mb-2">Connecting to Telemetry Stream...</h3>
+          <p className="text-xs text-[#526A82]">Fetching processing stage for Job {currentJobId}</p>
         </div>
       )}
 

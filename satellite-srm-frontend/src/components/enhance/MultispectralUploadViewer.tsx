@@ -58,18 +58,18 @@ const Upload2DFallback: React.FC<{ fourBands: FourBandFiles; allLoaded: boolean 
   fourBands,
   allLoaded,
 }) => (
-  <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center select-none bg-gradient-to-r from-[#030e1d] via-[#05182e] to-[#030e1d]">
-    <div className="flex items-center gap-2 mb-2 text-xs font-mono text-cyan-400">
+  <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center select-none bg-gradient-to-r from-srm-surface via-srm-base to-srm-elevated">
+    <div className="flex items-center gap-2 mb-2 text-xs font-mono text-[#1677FF]">
       <SatelliteIcon size={14} className="animate-pulse" />
       <span>Spectral Channel Telemetry (2D Fallback)</span>
     </div>
     {allLoaded ? (
-      <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-bold animate-pulse">
+      <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-700 text-xs font-bold animate-pulse">
         <CheckCircle2 size={13} />
         <span>MULTISPECTRAL INPUT READY</span>
       </div>
     ) : (
-      <div className="text-[11px] text-slate-400 font-mono">
+      <div className="text-[11px] text-[#526A82] font-mono">
         Waiting for Sentinel-2 spectral streams (B02, B03, B04, B08)
       </div>
     )}
@@ -102,7 +102,7 @@ export const MultispectralUploadViewer: React.FC<MultispectralUploadViewerProps>
 
   return (
     <div
-      className={`relative w-full h-[155px] sm:h-[165px] rounded-xl overflow-hidden border border-white/[0.08] bg-[#030a16] shadow-inner ${className}`}
+      className={`relative w-full h-[155px] sm:h-[165px] rounded-xl overflow-hidden border border-[#D7E6F4] bg-white shadow-inner ${className}`}
     >
       {/* 3D Canvas Layer */}
       {hasWebGL ? (
@@ -125,17 +125,17 @@ export const MultispectralUploadViewer: React.FC<MultispectralUploadViewerProps>
 
       {/* Top Left Header Badge */}
       <div className="absolute top-2.5 left-3 pointer-events-none z-10 flex items-center gap-2">
-        <div className="w-6 h-6 rounded-lg bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-300">
+        <div className="w-6 h-6 rounded-lg bg-[#1677FF]/20 border border-cyan-200 flex items-center justify-center text-cyan-700">
           <Radio size={12} className="animate-pulse" />
         </div>
         <div>
-          <div className="text-[11px] font-bold text-white tracking-wide leading-none flex items-center gap-1.5">
+          <div className="text-[11px] font-bold text-[#10233F] tracking-wide leading-none flex items-center gap-1.5">
             <span>Sentinel-2 Spectral Ingestion</span>
-            <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+            <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#1677FF]/20 border border-cyan-200 text-[#1677FF]">
               ORBIT 786 KM
             </span>
           </div>
-          <div className="text-[9px] text-slate-400 font-mono mt-0.5">
+          <div className="text-[9px] text-[#526A82] font-mono mt-0.5">
             4-Band Radiometric Stream Link
           </div>
         </div>
@@ -148,8 +148,8 @@ export const MultispectralUploadViewer: React.FC<MultispectralUploadViewerProps>
           <div
             className={`flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono border transition-all duration-300 ${
               b02Ready
-                ? 'bg-blue-500/20 border-blue-400/50 text-blue-300 shadow-[0_0_10px_rgba(59,130,246,0.3)]'
-                : 'bg-white/[0.03] border-white/[0.08] text-slate-500'
+                ? 'bg-[#1677FF]/20 border-blue-400/50 text-blue-700 shadow-[0_0_10px_rgba(59,130,246,0.3)]'
+                : 'bg-white border-[#D7E6F4] text-[#6B7F95]'
             }`}
           >
             <span
@@ -164,8 +164,8 @@ export const MultispectralUploadViewer: React.FC<MultispectralUploadViewerProps>
           <div
             className={`flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono border transition-all duration-300 ${
               b03Ready
-                ? 'bg-emerald-500/20 border-emerald-400/50 text-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.3)]'
-                : 'bg-white/[0.03] border-white/[0.08] text-slate-500'
+                ? 'bg-emerald-500/20 border-emerald-400/50 text-emerald-700 shadow-[0_0_10px_rgba(16,185,129,0.3)]'
+                : 'bg-white border-[#D7E6F4] text-[#6B7F95]'
             }`}
           >
             <span
@@ -180,8 +180,8 @@ export const MultispectralUploadViewer: React.FC<MultispectralUploadViewerProps>
           <div
             className={`flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono border transition-all duration-300 ${
               b04Ready
-                ? 'bg-red-500/20 border-red-400/50 text-red-300 shadow-[0_0_10px_rgba(239,68,68,0.3)]'
-                : 'bg-white/[0.03] border-white/[0.08] text-slate-500'
+                ? 'bg-red-500/20 border-red-400/50 text-red-700 shadow-[0_0_10px_rgba(239,68,68,0.3)]'
+                : 'bg-white border-[#D7E6F4] text-[#6B7F95]'
             }`}
           >
             <span
@@ -197,7 +197,7 @@ export const MultispectralUploadViewer: React.FC<MultispectralUploadViewerProps>
             className={`flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono border transition-all duration-300 ${
               b08Ready
                 ? 'bg-purple-500/20 border-purple-400/50 text-purple-300 shadow-[0_0_10px_rgba(168,85,247,0.3)]'
-                : 'bg-white/[0.03] border-white/[0.08] text-slate-500'
+                : 'bg-white border-[#D7E6F4] text-[#6B7F95]'
             }`}
           >
             <span
@@ -211,8 +211,8 @@ export const MultispectralUploadViewer: React.FC<MultispectralUploadViewerProps>
 
         {/* When all four are loaded: MULTISPECTRAL INPUT READY banner */}
         {allLoaded && (
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-gradient-to-r from-cyan-500/20 via-emerald-500/20 to-cyan-500/20 border border-emerald-400/50 text-emerald-300 text-[11px] font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)] animate-fade-in animate-pulse">
-            <Sparkles size={13} className="text-cyan-400" />
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-gradient-to-r from-cyan-500/20 via-emerald-500/20 to-cyan-500/20 border border-emerald-400/50 text-emerald-700 text-[11px] font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)] animate-fade-in animate-pulse">
+            <Sparkles size={13} className="text-[#1677FF]" />
             <span>MULTISPECTRAL INPUT READY</span>
           </div>
         )}

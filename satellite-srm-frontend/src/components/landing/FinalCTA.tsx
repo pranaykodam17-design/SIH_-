@@ -14,19 +14,19 @@ export const FinalCTA: React.FC = () => {
   };
 
   return (
-    <section className="py-20 border-t border-space-border bg-gradient-to-b from-space-darkest to-space-card/90 relative overflow-hidden">
+    <section className="py-20 border-t border-blue-100 bg-gradient-to-b from-blue-50 to-white/90 relative overflow-hidden">
       <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
       
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-cyan-950/60 border border-cyan-500/40 text-cyan-400 mb-6 shadow-lg shadow-cyan-500/20">
+        <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-cyan-950/60 border border-cyan-200 text-[#1677FF] mb-6 shadow-lg shadow-cyan-500/20">
           <Satellite className="h-6 w-6 animate-pulse-slow" />
         </div>
 
-        <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
+        <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#10233F] leading-tight">
           Initialize Your Satellite Reconstruction Mission
         </h2>
 
-        <p className="mt-4 text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        <p className="mt-4 text-base sm:text-lg text-[#425873] max-w-2xl mx-auto leading-relaxed">
           Upload any 10m Sentinel-2 multispectral GeoTIFF or explore our precomputed NTRO benchmarking dataset to inspect sub-4m spatial detail and uncertainty maps.
         </p>
 
@@ -47,12 +47,12 @@ export const FinalCTA: React.FC = () => {
             onClick={handleDemo}
             className="w-full sm:w-auto font-mono"
           >
-            <Play className="h-4 w-4 mr-2 text-cyan-400" />
+            <Play className="h-4 w-4 mr-2 text-[#1677FF]" />
             Explore Precomputed Dataset
           </Button>
         </div>
 
-        <div className="mt-8 text-xs font-mono text-slate-500">
+        <div className="mt-8 text-xs font-mono text-[#6B7F95]">
           Supports .TIF / .TIFF • B02, B03, B04, B08 Bands • QGIS / GDAL Ready
         </div>
       </div>

@@ -22,11 +22,11 @@ export const GeoMap: React.FC<GeoMapProps> = ({
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <Card className="border-space-border bg-space-card p-4 sm:p-6 shadow-2xl">
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-space-border mb-4">
+    <Card className="border-blue-100 bg-white p-4 sm:p-6 shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-blue-100 mb-4">
         <div className="flex items-center gap-2">
-          <Globe className="h-5 w-5 text-cyan-400" />
-          <h3 className="text-base font-bold font-mono text-white">
+          <Globe className="h-5 w-5 text-[#1677FF]" />
+          <h3 className="text-base font-bold font-mono text-[#10233F]">
             GEOSPATIAL COVERAGE & AOI FOOTPRINT
           </h3>
         </div>
@@ -34,62 +34,62 @@ export const GeoMap: React.FC<GeoMapProps> = ({
       </div>
 
       {/* Stylized Geospatial Map Visualizer */}
-      <div className="relative h-72 sm:h-80 w-full rounded-xl border border-space-border overflow-hidden bg-[#0a1120] flex items-center justify-center">
+      <div className="relative h-72 sm:h-80 w-full rounded-xl border border-blue-100 overflow-hidden bg-white flex items-center justify-center">
         
         {/* Subtle coordinate grid lines */}
         <div className="absolute inset-0 bg-grid-pattern opacity-40"></div>
 
         {/* Global coordinate ticks */}
-        <div className="absolute top-2 left-3 font-mono text-[10px] text-slate-500">
+        <div className="absolute top-2 left-3 font-mono text-[10px] text-[#6B7F95]">
           NW: {bounds.maxLat.toFixed(4)}°N, {bounds.minLon.toFixed(4)}°E
         </div>
-        <div className="absolute top-2 right-3 font-mono text-[10px] text-slate-500">
+        <div className="absolute top-2 right-3 font-mono text-[10px] text-[#6B7F95]">
           NE: {bounds.maxLat.toFixed(4)}°N, {bounds.maxLon.toFixed(4)}°E
         </div>
-        <div className="absolute bottom-2 left-3 font-mono text-[10px] text-slate-500">
+        <div className="absolute bottom-2 left-3 font-mono text-[10px] text-[#6B7F95]">
           SW: {bounds.minLat.toFixed(4)}°N, {bounds.minLon.toFixed(4)}°E
         </div>
-        <div className="absolute bottom-2 right-3 font-mono text-[10px] text-slate-500">
+        <div className="absolute bottom-2 right-3 font-mono text-[10px] text-[#6B7F95]">
           SE: {bounds.minLat.toFixed(4)}°N, {bounds.maxLon.toFixed(4)}°E
         </div>
 
         {/* Footprint Bounding Box graphic */}
         <div className="relative z-10 w-64 h-48 border-2 border-cyan-400/80 bg-cyan-950/20 rounded-lg flex flex-col items-center justify-center p-4 shadow-[0_0_30px_rgba(0,240,255,0.2)]">
-          <div className="h-8 w-8 rounded-full bg-cyan-500/30 text-cyan-300 flex items-center justify-center mb-2 animate-pulse">
+          <div className="h-8 w-8 rounded-full bg-[#1677FF]/30 text-cyan-700 flex items-center justify-center mb-2 animate-pulse">
             <MapPin className="h-5 w-5" />
           </div>
-          <span className="font-mono text-xs font-bold text-white tracking-wider">
+          <span className="font-mono text-xs font-bold text-[#10233F] tracking-wider">
             SCENE FOOTPRINT
           </span>
-          <span className="font-mono text-[11px] text-cyan-300 mt-1">
+          <span className="font-mono text-[11px] text-cyan-700 mt-1">
             Center: {center[0].toFixed(4)}°N, {center[1].toFixed(4)}°E
           </span>
-          <span className="font-mono text-[10px] text-emerald-400 mt-1">
+          <span className="font-mono text-[10px] text-emerald-600 mt-1">
             Reconstructed: {nativeRes.toFixed(1)}m → {targetRes.toFixed(2)}m GSD
           </span>
         </div>
 
         {/* Radar beam circle */}
-        <div className="absolute w-80 h-80 rounded-full border border-cyan-500/20 pointer-events-none"></div>
+        <div className="absolute w-80 h-80 rounded-full border border-cyan-200 pointer-events-none"></div>
       </div>
 
       {/* Geospatial Metrics Bar */}
       <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
-        <div className="p-2.5 rounded bg-space-elevated border border-space-border">
-          <span className="text-slate-500 text-[10px] uppercase block">Coordinate System</span>
-          <span className="font-bold text-white">{crs}</span>
+        <div className="p-2.5 rounded bg-white border border-blue-100">
+          <span className="text-[#6B7F95] text-[10px] uppercase block">Coordinate System</span>
+          <span className="font-bold text-[#10233F]">{crs}</span>
         </div>
-        <div className="p-2.5 rounded bg-space-elevated border border-space-border">
-          <span className="text-slate-500 text-[10px] uppercase block">Center Latitude</span>
-          <span className="font-bold text-cyan-300">{center[0].toFixed(4)}° N</span>
+        <div className="p-2.5 rounded bg-white border border-blue-100">
+          <span className="text-[#6B7F95] text-[10px] uppercase block">Center Latitude</span>
+          <span className="font-bold text-cyan-700">{center[0].toFixed(4)}° N</span>
         </div>
-        <div className="p-2.5 rounded bg-space-elevated border border-space-border">
-          <span className="text-slate-500 text-[10px] uppercase block">Center Longitude</span>
-          <span className="font-bold text-cyan-300">{center[1].toFixed(4)}° E</span>
+        <div className="p-2.5 rounded bg-white border border-blue-100">
+          <span className="text-[#6B7F95] text-[10px] uppercase block">Center Longitude</span>
+          <span className="font-bold text-cyan-700">{center[1].toFixed(4)}° E</span>
         </div>
-        <div className="p-2.5 rounded bg-space-elevated border border-space-border">
-          <span className="text-slate-500 text-[10px] uppercase block">Affine Transform</span>
-          <span className="font-bold text-emerald-400">Strict GDAL Compliant</span>
+        <div className="p-2.5 rounded bg-white border border-blue-100">
+          <span className="text-[#6B7F95] text-[10px] uppercase block">Affine Transform</span>
+          <span className="font-bold text-emerald-600">Strict GDAL Compliant</span>
         </div>
       </div>
     </Card>

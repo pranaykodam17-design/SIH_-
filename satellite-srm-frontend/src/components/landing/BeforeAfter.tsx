@@ -44,7 +44,7 @@ export const BeforeAfter: React.FC = () => {
   return (
     <section
       id="before-after"
-      className="relative py-28 bg-[#020b18] border-t border-white/[0.06] overflow-hidden select-none"
+      className="relative py-28 bg-white border-t border-[#D7E6F4] overflow-hidden select-none"
     >
       {/* Background ambient lighting */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-cyan-600/[0.04] blur-[160px] pointer-events-none" />
@@ -52,21 +52,21 @@ export const BeforeAfter: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/25 mb-4">
-            <SlidersHorizontal size={14} className="text-cyan-400" />
-            <span className="font-mono text-xs font-semibold tracking-wider text-cyan-300 uppercase">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1677FF]/20 border border-cyan-400/25 mb-4">
+            <SlidersHorizontal size={14} className="text-[#1677FF]" />
+            <span className="font-mono text-xs font-semibold tracking-wider text-cyan-700 uppercase">
               SECTION 04 — BEFORE / AFTER
             </span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#10233F] tracking-tight mb-6">
             Interactive Image{' '}
             <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-500 bg-clip-text text-transparent">
               Comparison
             </span>
           </h2>
 
-          <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg text-[#425873] max-w-2xl mx-auto leading-relaxed">
             Drag the slider horizontally to inspect how SwinIR-SRM eliminates pixelation and recovers sub-pixel spatial boundaries.
           </p>
         </div>
@@ -74,15 +74,15 @@ export const BeforeAfter: React.FC = () => {
         {/* ── INTERACTIVE SLIDER CONTAINER ── */}
         <div className="relative max-w-5xl mx-auto">
           {/* Metrics Header Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-3 rounded-t-2xl bg-black/60 border-t border-x border-white/10 text-xs font-mono text-slate-300 backdrop-blur-md">
+          <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-3 rounded-t-2xl bg-white border-t border-x border-[#D7E6F4] text-xs font-mono text-[#425873] backdrop-blur-md">
             <div className="flex items-center gap-4">
-              <span className="text-slate-400">Dataset: Sentinel-2 L2A</span>
-              <span className="hidden sm:inline text-slate-600">•</span>
-              <span className="text-cyan-300">EPSG:32644 (UTM Zone 44N)</span>
+              <span className="text-[#526A82]">Dataset: Sentinel-2 L2A</span>
+              <span className="hidden sm:inline text-[#526A82]">•</span>
+              <span className="text-cyan-700">EPSG:32644 (UTM Zone 44N)</span>
             </div>
-            <div className="flex items-center gap-4 text-emerald-400 font-semibold">
+            <div className="flex items-center gap-4 text-emerald-600 font-semibold">
               <span>PSNR: +4.2 dB</span>
-              <span className="text-slate-600">•</span>
+              <span className="text-[#526A82]">•</span>
               <span>SSIM: 0.912</span>
             </div>
           </div>
@@ -90,7 +90,7 @@ export const BeforeAfter: React.FC = () => {
           {/* Interactive Split View Screen */}
           <div
             ref={containerRef}
-            className="relative aspect-[16/10] sm:aspect-[16/9] w-full rounded-b-2xl overflow-hidden border border-white/10 cursor-ew-resize shadow-[0_10px_50px_rgba(0,0,0,0.8)]"
+            className="relative aspect-[16/10] sm:aspect-[16/9] w-full rounded-b-2xl overflow-hidden border border-[#D7E6F4] cursor-ew-resize shadow-[0_10px_50px_rgba(0,0,0,0.8)]"
             onClick={(e) => handleMove(e.clientX)}
           >
             {/* 1. Super-Resolved Layer (Full Width Base Layer - Right Side) */}
@@ -120,8 +120,8 @@ export const BeforeAfter: React.FC = () => {
               className="absolute top-4 left-4 z-20 pointer-events-none transition-opacity duration-200"
               style={{ opacity: sliderPos < 15 ? 0 : 1 }}
             >
-              <div className="px-3.5 py-1.5 rounded-xl bg-black/80 backdrop-blur-md border border-white/20 text-xs font-mono text-slate-200 shadow-lg">
-                <span className="text-red-400 font-bold">LEFT: </span>
+              <div className="px-3.5 py-1.5 rounded-xl bg-white backdrop-blur-md border border-[#D7E6F4] text-xs font-mono text-[#425873] shadow-lg">
+                <span className="text-red-600 font-bold">LEFT: </span>
                 <span>Original Satellite (10m)</span>
               </div>
             </div>
@@ -131,8 +131,8 @@ export const BeforeAfter: React.FC = () => {
               className="absolute top-4 right-4 z-20 pointer-events-none transition-opacity duration-200"
               style={{ opacity: sliderPos > 85 ? 0 : 1 }}
             >
-              <div className="px-3.5 py-1.5 rounded-xl bg-[#020b18]/85 backdrop-blur-md border border-cyan-500/40 text-xs font-mono text-cyan-300 shadow-[0_0_20px_rgba(0,212,255,0.25)]">
-                <span className="text-cyan-400 font-bold">RIGHT: </span>
+              <div className="px-3.5 py-1.5 rounded-xl bg-white/85 backdrop-blur-md border border-cyan-200 text-xs font-mono text-cyan-700 shadow-[0_0_20px_rgba(0,212,255,0.25)]">
+                <span className="text-[#1677FF] font-bold">RIGHT: </span>
                 <span>Super-Resolved (3.3m)</span>
               </div>
             </div>
@@ -146,7 +146,7 @@ export const BeforeAfter: React.FC = () => {
               <div
                 onMouseDown={handlePointerDown}
                 onTouchStart={handlePointerDown}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#020b18] border-2 border-cyan-400 flex items-center justify-center text-cyan-300 shadow-[0_0_25px_rgba(0,212,255,0.6)] cursor-grab active:cursor-grabbing hover:scale-110 transition-transform pointer-events-auto"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border-2 border-cyan-400 flex items-center justify-center text-cyan-700 shadow-[0_0_25px_rgba(0,212,255,0.6)] cursor-grab active:cursor-grabbing hover:scale-110 transition-transform pointer-events-auto"
               >
                 <MoveHorizontal size={18} />
               </div>
@@ -155,7 +155,7 @@ export const BeforeAfter: React.FC = () => {
 
           {/* Quick Jump Split Preset Buttons */}
           <div className="flex items-center justify-center gap-3 mt-6">
-            <span className="text-xs font-mono text-slate-400">Jump to View:</span>
+            <span className="text-xs font-mono text-[#526A82]">Jump to View:</span>
             {[
               { label: 'Original (10m)', val: 95 },
               { label: '50/50 Split', val: 50 },
@@ -166,8 +166,8 @@ export const BeforeAfter: React.FC = () => {
                 onClick={() => setSliderPos(btn.val)}
                 className={`px-3 py-1 rounded-lg text-xs font-mono transition-all duration-200 ${
                   Math.abs(sliderPos - btn.val) < 8
-                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 shadow-[0_0_15px_rgba(0,212,255,0.2)]'
-                    : 'bg-white/[0.04] text-slate-400 hover:text-white border border-white/[0.06]'
+                    ? 'bg-[#1677FF]/20 text-cyan-700 border border-cyan-200 shadow-[0_0_15px_rgba(0,212,255,0.2)]'
+                    : 'bg-white text-[#526A82] hover:text-blue-700 border border-[#D7E6F4]'
                 }`}
               >
                 {btn.label}

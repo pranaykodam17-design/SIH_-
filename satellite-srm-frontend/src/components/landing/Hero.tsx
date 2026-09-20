@@ -16,11 +16,11 @@ export const Hero: React.FC = () => {
   return (
     <section
       id="hero"
-      className="relative min-h-screen w-full flex items-center pt-24 pb-16 lg:py-0 overflow-hidden bg-[#020b18]"
+      className="relative min-h-screen w-full flex items-center pt-24 pb-16 lg:py-0 overflow-hidden bg-white"
     >
       {/* Background Deep Space Radial Glows */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-blue-600/[0.07] blur-[140px] pointer-events-none" />
-      <div className="absolute top-1/2 right-1/4 w-[600px] h-[600px] rounded-full bg-cyan-500/[0.08] blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-[#1677FF]/[0.07] blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/2 right-1/4 w-[600px] h-[600px] rounded-full bg-[#1677FF]/[0.08] blur-[150px] pointer-events-none" />
       <div className="absolute bottom-10 left-1/3 w-[500px] h-[500px] rounded-full bg-indigo-600/[0.05] blur-[120px] pointer-events-none" />
 
       {/* Subtle coordinate / telemetry grid overlay */}
@@ -35,13 +35,13 @@ export const Hero: React.FC = () => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: 'easeOut' }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 w-fit mb-6 shadow-[0_0_20px_rgba(0,212,255,0.15)]"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1677FF]/20 border border-cyan-400/30 w-fit mb-6 shadow-[0_0_20px_rgba(0,212,255,0.15)]"
             >
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400" />
               </span>
-              <span className="font-mono text-[11px] font-semibold tracking-wider text-cyan-300 uppercase">
+              <span className="font-mono text-[11px] font-semibold tracking-wider text-cyan-700 uppercase">
                 SATELLITE INTELLIGENCE PLATFORM
               </span>
             </motion.div>
@@ -51,7 +51,7 @@ export const Hero: React.FC = () => {
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
-              className="text-4xl sm:text-5xl md:text-6xl xl:text-[68px] font-black text-white tracking-tight leading-[1.08] mb-6"
+              className="text-4xl sm:text-5xl md:text-6xl xl:text-[68px] font-black text-[#10233F] tracking-tight leading-[1.08] mb-6"
             >
               See Earth in{' '}
               <span className="block mt-1 bg-gradient-to-r from-cyan-300 via-blue-400 to-indigo-300 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(0,212,255,0.4)]">
@@ -67,7 +67,7 @@ export const Hero: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}
-              className="text-base sm:text-lg text-slate-300/90 leading-relaxed max-w-xl mb-8 font-normal"
+              className="text-base sm:text-lg text-[#425873]/90 leading-relaxed max-w-xl mb-8 font-normal"
             >
               AI-powered multispectral super-resolution for transforming satellite
               imagery into enhanced high-resolution spatial intelligence.
@@ -82,7 +82,7 @@ export const Hero: React.FC = () => {
             >
               <Link
                 to="/platform"
-                className="group inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-400 bg-[length:200%_auto] hover:bg-right text-slate-950 font-bold text-sm sm:text-base shadow-[0_0_30px_rgba(0,212,255,0.4)] hover:shadow-[0_0_45px_rgba(0,212,255,0.7)] transition-all duration-300 transform hover:-translate-y-0.5"
+                className="group inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-400 bg-[length:200%_auto] hover:bg-right text-[#10233F] font-bold text-sm sm:text-base shadow-[0_0_30px_rgba(0,212,255,0.4)] hover:shadow-[0_0_45px_rgba(0,212,255,0.7)] transition-all duration-300 transform hover:-translate-y-0.5"
               >
                 <span>Explore Platform</span>
                 <ArrowRight size={17} className="group-hover:translate-x-1.5 transition-transform duration-200" />
@@ -90,10 +90,10 @@ export const Hero: React.FC = () => {
 
               <button
                 onClick={scrollToHowItWorks}
-                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.09] text-slate-200 hover:text-white font-semibold text-sm sm:text-base border border-white/10 hover:border-white/20 backdrop-blur-md transition-all duration-200"
+                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white hover:bg-white text-[#425873] hover:text-[#10233F] font-semibold text-sm sm:text-base border border-[#D7E6F4] hover:border-[#D7E6F4] backdrop-blur-md transition-all duration-200"
               >
                 <span>How It Works</span>
-                <ChevronDown size={17} className="text-cyan-400" />
+                <ChevronDown size={17} className="text-[#1677FF]" />
               </button>
             </motion.div>
 
@@ -102,19 +102,19 @@ export const Hero: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="pt-6 border-t border-white/[0.08] grid grid-cols-3 gap-4"
+              className="pt-6 border-t border-[#D7E6F4] grid grid-cols-3 gap-4"
             >
               <div>
-                <div className="text-2xl font-black text-cyan-300 font-mono">3×</div>
-                <div className="text-xs text-slate-400 mt-0.5">Spatial Scale</div>
+                <div className="text-2xl font-black text-cyan-700 font-mono">3×</div>
+                <div className="text-xs text-[#526A82] mt-0.5">Spatial Scale</div>
               </div>
               <div>
-                <div className="text-2xl font-black text-white font-mono">10m→3m</div>
-                <div className="text-xs text-slate-400 mt-0.5">GSD Detail</div>
+                <div className="text-2xl font-black text-[#10233F] font-mono">10m→3m</div>
+                <div className="text-xs text-[#526A82] mt-0.5">GSD Detail</div>
               </div>
               <div>
-                <div className="text-2xl font-black text-indigo-300 font-mono">4-Band</div>
-                <div className="text-xs text-slate-400 mt-0.5">B, G, R, NIR</div>
+                <div className="text-2xl font-black text-indigo-700 font-mono">4-Band</div>
+                <div className="text-xs text-[#526A82] mt-0.5">B, G, R, NIR</div>
               </div>
             </motion.div>
           </div>

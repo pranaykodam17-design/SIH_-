@@ -16,16 +16,16 @@ export const ValidationDashboard: React.FC<ValidationDashboardProps> = ({ metric
     <div className="space-y-6">
       
       {/* Header Banner */}
-      <Card className="border-cyan-500/30 bg-space-card p-6 shadow-2xl">
+      <Card className="border-cyan-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <ShieldCheck className="h-5 w-5 text-cyan-400" />
-              <h2 className="text-xl font-bold font-mono text-white">
+              <ShieldCheck className="h-5 w-5 text-[#1677FF]" />
+              <h2 className="text-xl font-bold font-mono text-[#10233F]">
                 QUANTITATIVE MODEL VALIDATION SUITE
               </h2>
             </div>
-            <p className="text-xs font-mono text-slate-400">
+            <p className="text-xs font-mono text-[#526A82]">
               Benchmarking SRM SwinIR Reconstruction against Bicubic Interpolation Baseline (NTRO PS-26142)
             </p>
           </div>
@@ -48,22 +48,22 @@ export const ValidationDashboard: React.FC<ValidationDashboardProps> = ({ metric
       {/* Comprehensive Evaluation Table */}
       <div className="space-y-3">
         <div className="flex items-center justify-between px-1">
-          <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400">
+          <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-[#526A82]">
             Multi-Metric Benchmarking vs. Baseline
           </h3>
-          <span className="text-xs font-mono text-slate-500">Scale Factor: 3.0x (10m → 3.33m)</span>
+          <span className="text-xs font-mono text-[#6B7F95]">Scale Factor: 3.0x (10m → 3.33m)</span>
         </div>
         
         <MetricsTable metrics={metrics} />
       </div>
 
       {/* Scientific Analysis Context Card */}
-      <Card className="border-space-border bg-space-card p-6 font-mono text-xs">
-        <h4 className="text-white font-bold mb-2 flex items-center gap-2">
-          <Compass className="h-4 w-4 text-cyan-400" />
+      <Card className="border-blue-100 bg-white p-6 font-mono text-xs">
+        <h4 className="text-[#10233F] font-bold mb-2 flex items-center gap-2">
+          <Compass className="h-4 w-4 text-[#1677FF]" />
           <span>Scientific Analysis & Metric Interpretation</span>
         </h4>
-        <div className="space-y-2 text-slate-300 leading-relaxed font-sans text-xs">
+        <div className="space-y-2 text-[#425873] leading-relaxed font-sans text-xs">
           <p>
             <strong>Peak Signal-to-Noise Ratio (PSNR) & SSIM:</strong> Standard bicubic interpolation yields high nominal pixel-to-pixel numerical overlap (smooth blur), whereas deep learning generative models (SwinIR) introduce high-frequency edges and spectral gradient sharpness.
           </p>

@@ -26,22 +26,22 @@ const SPECTRAL_DATA = [
 ];
 
 const FEATURE_CLASSES = [
-  { name: 'Vegetation',   icon: <TreePine size={14} />,   pct: 42, color: 'bg-emerald-500', textColor: 'text-emerald-400' },
-  { name: 'Bare Soil',    icon: <Layers size={14} />,     pct: 31, color: 'bg-amber-500',   textColor: 'text-amber-400'   },
-  { name: 'Water Bodies', icon: <Droplets size={14} />,   pct: 12, color: 'bg-blue-500',    textColor: 'text-blue-400'    },
-  { name: 'Built-up',     icon: <Building size={14} />,   pct: 15, color: 'bg-slate-500',   textColor: 'text-slate-400'   },
+  { name: 'Vegetation',   icon: <TreePine size={14} />,   pct: 42, color: 'bg-emerald-500', textColor: 'text-emerald-600' },
+  { name: 'Bare Soil',    icon: <Layers size={14} />,     pct: 31, color: 'bg-amber-500',   textColor: 'text-amber-600'   },
+  { name: 'Water Bodies', icon: <Droplets size={14} />,   pct: 12, color: 'bg-[#1677FF]',    textColor: 'text-[#1677FF]'    },
+  { name: 'Built-up',     icon: <Building size={14} />,   pct: 15, color: 'bg-slate-500',   textColor: 'text-[#526A82]'   },
 ];
 
 const CUSTOM_TOOLTIP = ({ active, payload, label }: { active?: boolean; payload?: { name: string; value: number; color: string }[]; label?: string }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-[#0d1f38] border border-white/10 rounded-xl p-3 shadow-xl">
-      <div className="text-[11px] text-slate-400 mb-2">{label}</div>
+    <div className="bg-[#EEF7FF] border border-[#D7E6F4] rounded-xl p-3 shadow-xl">
+      <div className="text-[11px] text-[#526A82] mb-2">{label}</div>
       {payload.map((p) => (
         <div key={p.name} className="flex items-center gap-2 text-xs">
           <div className="w-2 h-2 rounded-full" style={{ background: p.color }} />
-          <span className="text-slate-400">{p.name}:</span>
-          <span className="font-bold text-white">{p.value}</span>
+          <span className="text-[#526A82]">{p.name}:</span>
+          <span className="font-bold text-[#10233F]">{p.value}</span>
         </div>
       ))}
     </div>
@@ -65,24 +65,24 @@ export const AnalysisPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#020c1b]">
+    <div className="min-h-screen bg-[#F5FAFF]">
       {/* Header */}
-      <div className="border-b border-white/[0.06] bg-[#071525]/60 backdrop-blur-sm">
+      <div className="border-b border-[#D7E6F4] bg-white/60 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center gap-4">
           <button
             onClick={() => navigate(-1)}
-            className="w-9 h-9 flex items-center justify-center rounded-xl text-slate-500 hover:text-slate-300 hover:bg-white/5 transition-all"
+            className="w-9 h-9 flex items-center justify-center rounded-xl text-[#6B7F95] hover:text-[#425873] hover:bg-white transition-all"
           >
             <ArrowLeft size={18} />
           </button>
           <div>
-            <h1 className="text-xl font-black text-white leading-none">Satellite Analysis</h1>
-            <p className="text-xs text-slate-500 mt-0.5">Post-enhancement quality and spectral evaluation</p>
+            <h1 className="text-xl font-black text-[#10233F] leading-none">Satellite Analysis</h1>
+            <p className="text-xs text-[#6B7F95] mt-0.5">Post-enhancement quality and spectral evaluation</p>
           </div>
 
           {activeJobs.length > 1 && (
-            <div className="flex items-center gap-1.5 ml-2 sm:ml-6 bg-white/[0.03] p-1 rounded-xl border border-white/[0.07]">
-              <span className="text-[11px] font-semibold text-slate-400 px-2">Batch:</span>
+            <div className="flex items-center gap-1.5 ml-2 sm:ml-6 bg-white p-1 rounded-xl border border-[#D7E6F4]">
+              <span className="text-[11px] font-semibold text-[#526A82] px-2">Batch:</span>
               {activeJobs.map((j, idx) => (
                 <button
                   key={j.jobId}
@@ -92,8 +92,8 @@ export const AnalysisPage: React.FC = () => {
                   }}
                   className={`px-2.5 py-1 text-xs font-mono rounded-lg transition-all ${
                     (selectedJobId || job.jobId) === j.jobId
-                      ? 'bg-cyan-500/25 text-cyan-300 border border-cyan-500/40 font-bold'
-                      : 'text-slate-500 hover:text-slate-300'
+                      ? 'bg-[#1677FF]/25 text-cyan-700 border border-cyan-200 font-bold'
+                      : 'text-[#6B7F95] hover:text-[#425873]'
                   }`}
                   title={j.metadata?.filename}
                 >
@@ -154,15 +154,15 @@ export const AnalysisPage: React.FC = () => {
         </div>
 
         {/* Tab bar */}
-        <div className="flex gap-1 p-1 bg-white/[0.03] border border-white/[0.07] rounded-xl w-fit">
+        <div className="flex gap-1 p-1 bg-white border border-[#D7E6F4] rounded-xl w-fit">
           {tabs.map(({ id, label, icon }) => (
             <button
               key={id}
               onClick={() => setActiveTab(id)}
               className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                 activeTab === id
-                  ? 'bg-cyan-500/15 border border-cyan-500/30 text-cyan-400'
-                  : 'text-slate-500 hover:text-slate-300'
+                  ? 'bg-[#1677FF]/20 border border-cyan-200 text-[#1677FF]'
+                  : 'text-[#6B7F95] hover:text-[#425873]'
               }`}
             >
               {icon}
@@ -177,10 +177,10 @@ export const AnalysisPage: React.FC = () => {
             <div className="lg:col-span-2 glass rounded-2xl p-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h2 className="text-base font-bold text-white">Spectral Reflectance Profile</h2>
-                  <p className="text-xs text-slate-500 mt-0.5">Band-by-band reflectance: original vs enhanced</p>
+                  <h2 className="text-base font-bold text-[#10233F]">Spectral Reflectance Profile</h2>
+                  <p className="text-xs text-[#6B7F95] mt-0.5">Band-by-band reflectance: original vs enhanced</p>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-slate-500">
+                <div className="flex items-center gap-3 text-xs text-[#6B7F95]">
                   <div className="flex items-center gap-1.5"><div className="w-3 h-0.5 bg-slate-500 rounded" /> Original</div>
                   <div className="flex items-center gap-1.5"><div className="w-3 h-0.5 bg-cyan-400 rounded" /> Enhanced</div>
                 </div>
@@ -195,9 +195,9 @@ export const AnalysisPage: React.FC = () => {
                   <Line type="monotone" dataKey="enhanced" stroke="#00d4ff" strokeWidth={2} dot={{ fill: '#00d4ff', r: 3 }} name="Enhanced" strokeDasharray="5 2" />
                 </LineChart>
               </ResponsiveContainer>
-              <div className="mt-4 flex items-start gap-2 px-3 py-2.5 bg-blue-500/[0.05] border border-blue-500/15 rounded-xl">
-                <Info size={12} className="text-blue-400 flex-shrink-0 mt-0.5" />
-                <p className="text-[11px] text-blue-400/75 leading-relaxed">
+              <div className="mt-4 flex items-start gap-2 px-3 py-2.5 bg-[#1677FF]/[0.05] border border-blue-500/15 rounded-xl">
+                <Info size={12} className="text-[#1677FF] flex-shrink-0 mt-0.5" />
+                <p className="text-[11px] text-[#1677FF]/75 leading-relaxed">
                   Enhanced imagery maintains spectral consistency with source data. Deviations within ±0.5% 
                   indicate high fidelity spectral reconstruction.
                 </p>
@@ -206,7 +206,7 @@ export const AnalysisPage: React.FC = () => {
 
             <div className="space-y-4">
               <div className="glass rounded-2xl p-5">
-                <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Spectral Metrics</div>
+                <div className="text-xs font-bold text-[#6B7F95] uppercase tracking-widest mb-4">Spectral Metrics</div>
                 <InlineMetric label="SAM (deg)" value={metrics.sam_deg.model.toFixed(2)} unit="°" color="amber" />
                 <InlineMetric label="ERGAS"     value={metrics.ergas.model.toFixed(1)}            color="amber" />
                 <InlineMetric label="NDVI MAE"  value={metrics.ndvi_mae.model.toFixed(4)}         color="default" />
@@ -214,7 +214,7 @@ export const AnalysisPage: React.FC = () => {
               </div>
 
               <div className="glass rounded-2xl p-5">
-                <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">vs Bicubic Baseline</div>
+                <div className="text-xs font-bold text-[#6B7F95] uppercase tracking-widest mb-3">vs Bicubic Baseline</div>
                 <div className="space-y-3">
                   {Object.entries({
                     'PSNR (dB)': { m: metrics.psnr_db.model, b: metrics.psnr_db.bicubic },
@@ -223,10 +223,10 @@ export const AnalysisPage: React.FC = () => {
                   }).map(([key, { m, b }]) => (
                     <div key={key}>
                       <div className="flex justify-between text-xs mb-1">
-                        <span className="text-slate-500">{key}</span>
+                        <span className="text-[#6B7F95]">{key}</span>
                         <div className="flex gap-3">
-                          <span className="text-slate-600">Bicubic: {b}</span>
-                          <span className="text-cyan-400 font-mono">Model: {m}</span>
+                          <span className="text-[#526A82]">Bicubic: {b}</span>
+                          <span className="text-[#1677FF] font-mono">Model: {m}</span>
                         </div>
                       </div>
                     </div>
@@ -265,15 +265,15 @@ export const AnalysisPage: React.FC = () => {
 
             {/* NDVI comparison image */}
             <div className="glass rounded-2xl p-5">
-              <h3 className="text-sm font-bold text-white mb-3">NDVI Comparison</h3>
-              <div className="rounded-xl overflow-hidden border border-white/[0.07]">
+              <h3 className="text-sm font-bold text-[#10233F] mb-3">NDVI Comparison</h3>
+              <div className="rounded-xl overflow-hidden border border-[#D7E6F4]">
                 <img
                   src={job.outputs?.ndviPreviewUrl ?? '/sample-satellite/ndvi_comparison.png'}
                   alt="NDVI Comparison"
                   className="w-full object-cover max-h-72"
                 />
               </div>
-              <p className="text-xs text-slate-600 mt-2 flex items-center gap-1.5">
+              <p className="text-xs text-[#526A82] mt-2 flex items-center gap-1.5">
                 <Info size={11} />
                 NDVI Pearson correlation: {metrics.ndvi_correlation.model.toFixed(4)} — spectral vegetation index consistency
               </p>
@@ -285,8 +285,8 @@ export const AnalysisPage: React.FC = () => {
         {activeTab === 'landcover' && (
           <div className="grid lg:grid-cols-2 gap-6 anim-fade-in">
             <div className="glass rounded-2xl p-6">
-              <h2 className="text-base font-bold text-white mb-2">Land Cover Classification</h2>
-              <p className="text-xs text-slate-500 mb-6">Estimated from enhanced imagery spectral signature</p>
+              <h2 className="text-base font-bold text-[#10233F] mb-2">Land Cover Classification</h2>
+              <p className="text-xs text-[#6B7F95] mb-6">Estimated from enhanced imagery spectral signature</p>
               <div className="space-y-4">
                 {FEATURE_CLASSES.map(({ name, icon, pct, color, textColor }) => (
                   <div key={name}>
@@ -294,7 +294,7 @@ export const AnalysisPage: React.FC = () => {
                       <div className={`flex items-center gap-2 text-sm font-medium ${textColor}`}>
                         {icon} {name}
                       </div>
-                      <span className="text-sm font-bold text-slate-300">{pct}%</span>
+                      <span className="text-sm font-bold text-[#425873]">{pct}%</span>
                     </div>
                     <div className="progress-track">
                       <div className={`${color} h-full rounded-full transition-all duration-700`} style={{ width: `${pct}%` }} />
@@ -302,16 +302,16 @@ export const AnalysisPage: React.FC = () => {
                   </div>
                 ))}
               </div>
-              <p className="mt-5 text-[11px] text-slate-600 flex items-start gap-1.5">
+              <p className="mt-5 text-[11px] text-[#526A82] flex items-start gap-1.5">
                 <Info size={11} className="mt-0.5 flex-shrink-0" />
                 Land cover estimates are model-inferred from spectral signatures. Ground-truth validation recommended.
               </p>
             </div>
 
             <div className="glass rounded-2xl p-6">
-              <h2 className="text-base font-bold text-white mb-2">Enhanced Image Preview</h2>
-              <p className="text-xs text-slate-500 mb-4">Super-resolved RGB composite</p>
-              <div className="rounded-xl overflow-hidden border border-white/[0.07]">
+              <h2 className="text-base font-bold text-[#10233F] mb-2">Enhanced Image Preview</h2>
+              <p className="text-xs text-[#6B7F95] mb-4">Super-resolved RGB composite</p>
+              <div className="rounded-xl overflow-hidden border border-[#D7E6F4]">
                 <img
                   src={resolveApiUrl(job.outputs?.srPreviewUrl) || '/sample-satellite/sr.png'}
                   alt="Enhanced SR"
@@ -320,14 +320,14 @@ export const AnalysisPage: React.FC = () => {
               </div>
               <div className="grid grid-cols-2 gap-3 mt-4">
                 {[
-                  { label: 'Detected Vegetation', val: '42%', color: 'text-emerald-400' },
-                  { label: 'Urban Structures',    val: '15%', color: 'text-blue-400'    },
-                  { label: 'Water Bodies',        val: '12%', color: 'text-cyan-400'    },
-                  { label: 'Bare Soil / Other',   val: '31%', color: 'text-amber-400'   },
+                  { label: 'Detected Vegetation', val: '42%', color: 'text-emerald-600' },
+                  { label: 'Urban Structures',    val: '15%', color: 'text-[#1677FF]'    },
+                  { label: 'Water Bodies',        val: '12%', color: 'text-[#1677FF]'    },
+                  { label: 'Bare Soil / Other',   val: '31%', color: 'text-amber-600'   },
                 ].map(({ label, val, color }) => (
-                  <div key={label} className="bg-white/[0.03] rounded-xl p-3 border border-white/[0.06]">
+                  <div key={label} className="bg-white rounded-xl p-3 border border-[#D7E6F4]">
                     <div className={`text-lg font-black ${color}`}>{val}</div>
-                    <div className="text-[11px] text-slate-600">{label}</div>
+                    <div className="text-[11px] text-[#526A82]">{label}</div>
                   </div>
                 ))}
               </div>
@@ -339,8 +339,8 @@ export const AnalysisPage: React.FC = () => {
         {activeTab === 'uncertainty' && (
           <div className="grid lg:grid-cols-2 gap-6 anim-fade-in">
             <div className="glass rounded-2xl p-6">
-              <h2 className="text-base font-bold text-white mb-2">Uncertainty Map</h2>
-              <p className="text-xs text-slate-500 mb-4">
+              <h2 className="text-base font-bold text-[#10233F] mb-2">Uncertainty Map</h2>
+              <p className="text-xs text-[#6B7F95] mb-4">
                 Spatial predictive variance from 10 Monte Carlo Dropout forward passes
               </p>
               <div className="rounded-xl overflow-hidden border border-violet-500/20">
@@ -351,9 +351,9 @@ export const AnalysisPage: React.FC = () => {
                 />
               </div>
               <div className="mt-3 flex items-start gap-2">
-                <div className="flex items-center gap-3 text-xs text-slate-500 flex-wrap">
+                <div className="flex items-center gap-3 text-xs text-[#6B7F95] flex-wrap">
                   <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded bg-blue-500" /> Low confidence
+                    <div className="w-3 h-3 rounded bg-[#1677FF]" /> Low confidence
                   </div>
                   <div className="flex items-center gap-1">
                     <div className="w-3 h-3 rounded bg-yellow-500" /> Medium confidence
@@ -367,13 +367,13 @@ export const AnalysisPage: React.FC = () => {
 
             <div className="space-y-4">
               <div className="glass rounded-2xl p-5">
-                <h3 className="text-sm font-bold text-white mb-4">What is Uncertainty?</h3>
-                <p className="text-sm text-slate-400 leading-relaxed mb-4">
+                <h3 className="text-sm font-bold text-[#10233F] mb-4">What is Uncertainty?</h3>
+                <p className="text-sm text-[#526A82] leading-relaxed mb-4">
                   SRM uses Monte Carlo Dropout to estimate spatial uncertainty. 
                   The model runs 10 stochastic inference passes with active dropout, 
                   then computes the pixel-wise standard deviation across passes.
                 </p>
-                <p className="text-sm text-slate-500 leading-relaxed">
+                <p className="text-sm text-[#6B7F95] leading-relaxed">
                   High-uncertainty regions indicate where the model has less confidence 
                   in the enhanced detail — typically at edges, texture boundaries, and 
                   spectrally ambiguous areas.
@@ -381,7 +381,7 @@ export const AnalysisPage: React.FC = () => {
               </div>
 
               <div className="glass rounded-2xl p-5">
-                <h3 className="text-sm font-bold text-white mb-3">Uncertainty Summary</h3>
+                <h3 className="text-sm font-bold text-[#10233F] mb-3">Uncertainty Summary</h3>
                 <InlineMetric label="MC Dropout passes"   value="10"      color="cyan"    />
                 <InlineMetric label="Mean confidence"     value="87.3%"   color="emerald" />
                 <InlineMetric label="High-uncertainty px" value="4.2%"    color="amber"   />
@@ -389,8 +389,8 @@ export const AnalysisPage: React.FC = () => {
               </div>
 
               <div className="flex items-start gap-2.5 px-4 py-3 bg-amber-500/[0.06] border border-amber-500/15 rounded-xl">
-                <Info size={13} className="text-amber-400 flex-shrink-0 mt-0.5" />
-                <p className="text-[11px] text-amber-400/80 leading-relaxed">
+                <Info size={13} className="text-amber-600 flex-shrink-0 mt-0.5" />
+                <p className="text-[11px] text-amber-600/80 leading-relaxed">
                   Always validate enhanced imagery in high-uncertainty regions against 
                   available high-resolution reference data before operational use.
                 </p>
@@ -400,8 +400,8 @@ export const AnalysisPage: React.FC = () => {
         )}
 
         {/* Metadata footer */}
-        <div className="glass rounded-2xl p-5 border border-white/[0.06]">
-          <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Image Metadata</div>
+        <div className="glass rounded-2xl p-5 border border-[#D7E6F4]">
+          <div className="text-xs font-bold text-[#6B7F95] uppercase tracking-widest mb-4">Image Metadata</div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-3">
             {[
               { label: 'Filename',    value: meta?.filename         ?? 'S2A_agriculture.tif'        },
@@ -412,8 +412,8 @@ export const AnalysisPage: React.FC = () => {
               { label: 'Acquired',    value: meta?.acquisitionDate  ?? '2026-05-15'                 },
             ].map(({ label, value }) => (
               <div key={label}>
-                <div className="text-[10px] text-slate-600 mb-0.5">{label}</div>
-                <div className="text-xs text-slate-400 font-mono truncate" title={value}>{value}</div>
+                <div className="text-[10px] text-[#526A82] mb-0.5">{label}</div>
+                <div className="text-xs text-[#526A82] font-mono truncate" title={value}>{value}</div>
               </div>
             ))}
           </div>

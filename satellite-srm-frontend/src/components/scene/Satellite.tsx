@@ -45,7 +45,10 @@ export const Satellite: React.FC<SatelliteProps> = ({
   }, [orbitInclination, rotationYDeg]);
 
   useFrame(({ clock }) => {
-    const t = clock.getElapsedTime() * orbitSpeed;
+    // Add an initial offset of ~2.5 radians to start the satellite in the top-left area
+    // from the camera's perspective, avoiding initial overlap with the Earth.
+    const timeOffset = 2.5; 
+    const t = (clock.getElapsedTime() * orbitSpeed) + timeOffset;
 
     // 1. Calculate smooth elliptical position
     const x = a * Math.cos(t);

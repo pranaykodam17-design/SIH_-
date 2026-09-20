@@ -54,7 +54,7 @@ export const Pipeline: React.FC = () => {
       tag: 'Step 02',
       icon: <Sliders size={22} />,
       color: 'from-cyan-500/20 to-teal-500/10',
-      borderColor: 'border-cyan-500/30',
+      borderColor: 'border-cyan-200',
       glowColor: 'shadow-[0_0_25px_rgba(0,212,255,0.35)]',
       description:
         'Normalizes dynamic range, harmonizes cross-band co-registration, and isolates spectral channels (Blue, Green, Red, Near-Infrared).',
@@ -120,7 +120,7 @@ export const Pipeline: React.FC = () => {
   return (
     <section
       id="approach"
-      className="relative py-28 bg-[#020b18] border-t border-white/[0.06] overflow-hidden"
+      className="relative py-28 bg-white border-t border-[#D7E6F4] overflow-hidden"
     >
       {/* Dynamic Background Flows */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[400px] bg-cyan-600/[0.04] blur-[150px] pointer-events-none" />
@@ -128,21 +128,21 @@ export const Pipeline: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-20">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/25 mb-4">
-            <Workflow size={14} className="text-cyan-400" />
-            <span className="font-mono text-xs font-semibold tracking-wider text-cyan-300 uppercase">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1677FF]/20 border border-cyan-400/25 mb-4">
+            <Workflow size={14} className="text-[#1677FF]" />
+            <span className="font-mono text-xs font-semibold tracking-wider text-cyan-700 uppercase">
               SECTION 02 — OUR APPROACH
             </span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#10233F] tracking-tight mb-6">
             End-to-End{' '}
             <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-500 bg-clip-text text-transparent">
               Super-Resolution Pipeline
             </span>
           </h2>
 
-          <p className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg text-[#526A82] max-w-2xl mx-auto leading-relaxed">
             From raw multispectral GeoTIFF telemetry to sub-4m spatial clarity, powered by state-of-the-art transformer vision architectures.
           </p>
         </div>
@@ -169,8 +169,8 @@ export const Pipeline: React.FC = () => {
                   onClick={() => setActiveStage(stage.id)}
                   className={`cursor-pointer rounded-2xl p-5 transition-all duration-300 backdrop-blur-xl border ${
                     isSelected
-                      ? `bg-white/[0.09] ${stage.borderColor} ${stage.glowColor} -translate-y-2`
-                      : 'bg-white/[0.03] border-white/[0.08] hover:border-white/20 hover:bg-white/[0.05]'
+                      ? `bg-white ${stage.borderColor} ${stage.glowColor} -translate-y-2`
+                      : 'bg-white border-[#D7E6F4] hover:border-[#D7E6F4] hover:bg-white'
                   }`}
                 >
                   {/* Top: Icon + Indicator */}
@@ -178,25 +178,25 @@ export const Pipeline: React.FC = () => {
                     <div
                       className={`w-12 h-12 rounded-xl flex items-center justify-center transition-transform duration-300 ${
                         isSelected
-                          ? 'bg-cyan-500/20 text-cyan-300 scale-110'
-                          : 'bg-white/[0.05] text-slate-400'
+                          ? 'bg-[#1677FF]/20 text-cyan-700 scale-110'
+                          : 'bg-white text-[#526A82]'
                       }`}
                     >
                       {stage.icon}
                     </div>
-                    <span className="font-mono text-[11px] font-bold text-slate-500">
+                    <span className="font-mono text-[11px] font-bold text-[#6B7F95]">
                       {stage.tag}
                     </span>
                   </div>
 
-                  <h3 className="text-base font-bold text-white mb-1 leading-snug">
+                  <h3 className="text-base font-bold text-[#10233F] mb-1 leading-snug">
                     {stage.title}
                   </h3>
-                  <p className="text-xs text-slate-400 font-mono mb-3">
+                  <p className="text-xs text-[#526A82] font-mono mb-3">
                     {stage.subtitle}
                   </p>
 
-                  <div className="flex items-center gap-1 text-[11px] font-medium text-cyan-400">
+                  <div className="flex items-center gap-1 text-[11px] font-medium text-[#1677FF]">
                     <span>Inspect</span>
                     <ChevronRight size={12} />
                   </div>
@@ -217,23 +217,23 @@ export const Pipeline: React.FC = () => {
                 onClick={() => setActiveStage(stage.id)}
                 className={`relative z-10 flex items-start gap-4 rounded-2xl p-5 border backdrop-blur-md cursor-pointer transition-all ${
                   isSelected
-                    ? `bg-white/[0.08] ${stage.borderColor} ${stage.glowColor}`
-                    : 'bg-white/[0.03] border-white/[0.08]'
+                    ? `bg-white ${stage.borderColor} ${stage.glowColor}`
+                    : 'bg-white border-[#D7E6F4]'
                 }`}
               >
                 <div
                   className={`w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center ${
-                    isSelected ? 'bg-cyan-500/25 text-cyan-300' : 'bg-white/[0.05] text-slate-400'
+                    isSelected ? 'bg-[#1677FF]/25 text-cyan-700' : 'bg-white text-[#526A82]'
                   }`}
                 >
                   {stage.icon}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1">
-                    <h3 className="text-base font-bold text-white truncate">{stage.title}</h3>
-                    <span className="font-mono text-[10px] text-slate-400">{stage.tag}</span>
+                    <h3 className="text-base font-bold text-[#10233F] truncate">{stage.title}</h3>
+                    <span className="font-mono text-[10px] text-[#526A82]">{stage.tag}</span>
                   </div>
-                  <p className="text-xs text-slate-400">{stage.subtitle}</p>
+                  <p className="text-xs text-[#526A82]">{stage.subtitle}</p>
                 </div>
               </div>
             );
@@ -249,18 +249,18 @@ export const Pipeline: React.FC = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
-              className="rounded-3xl bg-gradient-to-r from-white/[0.06] via-white/[0.04] to-cyan-500/[0.03] border border-cyan-500/30 p-8 sm:p-10 backdrop-blur-2xl shadow-[0_0_50px_rgba(0,212,255,0.06)]"
+              className="rounded-3xl bg-gradient-to-r from-white/[0.06] via-white/[0.04] to-cyan-500/[0.03] border border-cyan-200 p-8 sm:p-10 backdrop-blur-2xl shadow-[0_0_50px_rgba(0,212,255,0.06)]"
             >
               <div className="grid lg:grid-cols-12 gap-8 items-center">
                 {/* Left: Stage summary & details (7 cols) */}
                 <div className="lg:col-span-7">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 font-mono text-xs font-semibold mb-3">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#1677FF]/20 border border-cyan-400/30 text-cyan-700 font-mono text-xs font-semibold mb-3">
                     <Activity size={12} /> {current.tag} Active Focus
                   </div>
-                  <h3 className="text-2xl sm:text-3xl font-black text-white mb-3">
+                  <h3 className="text-2xl sm:text-3xl font-black text-[#10233F] mb-3">
                     {current.title}
                   </h3>
-                  <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
+                  <p className="text-[#425873] text-sm sm:text-base leading-relaxed mb-6">
                     {current.description}
                   </p>
 
@@ -268,12 +268,12 @@ export const Pipeline: React.FC = () => {
                     {current.specs.map((spec, i) => (
                       <div
                         key={i}
-                        className="rounded-xl bg-black/40 border border-white/[0.08] p-3.5"
+                        className="rounded-xl bg-white border border-[#D7E6F4] p-3.5"
                       >
-                        <div className="text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-1">
+                        <div className="text-[11px] font-mono text-[#526A82] uppercase tracking-wider mb-1">
                           {spec.label}
                         </div>
-                        <div className="text-sm sm:text-base font-bold text-white font-mono">
+                        <div className="text-sm sm:text-base font-bold text-[#10233F] font-mono">
                           {spec.value}
                         </div>
                       </div>
@@ -282,30 +282,30 @@ export const Pipeline: React.FC = () => {
                 </div>
 
                 {/* Right: Technical Diagram Badge (5 cols) */}
-                <div className="lg:col-span-5 rounded-2xl bg-black/50 border border-cyan-500/20 p-6 flex flex-col justify-between">
-                  <div className="flex items-center justify-between text-xs font-mono text-slate-400 pb-3 border-b border-white/10 mb-4">
+                <div className="lg:col-span-5 rounded-2xl bg-white border border-cyan-200 p-6 flex flex-col justify-between">
+                  <div className="flex items-center justify-between text-xs font-mono text-[#526A82] pb-3 border-b border-[#D7E6F4] mb-4">
                     <span>STATUS: OPERATIONAL</span>
-                    <span className="text-cyan-400">LATENCY: ~2.4s / TILE</span>
+                    <span className="text-[#1677FF]">LATENCY: ~2.4s / TILE</span>
                   </div>
 
-                  <div className="space-y-3 font-mono text-xs text-slate-300">
+                  <div className="space-y-3 font-mono text-xs text-[#425873]">
                     <div className="flex items-center justify-between">
-                      <span className="text-slate-500">Pipeline Flow:</span>
-                      <span className="text-cyan-300">GeoTIFF → Tensors → SR GeoTIFF</span>
+                      <span className="text-[#6B7F95]">Pipeline Flow:</span>
+                      <span className="text-cyan-700">GeoTIFF → Tensors → SR GeoTIFF</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-slate-500">Inference Core:</span>
-                      <span className="text-white">PyTorch + CUDA Acceleration</span>
+                      <span className="text-[#6B7F95]">Inference Core:</span>
+                      <span className="text-[#10233F]">PyTorch + CUDA Acceleration</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-slate-500">Coordinate Sync:</span>
-                      <span className="text-emerald-400">EPSG:32644 (UTM 44N)</span>
+                      <span className="text-[#6B7F95]">Coordinate Sync:</span>
+                      <span className="text-emerald-600">EPSG:32644 (UTM 44N)</span>
                     </div>
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
-                    <span className="text-xs text-slate-400">SwinIR Deep Model</span>
-                    <span className="px-2.5 py-1 rounded bg-cyan-400/20 text-cyan-300 text-xs font-mono font-bold">
+                  <div className="mt-6 pt-4 border-t border-[#D7E6F4] flex items-center justify-between">
+                    <span className="text-xs text-[#526A82]">SwinIR Deep Model</span>
+                    <span className="px-2.5 py-1 rounded bg-cyan-400/20 text-cyan-700 text-xs font-mono font-bold">
                       v1.4 Production
                     </span>
                   </div>

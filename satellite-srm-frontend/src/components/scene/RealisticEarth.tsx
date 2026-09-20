@@ -9,20 +9,17 @@ const PhotorealisticGlobe: React.FC = () => {
   const earthRef = useRef<THREE.Mesh>(null);
   const cloudsRef = useRef<THREE.Mesh>(null);
 
-  // Load real NASA textures locally from public/textures/earth/
-  const [dayMap, nightMap, cloudsMap, specularMap] = useTexture([
-    '/textures/earth/earth_day.jpg',
-    '/textures/earth/earth_night.jpg',
-    '/textures/earth/earth_clouds.png',
-    '/textures/earth/earth_specular.jpg',
+  // Load new authentic, vibrant Blue Marble daylight textures
+  const [dayMap, cloudsMap, specularMap] = useTexture([
+    '/textures/earth/earth_day_daylight.jpg', // Renamed again to bust cache for the new NASA Blue Marble texture
+    '/textures/earth/earth_clouds_vivid.png',
+    '/textures/earth/earth_specular_vivid.jpg',
   ]);
 
   useEffect(() => {
     dayMap.colorSpace = THREE.SRGBColorSpace;
-    nightMap.colorSpace = THREE.SRGBColorSpace;
     dayMap.needsUpdate = true;
-    nightMap.needsUpdate = true;
-  }, [dayMap, nightMap]);
+  }, [dayMap]);
 
   useFrame((_, delta) => {
     // Smooth planetary rotation
@@ -37,30 +34,28 @@ const PhotorealisticGlobe: React.FC = () => {
 
   return (
     <group rotation={[0.41, 0, 0.23] /* Realistic 23.4° axial tilt */}>
-      {/* 1. Main Terrestrial Earth Globe (Vibrant continents, deep oceans, crisp city lights) */}
-      <mesh ref={earthRef} castShadow receiveShadow>
+      {/* 1. Main Terrestrial Earth Globe (Vibrant continents, bright blue oceans) */}
+      <mesh ref={earthRef} castShadow receiveShadow rotation={[0, Math.PI * 1.15, 0]}>
         <sphereGeometry args={[1.0, 64, 64]} />
         <meshStandardMaterial
           map={dayMap}
-          roughnessMap={specularMap}
-          roughness={0.48} // Refined for clearer contrast and vivid land colors
-          metalness={0.06}
-          emissiveMap={nightMap}
-          emissive="#ffe4b5" // Warm glowing metropolitan centers on night side
-          emissiveIntensity={0.85} // Clear, noticeable city lights
+          // Removed roughnessMap to ensure raw bright texture colors pass through purely
+          roughness={0.8} // Diffuse reflection
+          metalness={0.05} // Very subtle to prevent dark specular angles
+          color="#ffffff"
         />
       </mesh>
 
-      {/* 2. Real NASA Cloud Layer (Crisp, defined cloud patterns) */}
-      <mesh ref={cloudsRef}>
+      {/* 2. Real NASA Cloud Layer (Crisp, defined white cloud patterns) */}
+      <mesh ref={cloudsRef} rotation={[0, Math.PI * 1.15, 0]}>
         <sphereGeometry args={[1.012, 64, 64]} />
         <meshStandardMaterial
           map={cloudsMap}
           transparent={true}
-          opacity={0.62} // Increased visibility of realistic swirling weather patterns
-          blending={THREE.NormalBlending}
+          opacity={0.4} // Subtle, transparent clouds that don't obscure continents
+          blending={THREE.AdditiveBlending} // Ensures clouds are bright white and never cast dark artifacts
           depthWrite={false}
-          roughness={0.8}
+          roughness={1.0}
         />
       </mesh>
 

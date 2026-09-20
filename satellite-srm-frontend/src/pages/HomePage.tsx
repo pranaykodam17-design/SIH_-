@@ -70,7 +70,7 @@ const USE_CASES = [
     icon: <Leaf size={18} />,
     title: 'Agriculture',
     desc: 'Crop health monitoring, field boundary detection, yield prediction',
-    color: 'text-emerald-400',
+    color: 'text-emerald-600',
     bg: 'bg-emerald-500/10',
     border: 'border-emerald-500/20',
     image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=75&auto=format',
@@ -81,8 +81,8 @@ const USE_CASES = [
     icon: <Building2 size={18} />,
     title: 'Urban Planning',
     desc: 'Building footprint detection, road mapping, urban expansion analysis',
-    color: 'text-blue-400',
-    bg: 'bg-blue-500/10',
+    color: 'text-[#1677FF]',
+    bg: 'bg-[#1677FF]/10',
     border: 'border-blue-500/20',
     image: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400&q=75&auto=format',
     tags: ['Buildings', 'Roads', 'Density'],
@@ -92,8 +92,8 @@ const USE_CASES = [
     icon: <Flame size={18} />,
     title: 'Disaster Response',
     desc: 'Flood extent mapping, damage assessment, emergency response support',
-    color: 'text-amber-400',
-    bg: 'bg-amber-500/10',
+    color: 'text-amber-600',
+    bg: 'bg-amber-500/20',
     border: 'border-amber-500/20',
     image: 'https://images.unsplash.com/photo-1547683905-f686c993aae5?w=400&q=75&auto=format',
     tags: ['Flood', 'Damage', 'Response'],
@@ -103,9 +103,9 @@ const USE_CASES = [
     icon: <Globe size={18} />,
     title: 'Environment',
     desc: 'Land-cover classification, deforestation tracking, water body monitoring',
-    color: 'text-cyan-400',
-    bg: 'bg-cyan-500/10',
-    border: 'border-cyan-500/20',
+    color: 'text-[#1677FF]',
+    bg: 'bg-[#1677FF]/20',
+    border: 'border-cyan-200',
     image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&q=75&auto=format',
     tags: ['Land Cover', 'Forests', 'Water'],
     to: '/use-cases',
@@ -113,10 +113,10 @@ const USE_CASES = [
 ];
 
 const STATS = [
-  { value: 3,    suffix: '×',     label: 'Spatial Enhancement',    color: 'text-cyan-400' },
-  { value: 10,   suffix: 'm→3m',  label: 'GSD Improvement',        color: 'text-blue-400' },
+  { value: 3,    suffix: '×',     label: 'Spatial Enhancement',    color: 'text-[#1677FF]' },
+  { value: 10,   suffix: 'm→3m',  label: 'GSD Improvement',        color: 'text-[#1677FF]' },
   { value: 4,    suffix: ' bands', label: 'Multispectral',         color: 'text-violet-400' },
-  { value: 99.8, suffix: '%',     label: 'Geospatial Consistency', color: 'text-emerald-400' },
+  { value: 99.8, suffix: '%',     label: 'Geospatial Consistency', color: 'text-emerald-600' },
 ];
 
 export const HomePage: React.FC = () => {
@@ -124,7 +124,7 @@ export const HomePage: React.FC = () => {
   const [heroLoaded, setHeroLoaded] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#020c1b] overflow-x-hidden">
+    <div className="min-h-screen bg-[#F5FAFF] overflow-x-hidden">
       {/* ── HERO ── */}
       <section className="relative min-h-[90vh] flex items-center">
         {/* Background */}
@@ -135,15 +135,15 @@ export const HomePage: React.FC = () => {
             className={`w-full h-full object-cover transition-opacity duration-1000 ${heroLoaded ? 'opacity-30' : 'opacity-0'}`}
             onLoad={() => setHeroLoaded(true)}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#020c1b]/60 via-[#020c1b]/40 to-[#020c1b]" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#020c1b]/80 via-transparent to-[#020c1b]/80" />
+          <div className="absolute inset-0 bg-gradient-to-b from-srm-surface via-srm-base to-srm-elevated" />
+          <div className="absolute inset-0 bg-gradient-to-r from-srm-surface via-transparent to-srm-elevated" />
         </div>
 
         {/* Animated dot grid */}
         <div className="absolute inset-0 bg-dots opacity-30" />
 
         {/* Glowing orb */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-cyan-500/[0.04] blur-3xl pointer-events-none" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#1677FF]/[0.04] blur-3xl pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16 grid lg:grid-cols-2 gap-12 items-center">
           {/* Left: Text */}
@@ -153,12 +153,12 @@ export const HomePage: React.FC = () => {
               Deep Learning for a Clearer Earth
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-[1.08] anim-fade-up delay-1">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#10233F] mb-6 leading-[1.08] anim-fade-up delay-1">
               From Pixels to<br />
               <span className="text-gradient">A Clearer Planet</span>
             </h1>
 
-            <p className="text-base sm:text-lg text-slate-400 leading-relaxed mb-8 max-w-lg anim-fade-up delay-2">
+            <p className="text-base sm:text-lg text-[#526A82] leading-relaxed mb-8 max-w-lg anim-fade-up delay-2">
               Transform 10m Sentinel-2 satellite imagery into sharper, analysis-ready maps 
               using advanced deep learning and generative AI — while preserving full 
               spatial and spectral integrity.
@@ -188,8 +188,8 @@ export const HomePage: React.FC = () => {
                 { icon: <Shield size={13} />,     text: 'Spectrally Consistent' },
                 { icon: <Globe size={13} />,      text: 'Real-World Impact' },
               ].map(({ icon, text }) => (
-                <div key={text} className="flex items-center gap-1.5 text-sm text-slate-400">
-                  <span className="text-cyan-500">{icon}</span>
+                <div key={text} className="flex items-center gap-1.5 text-sm text-[#526A82]">
+                  <span className="text-[#1677FF]">{icon}</span>
                   {text}
                 </div>
               ))}
@@ -198,7 +198,7 @@ export const HomePage: React.FC = () => {
 
           {/* Right: Comparison preview */}
           <div className="hidden lg:block anim-fade-up delay-2">
-            <div className="relative rounded-2xl overflow-hidden border border-white/[0.08] shadow-[0_0_60px_rgba(0,212,255,0.1)] anim-float">
+            <div className="relative rounded-2xl overflow-hidden border border-[#D7E6F4] shadow-[0_0_60px_rgba(0,212,255,0.1)] anim-float">
               {/* Before/After split */}
               <div className="relative h-72 overflow-hidden">
                 {/* After (enhanced) — left half */}
@@ -215,31 +215,31 @@ export const HomePage: React.FC = () => {
                     className="absolute inset-0 h-full object-cover"
                     style={{ width: '200%', maxWidth: '200%', left: '-100%' }}
                   />
-                  <div className="absolute inset-0 bg-[#020c1b]/20 backdrop-blur-[1px]" />
+                  <div className="absolute inset-0 bg-[#F5FAFF]/20 backdrop-blur-[1px]" />
                 </div>
 
                 {/* Divider */}
                 <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-0.5 bg-gradient-to-b from-transparent via-cyan-400 to-transparent shadow-[0_0_10px_rgba(0,212,255,0.6)] z-10" />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#020c1b] border-2 border-cyan-400 flex items-center justify-center z-20 shadow-[0_0_16px_rgba(0,212,255,0.5)]">
-                  <span className="text-cyan-400 text-xs font-bold">◂▸</span>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#F5FAFF] border-2 border-cyan-400 flex items-center justify-center z-20 shadow-[0_0_16px_rgba(0,212,255,0.5)]">
+                  <span className="text-[#1677FF] text-xs font-bold">◂▸</span>
                 </div>
 
                 {/* Labels */}
                 <div className="absolute top-3 left-3 z-20 tag-cyan text-[10px]">SRM · &lt;4m</div>
-                <div className="absolute top-3 right-3 z-20 px-2 py-1 bg-[#020c1b]/70 border border-white/10 rounded-lg text-[10px] text-slate-400">Sentinel-2 · 10m</div>
+                <div className="absolute top-3 right-3 z-20 px-2 py-1 bg-[#F5FAFF]/70 border border-[#D7E6F4] rounded-lg text-[10px] text-[#526A82]">Sentinel-2 · 10m</div>
               </div>
 
               {/* Bottom bar */}
-              <div className="flex items-center justify-between px-4 py-3 bg-[#071525] border-t border-white/[0.06]">
+              <div className="flex items-center justify-between px-4 py-3 bg-white border-t border-[#D7E6F4]">
                 <div className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                  <span className="text-xs text-slate-400 font-mono">SwinIR-SRM · NTRO PS-26142</span>
+                  <span className="text-xs text-[#526A82] font-mono">SwinIR-SRM · NTRO PS-26142</span>
                 </div>
-                <span className="text-xs font-bold text-cyan-400 font-mono">3× SR</span>
+                <span className="text-xs font-bold text-[#1677FF] font-mono">3× SR</span>
               </div>
             </div>
 
-            <p className="text-center text-xs text-slate-600 mt-3">
+            <p className="text-center text-xs text-[#526A82] mt-3">
               Actual model output — Sentinel-2 Agriculture (Hyderabad, 2026)
             </p>
           </div>
@@ -247,7 +247,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* ── STATS BAR ── */}
-      <section className="border-y border-white/[0.06] bg-[#071525]/50">
+      <section className="border-y border-[#D7E6F4] bg-white/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {STATS.map(({ value, suffix, label, color }) => (
@@ -255,7 +255,7 @@ export const HomePage: React.FC = () => {
                 <div className={`text-3xl font-black mb-1 ${color} anim-counter`}>
                   <Counter to={value} suffix={suffix} />
                 </div>
-                <div className="text-xs text-slate-600">{label}</div>
+                <div className="text-xs text-[#526A82]">{label}</div>
               </div>
             ))}
           </div>
@@ -267,8 +267,8 @@ export const HomePage: React.FC = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
             <div className="section-eyebrow justify-center mb-4">Workflow</div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">How SRM Works</h2>
-            <p className="text-slate-500 max-w-xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-black text-[#10233F] mb-4">How SRM Works</h2>
+            <p className="text-[#6B7F95] max-w-xl mx-auto">
               Four simple steps from raw Sentinel-2 imagery to analysis-ready enhanced maps
             </p>
           </div>
@@ -283,16 +283,16 @@ export const HomePage: React.FC = () => {
                   key={step}
                   className={`relative glass-hover p-6 rounded-2xl border ${border} anim-fade-up delay-${i + 1}`}
                 >
-                  <div className={`w-12 h-12 rounded-xl mb-4 flex items-center justify-center text-white bg-gradient-to-br ${color} border ${border}`}>
+                  <div className={`w-12 h-12 rounded-xl mb-4 flex items-center justify-center text-[#10233F] bg-gradient-to-br ${color} border ${border}`}>
                     {icon}
                   </div>
-                  <div className="text-[10px] font-bold text-slate-600 font-mono mb-1">{step}</div>
-                  <h3 className="text-base font-bold text-white mb-2">{title}</h3>
-                  <p className="text-sm text-slate-500 leading-relaxed">{desc}</p>
+                  <div className="text-[10px] font-bold text-[#526A82] font-mono mb-1">{step}</div>
+                  <h3 className="text-base font-bold text-[#10233F] mb-2">{title}</h3>
+                  <p className="text-sm text-[#6B7F95] leading-relaxed">{desc}</p>
                   {i < HOW_IT_WORKS.length - 1 && (
                     <ChevronRight
                       size={16}
-                      className="hidden lg:block absolute -right-3 top-10 text-slate-700 z-10"
+                      className="hidden lg:block absolute -right-3 top-10 text-[#425873] z-10"
                     />
                   )}
                 </div>
@@ -303,14 +303,14 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* ── USE CASES ── */}
-      <section className="py-24 px-4 sm:px-6 bg-[#071525]/50">
+      <section className="py-24 px-4 sm:px-6 bg-white/50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
             <div className="section-eyebrow justify-center mb-4">Applications</div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
+            <h2 className="text-3xl sm:text-4xl font-black text-[#10233F] mb-4">
               Explore the Possibilities
             </h2>
-            <p className="text-slate-500 max-w-xl mx-auto">
+            <p className="text-[#6B7F95] max-w-xl mx-auto">
               Enhanced satellite imagery unlocks capabilities across multiple critical sectors
             </p>
           </div>
@@ -329,7 +329,7 @@ export const HomePage: React.FC = () => {
                     alt={title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#020c1b] via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-srm-surface via-transparent to-transparent" />
                   <div className={`absolute top-3 left-3 w-8 h-8 rounded-lg ${bg} border ${border} flex items-center justify-center ${color}`}>
                     {icon}
                   </div>
@@ -337,8 +337,8 @@ export const HomePage: React.FC = () => {
 
                 {/* Content */}
                 <div className="p-4">
-                  <h3 className="text-base font-bold text-white mb-2">{title}</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed mb-3">{desc}</p>
+                  <h3 className="text-base font-bold text-[#10233F] mb-2">{title}</h3>
+                  <p className="text-xs text-[#6B7F95] leading-relaxed mb-3">{desc}</p>
                   <div className="flex flex-wrap gap-1 mb-3">
                     {tags.map((tag) => (
                       <span key={tag} className={`text-[10px] px-1.5 py-0.5 ${bg} border ${border} ${color} rounded font-medium`}>
@@ -364,10 +364,10 @@ export const HomePage: React.FC = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-blue-500/5" />
             <div className="relative z-10">
               <div className="tag-cyan mx-auto mb-5 w-fit">Ready to Start?</div>
-              <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
+              <h2 className="text-3xl sm:text-4xl font-black text-[#10233F] mb-4">
                 Try SRM on Your Imagery
               </h2>
-              <p className="text-slate-400 mb-8 max-w-lg mx-auto leading-relaxed">
+              <p className="text-[#526A82] mb-8 max-w-lg mx-auto leading-relaxed">
                 Upload any Sentinel-2 scene and experience sub-4m resolution enhancement 
                 powered by deep learning in seconds.
               </p>

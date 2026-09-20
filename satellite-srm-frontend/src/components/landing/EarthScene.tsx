@@ -25,33 +25,33 @@ interface EarthSceneProps {
 export const EarthVisualFallback: React.FC<{ message?: string }> = ({
   message = 'Earth Observation Simulation Active',
 }) => (
-  <div className="w-full h-full min-h-[380px] flex flex-col items-center justify-center p-6 text-center select-none relative overflow-hidden rounded-3xl bg-gradient-to-b from-[#071527]/90 via-[#030d1c]/95 to-[#020b18] border border-cyan-500/25 backdrop-blur-xl shadow-[0_0_50px_rgba(0,212,255,0.08)]">
-    <div className="absolute w-72 h-72 rounded-full border border-cyan-500/20 animate-ping opacity-20 pointer-events-none" />
+  <div className="w-full h-full min-h-[380px] flex flex-col items-center justify-center p-6 text-center select-none relative overflow-hidden rounded-3xl bg-gradient-to-b from-srm-surface via-srm-base to-srm-elevated border border-cyan-500/25 backdrop-blur-xl shadow-[0_0_50px_rgba(0,212,255,0.08)]">
+    <div className="absolute w-72 h-72 rounded-full border border-cyan-200 animate-ping opacity-20 pointer-events-none" />
     <div className="absolute w-96 h-96 rounded-full border border-blue-500/10 pointer-events-none" />
 
     {/* Center Earth Graphic Orb */}
-    <div className="relative w-48 h-48 sm:w-60 sm:h-60 rounded-full bg-gradient-to-tr from-[#020b18] via-[#071d3d] to-[#005277] border-2 border-cyan-400/40 shadow-[0_0_60px_rgba(0,212,255,0.35)] flex items-center justify-center mb-6 overflow-hidden">
+    <div className="relative w-48 h-48 sm:w-60 sm:h-60 rounded-full bg-gradient-to-tr from-srm-surface via-srm-base to-srm-elevated border-2 border-cyan-200 shadow-[0_0_60px_rgba(0,212,255,0.35)] flex items-center justify-center mb-6 overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(#00e5ff18_1px,transparent_1px)] [background-size:12px_12px] opacity-70" />
       <div className="absolute inset-0 rounded-full shadow-[inset_0_0_30px_rgba(0,212,255,0.6)]" />
-      <div className="absolute inset-0 rounded-full border border-cyan-400/40 border-dashed animate-spin-slow pointer-events-none" />
+      <div className="absolute inset-0 rounded-full border border-cyan-200 border-dashed animate-spin-slow pointer-events-none" />
 
       {/* Orbiting Satellite Graphic */}
       <div className="relative z-10 flex flex-col items-center">
-        <div className="w-14 h-14 rounded-2xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 shadow-[0_0_20px_rgba(0,212,255,0.4)] mb-2">
+        <div className="w-14 h-14 rounded-2xl bg-[#1677FF]/20 border border-cyan-200 flex items-center justify-center text-cyan-700 shadow-[0_0_20px_rgba(0,212,255,0.4)] mb-2">
           <SatelliteIcon size={28} className="animate-pulse" />
         </div>
-        <span className="font-mono text-[11px] font-bold text-cyan-300 uppercase tracking-wider">
+        <span className="font-mono text-[11px] font-bold text-cyan-700 uppercase tracking-wider">
           TerraSR-1 Satellite
         </span>
       </div>
     </div>
 
-    <div className="relative z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-xs font-mono text-cyan-300 mb-2">
+    <div className="relative z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-[#1677FF]/20 border border-cyan-400/30 text-xs font-mono text-cyan-700 mb-2">
       <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
       <span>{message}</span>
     </div>
 
-    <p className="relative z-10 text-xs text-slate-400 max-w-xs leading-relaxed font-mono">
+    <p className="relative z-10 text-xs text-[#526A82] max-w-xs leading-relaxed font-mono">
       AI multispectral super-resolution & orbital observation active.
     </p>
   </div>
@@ -98,7 +98,7 @@ export const EarthScene: React.FC<EarthSceneProps> = ({
   return (
     <div className={`relative ${className} select-none`}>
       {/* Subtle outer ambient space glow */}
-      <div className="absolute inset-0 rounded-full bg-cyan-500/[0.04] blur-3xl pointer-events-none" />
+      <div className="absolute inset-0 rounded-full bg-[#1677FF]/[0.04] blur-3xl pointer-events-none" />
 
       {/* ErrorBoundary wraps WebGL Canvas */}
       <ErrorBoundary fallback={<EarthVisualFallback />}>
@@ -117,36 +117,37 @@ export const EarthScene: React.FC<EarthSceneProps> = ({
           {/* Deep Space Background Stars with subtle gentle movement */}
           <StarField count={2200} speed={0.6} />
 
-          {/* ── ENHANCED LIGHTING (Natural vibrancy, bright continents, visible oceans) ── */}
-          {/* 1. Soft deep space ambient illumination */}
-          <ambientLight color="#1e293b" intensity={0.75} />
+          {/* ── ENHANCED DAYLIGHT ILLUMINATION ── */}
+          {/* 1. Soft bright ambient illumination for daytime realism */}
+          <ambientLight color="#ffffff" intensity={1.0} />
 
           {/* 2. Key Sun Directional Light (Crisp daylight hemisphere) */}
           <directionalLight
-            position={[5.5, 3.0, 4.5]}
-            intensity={3.0}
+            position={[8.0, 4.0, 6.0]}
+            intensity={2.5}
             color="#ffffff"
+            castShadow
           />
 
-          {/* 3. Soft Frontal Camera Fill Light (Ensures Earth facing the user is brightly visible) */}
+          {/* 3. Soft Frontal Camera Fill Light */}
           <directionalLight
-            position={[0, 1.5, 5]}
-            intensity={1.2}
-            color="#e0f2fe"
+            position={[0, 2.0, 6]}
+            intensity={0.8}
+            color="#f0f9ff"
           />
 
           {/* 4. Natural Atmospheric Blue Rim Backlight */}
           <directionalLight
-            position={[-5, 2, -4]}
-            intensity={0.9}
-            color="#3895ea"
+            position={[-6, 3, -5]}
+            intensity={1.0}
+            color="#7dd3fc"
           />
 
           {/* 5. Nadir Fill */}
           <directionalLight
-            position={[0, -4, 1.5]}
-            intensity={0.35}
-            color="#475569"
+            position={[0, -5, 2.0]}
+            intensity={0.4}
+            color="#e2e8f0"
           />
 
           <Suspense fallback={null}>
@@ -184,27 +185,27 @@ export const EarthScene: React.FC<EarthSceneProps> = ({
 
       {/* Interactive Control Pill Hint */}
       {showHint && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#071527]/80 backdrop-blur-md border border-white/10 text-xs text-slate-300 pointer-events-none shadow-lg shadow-black/40">
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-[#D7E6F4] text-xs text-[#425873] pointer-events-none shadow-lg shadow-black/40">
           <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-          <span className="font-mono text-[11px] tracking-wide text-cyan-300/90 uppercase">
+          <span className="font-mono text-[11px] tracking-wide text-cyan-700/90 uppercase">
             3D Satellite Observation
           </span>
-          <span className="text-slate-500">•</span>
-          <span className="text-slate-400 text-[11px]">Drag to rotate</span>
+          <span className="text-[#6B7F95]">•</span>
+          <span className="text-[#526A82] text-[11px]">Drag to rotate</span>
           {enableZoom && (
             <>
-              <span className="text-slate-500">•</span>
-              <span className="text-slate-400 text-[11px]">Scroll to zoom</span>
+              <span className="text-[#6B7F95]">•</span>
+              <span className="text-[#526A82] text-[11px]">Scroll to zoom</span>
             </>
           )}
         </div>
       )}
 
       {/* Real-Time Telemetry Badge */}
-      <div className="absolute top-4 right-4 z-20 hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#030914]/85 backdrop-blur-md border border-cyan-500/25 text-xs text-slate-300 shadow-md">
-        <SatelliteIcon size={14} className="text-cyan-400 animate-pulse" />
-        <span className="font-mono text-[11px] text-slate-400">TerraSR-1:</span>
-        <span className="font-mono text-[11px] text-cyan-300 font-semibold">Active Scanning</span>
+      <div className="absolute top-4 right-4 z-20 hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/85 backdrop-blur-md border border-cyan-500/25 text-xs text-[#425873] shadow-md">
+        <SatelliteIcon size={14} className="text-[#1677FF] animate-pulse" />
+        <span className="font-mono text-[11px] text-[#526A82]">TerraSR-1:</span>
+        <span className="font-mono text-[11px] text-cyan-700 font-semibold">Active Scanning</span>
       </div>
     </div>
   );

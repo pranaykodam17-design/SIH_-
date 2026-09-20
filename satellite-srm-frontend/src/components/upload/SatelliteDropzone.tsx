@@ -69,10 +69,10 @@ export const SatelliteDropzone: React.FC<SatelliteDropzoneProps> = ({
         onClick={() => fileInputRef.current?.click()}
         className={`relative flex flex-col items-center justify-center p-8 sm:p-12 rounded-2xl border-2 border-dashed cursor-pointer transition-all duration-300 overflow-hidden ${
           isDragging
-            ? 'border-cyan-400 bg-cyan-950/40 shadow-2xl shadow-cyan-500/30 scale-[1.01]'
+            ? 'border-cyan-400 bg-cyan-950/40 shadow-sm shadow-cyan-500/30 scale-[1.01]'
             : selectedFile
-            ? 'border-emerald-500/50 bg-space-card/90 shadow-xl'
-            : 'border-space-border hover:border-cyan-500/50 bg-space-card/70 hover:bg-space-card'
+            ? 'border-emerald-500/50 bg-white/90 shadow-xl'
+            : 'border-blue-100 hover:border-cyan-500/50 bg-white/70 hover:bg-white'
         }`}
       >
         <input
@@ -94,10 +94,10 @@ export const SatelliteDropzone: React.FC<SatelliteDropzoneProps> = ({
         <div className="relative mb-6">
           <div className={`h-20 w-20 rounded-full flex items-center justify-center border transition-all ${
             isDragging
-              ? 'border-cyan-300 bg-cyan-500/20 text-cyan-300 shadow-[0_0_25px_rgba(0,240,255,0.6)]'
+              ? 'border-cyan-300 bg-[#1677FF]/20 text-cyan-700 shadow-[0_0_25px_rgba(0,240,255,0.6)]'
               : selectedFile
-              ? 'border-emerald-400 bg-emerald-950/60 text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.4)]'
-              : 'border-cyan-500/40 bg-space-elevated text-cyan-400'
+              ? 'border-emerald-400 bg-emerald-950/60 text-emerald-600 shadow-[0_0_20px_rgba(16,185,129,0.4)]'
+              : 'border-cyan-200 bg-white text-[#1677FF]'
           }`}>
             <Satellite className={`h-10 w-10 ${isDragging ? 'animate-bounce' : 'animate-pulse-slow'}`} />
           </div>
@@ -114,10 +114,10 @@ export const SatelliteDropzone: React.FC<SatelliteDropzoneProps> = ({
             <Badge variant="emerald" dot className="mb-2">
               SATELLITE DATA DETECTED
             </Badge>
-            <h3 className="text-lg font-bold text-white font-mono break-all max-w-md">
+            <h3 className="text-lg font-bold text-[#10233F] font-mono break-all max-w-md">
               {selectedFile.name}
             </h3>
-            <p className="text-xs font-mono text-slate-400 mt-1">
+            <p className="text-xs font-mono text-[#526A82] mt-1">
               {formatBytes(selectedFile.size)} • Click or drop another file to replace
             </p>
           </div>
@@ -126,13 +126,13 @@ export const SatelliteDropzone: React.FC<SatelliteDropzoneProps> = ({
             <Badge variant="cyan" className="mb-2 uppercase tracking-widest text-[10px]">
               MISSION CONTROL INGESTION CONSOLE
             </Badge>
-            <h3 className="text-lg sm:text-xl font-bold text-white mb-1 font-mono">
+            <h3 className="text-lg sm:text-xl font-bold text-[#10233F] mb-1 font-mono">
               {isDragging ? 'RELEASE SATELLITE RASTER' : 'DROP SENTINEL-2 GEOTIFF HERE'}
             </h3>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-sm mx-auto">
+            <p className="text-xs sm:text-sm text-[#526A82] max-w-sm mx-auto">
               Drag and drop your 4-band multispectral GeoTIFF, or click to browse files
             </p>
-            <div className="mt-3 flex items-center justify-center gap-2 text-xs font-mono text-slate-500">
+            <div className="mt-3 flex items-center justify-center gap-2 text-xs font-mono text-[#6B7F95]">
               <span>Supported: .TIF, .TIFF (B02, B03, B04, B08)</span>
             </div>
           </div>
@@ -140,7 +140,7 @@ export const SatelliteDropzone: React.FC<SatelliteDropzoneProps> = ({
 
         {/* Error notification */}
         {error && (
-          <div className="mt-4 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-950/80 border border-red-500 text-red-300 text-xs font-mono">
+          <div className="mt-4 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-950/80 border border-red-500 text-red-700 text-xs font-mono">
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -149,9 +149,9 @@ export const SatelliteDropzone: React.FC<SatelliteDropzoneProps> = ({
       </div>
 
       {/* Quick Sample Loader Option */}
-      <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-slate-400 p-3 rounded-xl border border-space-border bg-space-card">
+      <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-[#526A82] p-3 rounded-xl border border-blue-100 bg-white">
         <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-cyan-400 shrink-0" />
+          <Sparkles className="h-4 w-4 text-[#1677FF] shrink-0" />
           <span>Need a verified Sentinel-2 multispectral dataset to test?</span>
         </div>
         <button
@@ -160,7 +160,7 @@ export const SatelliteDropzone: React.FC<SatelliteDropzoneProps> = ({
             e.stopPropagation();
             onLoadSample();
           }}
-          className="px-3 py-1.5 rounded-md bg-space-elevated hover:bg-space-border border border-cyan-500/40 text-cyan-300 hover:text-white font-bold transition-all"
+          className="px-3 py-1.5 rounded-md bg-white hover:bg-space-border border border-cyan-200 text-cyan-700 hover:text-[#10233F] font-bold transition-all"
         >
           Load NTRO Benchmark GeoTIFF (Agriculture)
         </button>

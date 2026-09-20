@@ -131,14 +131,14 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
         <div className="flex items-center justify-between px-1">
           <div className="flex items-center gap-2">
             {isInspecting ? (
-              <RefreshCw size={15} className="text-cyan-400 animate-spin" />
+              <RefreshCw size={15} className="text-[#1677FF] animate-spin" />
             ) : isPrimaryValid ? (
-              <CheckCircle2 size={16} className="text-emerald-400" />
+              <CheckCircle2 size={16} className="text-emerald-600" />
             ) : (
               <AlertCircle size={16} className="text-rose-400" />
             )}
             <span className={`text-xs font-bold ${
-              isInspecting ? 'text-cyan-400' : isPrimaryValid ? 'text-emerald-400' : 'text-rose-400'
+              isInspecting ? 'text-[#1677FF]' : isPrimaryValid ? 'text-emerald-600' : 'text-rose-400'
             }`}>
               {isInspecting
                 ? 'Inspecting Satellite Metadata…'
@@ -153,7 +153,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
           <button
             type="button"
             onClick={handleClear}
-            className="text-xs text-slate-400 hover:text-rose-400 transition-colors font-medium"
+            className="text-xs text-[#526A82] hover:text-rose-400 transition-colors font-medium"
           >
             Clear File
           </button>
@@ -172,29 +172,29 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
 
         {/* Primary File Metadata Card */}
         {meta && (
-          <div className="rounded-2xl border border-cyan-500/30 bg-[#07172b]/80 p-5 shadow-[0_0_30px_rgba(0,212,255,0.06)] space-y-4">
+          <div className="rounded-2xl border border-cyan-200 bg-white/80 p-5 shadow-[0_0_30px_rgba(0,212,255,0.06)] space-y-4">
             {/* File title & type badge */}
-            <div className="flex items-start justify-between gap-4 pb-3 border-b border-white/[0.08]">
+            <div className="flex items-start justify-between gap-4 pb-3 border-b border-[#D7E6F4]">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-10 h-10 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_rgba(0,212,255,0.2)]">
-                  <FileImage size={20} className="text-cyan-300" />
+                <div className="w-10 h-10 rounded-xl bg-[#1677FF]/20 border border-cyan-200 flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_rgba(0,212,255,0.2)]">
+                  <FileImage size={20} className="text-cyan-700" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-sm font-bold text-white truncate max-w-sm" title={meta.filename}>
+                  <h4 className="text-sm font-bold text-[#10233F] truncate max-w-sm" title={meta.filename}>
                     {meta.filename}
                   </h4>
-                  <p className="text-[11px] text-cyan-300 font-mono mt-0.5">
+                  <p className="text-[11px] text-cyan-700 font-mono mt-0.5">
                     {meta.fileType}
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-mono px-2 py-1 rounded bg-white/[0.05] border border-white/10 text-slate-300">
+                <span className="text-[11px] font-mono px-2 py-1 rounded bg-white border border-[#D7E6F4] text-[#425873]">
                   {formatSize(meta.fileSize)}
                 </span>
                 {meta.bandCount === 4 && (
-                  <span className="text-[10px] font-bold px-2 py-1 rounded bg-emerald-500/15 border border-emerald-500/30 text-emerald-300">
+                  <span className="text-[10px] font-bold px-2 py-1 rounded bg-emerald-500/15 border border-emerald-500/30 text-emerald-700">
                     4-Band Native
                   </span>
                 )}
@@ -204,56 +204,56 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
             {/* Extracted Metadata Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
               {/* Dimensions */}
-              <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
-                <div className="text-[10px] uppercase font-mono tracking-wider text-slate-400 mb-1 flex items-center gap-1">
-                  <Target size={11} className="text-cyan-400" /> Dimensions
+              <div className="p-3 rounded-xl bg-white border border-[#D7E6F4]">
+                <div className="text-[10px] uppercase font-mono tracking-wider text-[#526A82] mb-1 flex items-center gap-1">
+                  <Target size={11} className="text-[#1677FF]" /> Dimensions
                 </div>
-                <div className="font-bold text-white font-mono text-xs">
+                <div className="font-bold text-[#10233F] font-mono text-xs">
                   {meta.dimensions}
                 </div>
               </div>
 
               {/* Number of Bands */}
-              <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
-                <div className="text-[10px] uppercase font-mono tracking-wider text-slate-400 mb-1 flex items-center gap-1">
-                  <Layers size={11} className="text-cyan-400" /> Spectral Bands
+              <div className="p-3 rounded-xl bg-white border border-[#D7E6F4]">
+                <div className="text-[10px] uppercase font-mono tracking-wider text-[#526A82] mb-1 flex items-center gap-1">
+                  <Layers size={11} className="text-[#1677FF]" /> Spectral Bands
                 </div>
-                <div className="font-bold text-white font-mono text-xs">
+                <div className="font-bold text-[#10233F] font-mono text-xs">
                   {meta.bandCount} Channels
                 </div>
               </div>
 
               {/* Spatial Resolution */}
-              <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
-                <div className="text-[10px] uppercase font-mono tracking-wider text-slate-400 mb-1 flex items-center gap-1">
-                  <HardDrive size={11} className="text-cyan-400" /> Resolution (GSD)
+              <div className="p-3 rounded-xl bg-white border border-[#D7E6F4]">
+                <div className="text-[10px] uppercase font-mono tracking-wider text-[#526A82] mb-1 flex items-center gap-1">
+                  <HardDrive size={11} className="text-[#1677FF]" /> Resolution (GSD)
                 </div>
-                <div className="font-bold text-amber-300 font-mono text-xs truncate" title={meta.spatialResolution}>
+                <div className="font-bold text-amber-700 font-mono text-xs truncate" title={meta.spatialResolution}>
                   {meta.spatialResolution}
                 </div>
               </div>
 
               {/* CRS / Projection */}
-              <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
-                <div className="text-[10px] uppercase font-mono tracking-wider text-slate-400 mb-1 flex items-center gap-1">
-                  <Compass size={11} className="text-cyan-400" /> CRS / Projection
+              <div className="p-3 rounded-xl bg-white border border-[#D7E6F4]">
+                <div className="text-[10px] uppercase font-mono tracking-wider text-[#526A82] mb-1 flex items-center gap-1">
+                  <Compass size={11} className="text-[#1677FF]" /> CRS / Projection
                 </div>
-                <div className="font-bold text-emerald-300 font-mono text-xs truncate" title={meta.crs}>
+                <div className="font-bold text-emerald-700 font-mono text-xs truncate" title={meta.crs}>
                   {meta.crs}
                 </div>
               </div>
             </div>
 
             {/* Spectral Band Breakdown Strip */}
-            <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] flex flex-wrap items-center justify-between gap-2 text-[11px]">
+            <div className="p-3 rounded-xl bg-white border border-[#D7E6F4] flex flex-wrap items-center justify-between gap-2 text-[11px]">
               <div className="flex items-center gap-2">
-                <ShieldCheck size={14} className="text-cyan-400 flex-shrink-0" />
-                <span className="text-slate-300 font-medium">
+                <ShieldCheck size={14} className="text-[#1677FF] flex-shrink-0" />
+                <span className="text-[#425873] font-medium">
                   {meta.bandsDescription}
                 </span>
               </div>
               {meta.bitsPerSample && (
-                <span className="text-[10px] font-mono text-slate-400 bg-black/40 px-2 py-0.5 rounded border border-white/5">
+                <span className="text-[10px] font-mono text-[#526A82] bg-white px-2 py-0.5 rounded border border-[#D7E6F4]">
                   {meta.bitsPerSample}
                 </span>
               )}
@@ -264,7 +264,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
         {/* If multiple batch files are uploaded, list them */}
         {allFiles.length > 1 && (
           <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-1">
+            <div className="text-[11px] font-bold text-[#526A82] uppercase tracking-wider px-1">
               Batch Queue ({allFiles.length} files)
             </div>
             {allFiles.map((file, idx) => {
@@ -275,17 +275,17 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
                   key={`${file.name}-${idx}`}
                   className={`flex items-center justify-between p-2.5 rounded-xl border transition-all ${
                     isValid
-                      ? 'border-white/[0.08] bg-white/[0.02] hover:border-cyan-500/30'
+                      ? 'border-[#D7E6F4] bg-white hover:border-cyan-200'
                       : 'border-rose-500/30 bg-rose-500/5'
                   }`}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <FileImage size={15} className={isValid ? 'text-cyan-400' : 'text-rose-400'} />
+                    <FileImage size={15} className={isValid ? 'text-[#1677FF]' : 'text-rose-400'} />
                     <div className="min-w-0">
-                      <div className="text-xs font-medium text-slate-200 truncate max-w-xs" title={file.name}>
+                      <div className="text-xs font-medium text-[#425873] truncate max-w-xs" title={file.name}>
                         {file.name}
                       </div>
-                      <div className="text-[10px] text-slate-400 font-mono">
+                      <div className="text-[10px] text-[#526A82] font-mono">
                         {formatSize(file.size)} {res?.metadata ? `· ${res.metadata.dimensions} · ${res.metadata.bandCount} bands` : ''}
                       </div>
                     </div>
@@ -295,7 +295,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
                     <button
                       type="button"
                       onClick={() => onRemoveFile(idx)}
-                      className="w-6 h-6 flex items-center justify-center rounded text-slate-500 hover:text-rose-400 hover:bg-rose-400/10"
+                      className="w-6 h-6 flex items-center justify-center rounded text-[#6B7F95] hover:text-rose-400 hover:bg-rose-400/10"
                       title="Remove file"
                     >
                       <X size={13} />
@@ -312,7 +312,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
-            className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors font-medium flex items-center gap-1.5"
+            className="text-xs text-[#1677FF] hover:text-cyan-700 transition-colors font-medium flex items-center gap-1.5"
           >
             <span>Replace / Select Different File</span>
           </button>
@@ -337,8 +337,8 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
       <div
         className={`relative rounded-2xl border-2 border-dashed transition-all duration-300 cursor-pointer overflow-hidden ${
           isDragActive
-            ? 'border-cyan-400 bg-cyan-500/10 shadow-[0_0_30px_rgba(0,212,255,0.2)]'
-            : 'border-white/[0.12] bg-[#071525]/60 hover:border-cyan-500/40 hover:bg-[#07172b]/80'
+            ? 'border-cyan-400 bg-[#1677FF]/20 shadow-[0_0_30px_rgba(0,212,255,0.2)]'
+            : 'border-[#D7E6F4] bg-white/60 hover:border-cyan-200 hover:bg-white/80'
         } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
         onDragEnter={(e) => { e.preventDefault(); if (!disabled) setIsDragActive(true); }}
         onDragOver={(e) => { e.preventDefault(); if (!disabled) setIsDragActive(true); }}
@@ -348,18 +348,18 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
       >
         <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
           {/* Header Title */}
-          <div className="mb-4 inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/30">
-            <Upload size={13} className="text-cyan-300" />
-            <span className="font-mono text-xs font-bold tracking-widest text-cyan-300 uppercase">
+          <div className="mb-4 inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1677FF]/20 border border-cyan-400/30">
+            <Upload size={13} className="text-cyan-700" />
+            <span className="font-mono text-xs font-bold tracking-widest text-cyan-700 uppercase">
               UPLOAD 4-BAND GEOTIFF
             </span>
           </div>
 
           {/* Main prompt */}
-          <h3 className="text-base sm:text-lg font-bold text-white mb-2">
+          <h3 className="text-base sm:text-lg font-bold text-[#10233F] mb-2">
             Upload 4-Band Sentinel-2 GeoTIFF
           </h3>
-          <p className="text-xs text-slate-400 mb-5 max-w-sm leading-relaxed">
+          <p className="text-xs text-[#526A82] mb-5 max-w-sm leading-relaxed">
             Provide a single GeoTIFF containing all four Sentinel-2 spectral bands:
             Band 1 = B02 Blue, Band 2 = B03 Green, Band 3 = B04 Red, Band 4 = B08 NIR.
           </p>
@@ -375,11 +375,11 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
               'Download SR GeoTIFF',
             ].map((step, i, arr) => (
               <React.Fragment key={step}>
-                <span className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.07] text-slate-400">
+                <span className="px-2 py-0.5 rounded bg-white border border-[#D7E6F4] text-[#526A82]">
                   {step}
                 </span>
                 {i < arr.length - 1 && (
-                  <span className="text-slate-600">↓</span>
+                  <span className="text-[#526A82]">↓</span>
                 )}
               </React.Fragment>
             ))}
@@ -388,7 +388,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
           {/* Choose File button */}
           <button
             type="button"
-            className="group relative inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-400 bg-[length:200%_auto] hover:bg-right text-slate-950 font-bold text-sm shadow-[0_0_20px_rgba(0,212,255,0.35)] hover:shadow-[0_0_30px_rgba(0,212,255,0.6)] transition-all duration-300"
+            className="group relative inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-400 bg-[length:200%_auto] hover:bg-right text-[#10233F] font-bold text-sm shadow-[0_0_20px_rgba(0,212,255,0.35)] hover:shadow-[0_0_30px_rgba(0,212,255,0.6)] transition-all duration-300"
             onClick={(e) => { e.stopPropagation(); inputRef.current?.click(); }}
             disabled={disabled}
           >
@@ -396,22 +396,22 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
           </button>
 
           {/* Supported formats */}
-          <div className="mt-8 pt-6 border-t border-white/[0.08] w-full max-w-md">
-            <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-2 font-semibold">
+          <div className="mt-8 pt-6 border-t border-[#D7E6F4] w-full max-w-md">
+            <div className="text-[11px] font-mono uppercase tracking-wider text-[#526A82] mb-2 font-semibold">
               Accepted Input:
             </div>
             <div className="flex flex-wrap items-center justify-center gap-2 text-xs">
-              <span className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-cyan-500/25 text-cyan-300 font-medium">
+              <span className="px-2.5 py-1 rounded-lg bg-white border border-cyan-500/25 text-cyan-700 font-medium">
                 .tif / .tiff (GeoTIFF)
               </span>
-              <span className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-cyan-500/25 text-cyan-300 font-medium">
+              <span className="px-2.5 py-1 rounded-lg bg-white border border-cyan-500/25 text-cyan-700 font-medium">
                 4 bands: B02, B03, B04, B08
               </span>
-              <span className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/10 text-slate-400 font-medium">
+              <span className="px-2.5 py-1 rounded-lg bg-white border border-[#D7E6F4] text-[#526A82] font-medium">
                 Georeferenced (EPSG embedded)
               </span>
             </div>
-            <div className="text-[10px] text-slate-500 mt-2">
+            <div className="text-[10px] text-[#6B7F95] mt-2">
               Max file size: 500 MB • Output: 4-band georeferenced GeoTIFF at 3× resolution
             </div>
           </div>
