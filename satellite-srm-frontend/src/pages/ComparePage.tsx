@@ -38,24 +38,24 @@ export const ComparePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-wash bg-earth-decor">
+    <div className="min-h-screen">
       {/* ── Header ── */}
-      <div className="border-b border-border bg-white/80 backdrop-blur-sm">
-        <div className="max-w-[1120px] mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center gap-4">
+      <div className="border-b border-border/50 bg-background/60 backdrop-blur-md sticky top-0 z-50">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center gap-4">
           <button
             onClick={() => navigate(-1)}
-            className="w-9 h-9 flex items-center justify-center rounded-xl text-[#6B7F95] hover:text-[#425873] hover:bg-white transition-all duration-200"
+            className="w-10 h-10 flex items-center justify-center rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-transparent hover:border-border/50 transition-all duration-200"
           >
-            <ArrowLeft size={18} />
+            <ArrowLeft size={20} />
           </button>
           <div>
-            <h1 className="text-xl font-black text-[#10233F] leading-none">Compare Results</h1>
-            <p className="text-xs text-[#6B7F95] mt-0.5">Before / after deep learning enhancement</p>
+            <h1 className="text-xl font-bold text-foreground leading-none">Compare Results</h1>
+            <p className="text-xs text-muted-foreground mt-1">Before / after deep learning enhancement</p>
           </div>
 
           {activeJobs.length > 1 && (
-            <div className="flex items-center gap-1.5 ml-2 sm:ml-6 bg-white p-1 rounded-xl border border-[#D7E6F4]">
-              <span className="text-[11px] font-semibold text-[#526A82] px-2">Batch:</span>
+            <div className="flex items-center gap-1.5 ml-2 sm:ml-6 bg-background/50 p-1.5 rounded-xl border border-border/50">
+              <span className="text-[11px] font-semibold text-muted-foreground px-2 uppercase tracking-widest">Batch:</span>
               {activeJobs.map((j, idx) => (
                 <button
                   key={j.jobId}
@@ -63,10 +63,11 @@ export const ComparePage: React.FC = () => {
                     setSelectedJobId(j.jobId);
                     setActiveJob(j);
                   }}
-                  className={`px-2.5 py-1 text-xs font-mono rounded-lg transition-all ${(selectedJobId || job.jobId) === j.jobId
-                    ? 'bg-[#1677FF]/25 text-cyan-700 border border-cyan-200 font-bold'
-                    : 'text-[#6B7F95] hover:text-[#425873]'
-                    }`}
+                  className={`px-3 py-1.5 text-xs font-mono rounded-lg transition-all ${
+                    (selectedJobId || job.jobId) === j.jobId
+                      ? 'bg-primary/20 text-primary border border-primary/40 shadow-[0_0_10px_hsl(var(--primary)/0.2)] font-bold'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-transparent'
+                  }`}
                   title={j.metadata?.filename}
                 >
                   #{idx + 1}
@@ -76,28 +77,29 @@ export const ComparePage: React.FC = () => {
           )}
 
           <div className="ml-auto flex items-center gap-3">
-            <button onClick={handleDownload} className="btn-primary text-xs py-2 px-4">
-              <Download size={13} />
+            <button onClick={handleDownload} className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium py-2 px-4 rounded-lg transition-colors shadow-[0_0_15px_hsl(var(--primary)/0.3)]">
+              <Download size={16} />
               Download Enhanced
             </button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-8 relative z-10">
         <div className="grid lg:grid-cols-4 gap-6">
           {/* Main viewer */}
-          <div className="lg:col-span-3 space-y-4">
+          <div className="lg:col-span-3 space-y-5">
             {/* Mode selector */}
-            <div className="flex items-center gap-2 p-1 bg-white border border-[#D7E6F4] rounded-xl w-fit">
+            <div className="flex items-center gap-1.5 p-1.5 bg-card/60 backdrop-blur-sm border border-border/50 rounded-xl w-fit shadow-lg">
               {COMPARE_MODES.map(({ id, label, icon }) => (
                 <button
                   key={id}
                   onClick={() => setMode(id)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${mode === id
-                    ? 'bg-[#1677FF]/20 border border-cyan-200 text-[#1677FF]'
-                    : 'text-[#6B7F95] hover:text-[#425873]'
-                    }`}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                    mode === id
+                      ? 'bg-primary text-primary-foreground shadow-[0_0_15px_hsl(var(--primary)/0.4)]'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                  }`}
                 >
                   {icon}
                   <span className="hidden sm:inline">{label}</span>
@@ -123,16 +125,16 @@ export const ComparePage: React.FC = () => {
             )}
 
             {mode === 'split' && (
-              <div className="grid grid-cols-2 gap-3 rounded-2xl overflow-hidden">
-                <div className="relative rounded-xl overflow-hidden border border-cyan-200">
-                  <img src={srUrl} alt="Enhanced" className="w-full object-cover" style={{ height: '520px' }} />
-                  <div className="absolute top-3 left-3 tag-cyan text-[10px]">
+              <div className="grid grid-cols-2 gap-4 rounded-2xl overflow-hidden shadow-2xl">
+                <div className="relative rounded-xl overflow-hidden border border-primary/50 shadow-[0_0_20px_hsl(var(--primary)/0.2)]">
+                  <img src={srUrl} alt="Enhanced" className="w-full object-cover" style={{ height: '600px' }} />
+                  <div className="absolute top-4 left-4 px-3 py-1.5 rounded-lg bg-primary/20 backdrop-blur-md border border-primary/30 text-[11px] font-mono text-primary font-bold shadow-lg">
                     SRM Enhanced · &lt;{meta?.targetResolution?.toFixed(1) || '3.3'}m
                   </div>
                 </div>
-                <div className="relative rounded-xl overflow-hidden border border-[#D7E6F4]">
-                  <img src={lrUrl} alt="Original" className="w-full object-cover" style={{ height: '520px' }} />
-                  <div className="absolute top-3 left-3 px-2.5 py-1 text-[10px] bg-[#F5FAFF]/70 border border-[#D7E6F4] rounded-lg text-[#526A82]">
+                <div className="relative rounded-xl overflow-hidden border border-border/50 bg-card">
+                  <img src={lrUrl} alt="Original" className="w-full object-cover" style={{ height: '600px' }} />
+                  <div className="absolute top-4 left-4 px-3 py-1.5 rounded-lg bg-background/80 backdrop-blur-md border border-border/50 text-[11px] font-mono text-muted-foreground shadow-lg">
                     Sentinel-2 · {meta?.nativeResolution?.toFixed(0) || '10'}m
                   </div>
                 </div>
@@ -140,50 +142,50 @@ export const ComparePage: React.FC = () => {
             )}
 
             {mode === 'opacity' && (
-              <div className="relative rounded-2xl overflow-hidden border border-[#D7E6F4]" style={{ height: '520px' }}>
+              <div className="relative rounded-2xl overflow-hidden border border-border/50 shadow-2xl" style={{ height: '600px' }}>
                 <img src={lrUrl} alt="Original" className="absolute inset-0 w-full h-full object-cover" />
                 <img
                   src={srUrl}
                   alt="Enhanced"
-                  className="absolute inset-0 w-full h-full object-cover"
+                  className="absolute inset-0 w-full h-full object-cover transition-opacity duration-75"
                   style={{ opacity: opacity / 100 }}
                 />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <div className="glass rounded-xl p-3 border border-[#D7E6F4]">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="text-xs text-[#6B7F95]">Original</span>
+                <div className="absolute bottom-6 left-6 right-6">
+                  <div className="bg-card/80 backdrop-blur-xl rounded-xl p-4 border border-border/50 shadow-lg max-w-xl mx-auto">
+                    <div className="flex items-center gap-4 mb-1">
+                      <span className="text-xs font-mono font-medium text-muted-foreground w-16">Original</span>
                       <input
                         type="range"
                         min={0}
                         max={100}
                         value={opacity}
                         onChange={(e) => setOpacity(Number(e.target.value))}
-                        className="flex-1"
+                        className="flex-1 accent-primary cursor-ew-resize"
                       />
-                      <span className="text-xs text-[#1677FF]">{opacity}% Enhanced</span>
+                      <span className="text-xs font-mono font-bold text-primary w-24 text-right">{opacity}% Enhanced</span>
                     </div>
                   </div>
                 </div>
-                <div className="absolute top-3 left-3 tag-cyan text-[10px]">Opacity Mode</div>
+                <div className="absolute top-4 left-4 px-3 py-1.5 rounded-lg bg-background/80 backdrop-blur-md border border-border/50 text-[11px] font-mono text-foreground shadow-lg">Opacity Mode</div>
               </div>
             )}
 
             {mode === 'difference' && (
-              <div className="relative rounded-2xl overflow-hidden border border-violet-500/20" style={{ height: '520px' }}>
+              <div className="relative rounded-2xl overflow-hidden border border-purple-500/30 shadow-2xl" style={{ height: '600px' }}>
                 <img
                   src={job.outputs?.uncertaintyPreviewUrl ?? '/sample-satellite/uncertainty.png'}
                   alt="Difference/Uncertainty"
                   className="absolute inset-0 w-full h-full object-cover"
-                  style={{ mixBlendMode: 'luminosity' }}
+                  style={{ mixBlendMode: 'screen' }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-srm-surface to-transparent" />
-                <div className="absolute top-3 left-3 px-2.5 py-1 bg-violet-500/20 border border-violet-500/30 rounded-lg text-violet-400 text-[10px] font-bold">
+                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute top-4 left-4 px-3 py-1.5 bg-purple-500/20 backdrop-blur-md border border-purple-500/40 rounded-lg text-purple-400 text-[11px] font-mono font-bold shadow-[0_0_15px_rgba(168,85,247,0.3)]">
                   Uncertainty / Confidence Map
                 </div>
-                <div className="absolute bottom-3 left-3 right-3">
-                  <div className="glass rounded-xl px-3 py-2 border border-[#D7E6F4]">
-                    <div className="text-[11px] text-[#526A82] flex items-center gap-1.5">
-                      <Info size={11} className="text-violet-400" />
+                <div className="absolute bottom-4 left-4 right-4 max-w-xl mx-auto">
+                  <div className="bg-card/80 backdrop-blur-xl rounded-xl px-4 py-3 border border-border/50 shadow-lg">
+                    <div className="text-xs text-muted-foreground flex items-center justify-center gap-2">
+                      <Info size={14} className="text-purple-400" />
                       Brighter regions indicate higher model uncertainty (Monte Carlo Dropout)
                     </div>
                   </div>
@@ -195,9 +197,9 @@ export const ComparePage: React.FC = () => {
           {/* Right panel — Metadata */}
           <div className="lg:col-span-1 space-y-4">
             {/* Input info */}
-            <div className="glass rounded-2xl p-5">
-              <div className="text-xs font-bold text-[#6B7F95] uppercase tracking-widest mb-4">Image Metadata</div>
-              <div className="space-y-0">
+            <div className="bg-card/60 backdrop-blur-xl rounded-2xl p-6 border border-border/50 shadow-lg">
+              <div className="text-[11px] font-mono font-bold text-muted-foreground uppercase tracking-widest mb-5">Image Metadata</div>
+              <div className="space-y-3">
                 <InlineMetric label="Input Resolution" value="10m" color="default" />
                 <InlineMetric label="Output Resolution" value={`<${meta?.targetResolution?.toFixed(1) || '3.3'}m`} color="cyan" />
                 <InlineMetric label="Scale Factor" value={`${job.metrics?.scale_factor ?? 3}×`} color="cyan" />
@@ -210,9 +212,9 @@ export const ComparePage: React.FC = () => {
             </div>
 
             {/* Model info */}
-            <div className="glass rounded-2xl p-5">
-              <div className="text-xs font-bold text-[#6B7F95] uppercase tracking-widest mb-4">Processing Info</div>
-              <div className="space-y-0">
+            <div className="bg-card/60 backdrop-blur-xl rounded-2xl p-6 border border-border/50 shadow-lg">
+              <div className="text-[11px] font-mono font-bold text-muted-foreground uppercase tracking-widest mb-5">Processing Info</div>
+              <div className="space-y-3">
                 <InlineMetric label="Model" value={job.telemetry.model.split(' ')[0]} color="cyan" />
                 <InlineMetric label="Device" value={job.telemetry.device.split('/')[0].trim()} />
                 <InlineMetric label="Tiles" value={job.telemetry.tileProgress} />
@@ -223,36 +225,36 @@ export const ComparePage: React.FC = () => {
             </div>
 
             {/* Location */}
-            <div className="glass rounded-2xl p-5">
-              <div className="flex items-center gap-2 text-xs font-bold text-[#6B7F95] uppercase tracking-widest mb-3">
-                <MapPin size={11} />
+            <div className="bg-card/60 backdrop-blur-xl rounded-2xl p-6 border border-border/50 shadow-lg">
+              <div className="flex items-center gap-2 text-[11px] font-mono font-bold text-muted-foreground uppercase tracking-widest mb-4">
+                <MapPin size={14} />
                 Location
               </div>
-              <div className="space-y-1.5 text-xs">
-                <div className="flex justify-between">
-                  <span className="text-[#526A82]">Lat</span>
-                  <span className="text-[#526A82] font-mono">{meta?.center?.[0]?.toFixed(4) ?? '17.4106'}°N</span>
+              <div className="space-y-2 text-sm font-mono">
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground/70">Lat</span>
+                  <span className="text-foreground">{meta?.center?.[0]?.toFixed(4) ?? '17.4106'}°N</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-[#526A82]">Lon</span>
-                  <span className="text-[#526A82] font-mono">{meta?.center?.[1]?.toFixed(4) ?? '78.4776'}°E</span>
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground/70">Lon</span>
+                  <span className="text-foreground">{meta?.center?.[1]?.toFixed(4) ?? '78.4776'}°E</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-[#526A82]">Acquired</span>
-                  <span className="text-[#526A82] font-mono">{meta?.acquisitionDate ?? '2026-05-15'}</span>
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground/70">Acquired</span>
+                  <span className="text-foreground">{meta?.acquisitionDate ?? '2026-05-15'}</span>
                 </div>
               </div>
             </div>
 
             {/* Download */}
-            <button onClick={handleDownload} className="btn-primary w-full justify-center text-sm">
-              <Download size={15} />
+            <button onClick={handleDownload} className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-semibold rounded-xl shadow-[0_0_15px_hsl(var(--primary)/0.3)] transition-colors">
+              <Download size={16} />
               Download GeoTIFF
             </button>
 
             <button
               onClick={() => navigate('/analysis')}
-              className="btn-secondary w-full justify-center text-sm"
+              className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-card/60 hover:bg-card/90 backdrop-blur-md border border-border/50 text-foreground text-sm font-semibold rounded-xl transition-colors"
             >
               View Analysis
             </button>

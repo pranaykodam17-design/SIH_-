@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Satellite, Search, HelpCircle, Menu, X, ChevronRight, Bell } from 'lucide-react';
+import { ThemeToggle } from '../theme/ThemeToggle';
 
 const NAV_LINKS = [
   { label: 'Home', to: '/' },
@@ -37,19 +38,19 @@ export const Navbar: React.FC = () => {
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
           scrolled || menuOpen
-            ? 'bg-white/95 backdrop-blur-md border-b border-[#D4DEE8] shadow-[0_1px_3px_rgba(0,0,0,0.04)]'
-            : 'bg-white'
+            ? 'bg-background/95 backdrop-blur-md border-b border-border/50 shadow-sm'
+            : 'bg-background/50 backdrop-blur-sm border-b border-border/50'
         }`}
         style={{ height: 'var(--nav-height)' }}
       >
         <div className="max-w-[1120px] mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
-            <div className="w-8 h-8 rounded-md bg-band-blue flex items-center justify-center">
-              <Satellite size={16} className="text-white" />
+            <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center shadow-[0_0_15px_hsl(var(--primary)/0.2)]">
+              <Satellite size={16} className="text-primary-foreground" />
             </div>
             <div className="hidden sm:block">
-              <div className="text-[15px] font-bold text-ink leading-none">TerraSR</div>
+              <div className="text-[15px] font-bold text-foreground leading-none">TerraSR</div>
               <div className="text-[11px] text-slate leading-none mt-0.5">
                 Satellite Super-Resolution
               </div>
@@ -64,13 +65,13 @@ export const Navbar: React.FC = () => {
                 to={link.to}
                 className={`relative px-3 py-2 text-[13px] font-medium rounded-md transition-colors duration-150 ${
                   isActive(link.to)
-                    ? 'text-band-blue'
-                    : 'text-slate hover:text-ink'
+                    ? 'text-primary'
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {link.label}
                 {isActive(link.to) && (
-                  <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-band-blue rounded-full" />
+                  <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-primary rounded-full" />
                 )}
               </Link>
             ))}
@@ -78,20 +79,22 @@ export const Navbar: React.FC = () => {
 
           {/* Right Actions */}
           <div className="hidden lg:flex items-center gap-1.5">
+            <ThemeToggle />
+            <div className="w-px h-4 bg-border mx-1" />
             <button
-              className="w-8 h-8 flex items-center justify-center rounded-md text-slate hover:text-ink hover:bg-wash transition-colors duration-150"
+              className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors duration-150"
               title="Search"
             >
               <Search size={15} />
             </button>
             <button
-              className="w-8 h-8 flex items-center justify-center rounded-md text-slate hover:text-ink hover:bg-wash transition-colors duration-150 relative"
+              className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors duration-150 relative"
               title="Notifications"
             >
               <Bell size={15} />
             </button>
             <button
-              className="w-8 h-8 flex items-center justify-center rounded-md text-slate hover:text-ink hover:bg-wash transition-colors duration-150"
+              className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors duration-150"
               title="Help"
             >
               <HelpCircle size={15} />
@@ -107,6 +110,7 @@ export const Navbar: React.FC = () => {
 
           {/* Mobile */}
           <div className="flex lg:hidden items-center gap-2">
+            <ThemeToggle />
             <button
               onClick={() => navigate('/platform')}
               className="btn-primary text-xs py-2 px-3"
@@ -115,7 +119,7 @@ export const Navbar: React.FC = () => {
             </button>
             <button
               onClick={() => setMenuOpen((v) => !v)}
-              className="w-8 h-8 flex items-center justify-center rounded-md text-slate hover:text-ink hover:bg-wash transition-colors duration-150"
+              className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors duration-150"
             >
               {menuOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
@@ -124,15 +128,15 @@ export const Navbar: React.FC = () => {
 
         {/* Mobile Menu */}
         {menuOpen && (
-          <div className="lg:hidden bg-white border-t border-border px-4 py-3 space-y-0.5 anim-fade-in">
+          <div className="lg:hidden bg-background border-t border-border px-4 py-3 space-y-0.5 anim-fade-in shadow-xl">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
                 className={`flex items-center justify-between px-3 py-2.5 rounded-md text-[13px] font-medium transition-colors duration-150 ${
                   isActive(link.to)
-                    ? 'bg-wash text-band-blue'
-                    : 'text-slate hover:text-ink hover:bg-wash'
+                    ? 'bg-muted/50 text-primary'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                 }`}
               >
                 {link.label}

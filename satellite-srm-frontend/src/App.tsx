@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // Layout for internal platform tools
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
+import { ThemeProvider } from './components/theme/ThemeProvider';
 
 // Pages
 import { LandingPage } from './pages/LandingPage';
@@ -18,7 +19,7 @@ import { AboutPage } from './pages/AboutPage';
 // Wrapper for platform tool pages
 const PlatformLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className="flex flex-col min-h-screen bg-wash bg-earth-decor text-ink font-sans selection:bg-band-blue/15 selection:text-ink relative">
+    <div className="flex flex-col min-h-screen bg-background bg-earth-decor text-foreground font-sans selection:bg-primary/15 selection:text-foreground relative">
       <Navbar />
       <main className="flex-1 flex flex-col relative z-10">
         {children}
@@ -30,8 +31,9 @@ const PlatformLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <Routes>
+    <ThemeProvider defaultTheme="dark" storageKey="terrasr-theme">
+      <Router>
+        <Routes>
         {/* ── Flagship TerraSR Landing Page with 3D WebGL Earth ── */}
         <Route path="/" element={<LandingPage />} />
 
@@ -102,6 +104,7 @@ const App: React.FC = () => {
         />
       </Routes>
     </Router>
+    </ThemeProvider>
   );
 };
 

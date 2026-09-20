@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Waves, Sparkles, Droplets, Leaf, Building, Sun, Eye, Info } from 'lucide-react';
+import { Card, CardContent } from '../ui/Card';
 
 interface BandCard {
   id: string;
@@ -28,11 +29,11 @@ export const Multispectral: React.FC = () => {
       bandCode: 'Band 2',
       wavelength: '490 nm',
       range: '458 – 523 nm',
-      icon: <Droplets size={22} />,
-      themeColor: 'text-[#1677FF]',
-      accentBg: 'from-cyan-500/15 to-blue-500/5',
-      borderGlow: 'hover:border-cyan-400/50 hover:shadow-[0_0_30px_rgba(0,212,255,0.2)]',
-      badgeColor: 'bg-[#1677FF]/20 text-cyan-700 border-cyan-400/30',
+      icon: <Droplets size={24} />,
+      themeColor: 'text-cyan-500',
+      accentBg: 'from-cyan-500/20 to-cyan-500/5',
+      borderGlow: 'hover:border-cyan-500/50 hover:shadow-[0_0_30px_rgba(6,182,212,0.2)]',
+      badgeColor: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
       summary:
         'Maximum penetration through shallow aquatic environments and critical for aerosol scattering correction.',
       primaryUses: [
@@ -49,11 +50,11 @@ export const Multispectral: React.FC = () => {
       bandCode: 'Band 3',
       wavelength: '560 nm',
       range: '543 – 578 nm',
-      icon: <Leaf size={22} />,
-      themeColor: 'text-emerald-600',
-      accentBg: 'from-emerald-500/15 to-teal-500/5',
-      borderGlow: 'hover:border-emerald-400/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)]',
-      badgeColor: 'bg-emerald-500/20 text-emerald-700 border-emerald-400/30',
+      icon: <Leaf size={24} />,
+      themeColor: 'text-emerald-500',
+      accentBg: 'from-emerald-500/20 to-emerald-500/5',
+      borderGlow: 'hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)]',
+      badgeColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
       summary:
         'Captures peak reflectance from healthy green vegetation canopies and sediment dynamics in inland water bodies.',
       primaryUses: [
@@ -70,11 +71,11 @@ export const Multispectral: React.FC = () => {
       bandCode: 'Band 4',
       wavelength: '665 nm',
       range: '650 – 680 nm',
-      icon: <Sun size={22} />,
-      themeColor: 'text-red-600',
-      accentBg: 'from-red-500/15 to-amber-500/5',
-      borderGlow: 'hover:border-red-400/50 hover:shadow-[0_0_30px_rgba(239,68,68,0.2)]',
-      badgeColor: 'bg-red-500/20 text-red-700 border-red-400/30',
+      icon: <Sun size={24} />,
+      themeColor: 'text-red-500',
+      accentBg: 'from-red-500/20 to-red-500/5',
+      borderGlow: 'hover:border-red-500/50 hover:shadow-[0_0_30px_rgba(239,68,68,0.2)]',
+      badgeColor: 'bg-red-500/20 text-red-400 border-red-500/30',
       summary:
         'Strongest chlorophyll-a absorption band. Essential baseline for determining photosynthetic activity and urban materials.',
       primaryUses: [
@@ -91,11 +92,11 @@ export const Multispectral: React.FC = () => {
       bandCode: 'Band 8 (Near-Infrared)',
       wavelength: '842 nm',
       range: '785 – 900 nm',
-      icon: <Sparkles size={22} />,
+      icon: <Sparkles size={24} />,
       themeColor: 'text-violet-400',
-      accentBg: 'from-violet-500/15 to-purple-500/5',
-      borderGlow: 'hover:border-violet-400/50 hover:shadow-[0_0_30px_rgba(139,92,246,0.25)]',
-      badgeColor: 'bg-violet-500/20 text-violet-300 border-violet-400/30',
+      accentBg: 'from-violet-500/20 to-violet-500/5',
+      borderGlow: 'hover:border-violet-500/50 hover:shadow-[0_0_30px_rgba(139,92,246,0.2)]',
+      badgeColor: 'bg-violet-500/20 text-violet-300 border-violet-500/30',
       summary:
         'Invisible to human eyes, NIR radiation reflects powerfully off spongy plant mesophyll cells and absorbs completely in pure water.',
       primaryUses: [
@@ -109,80 +110,82 @@ export const Multispectral: React.FC = () => {
   ];
 
   return (
-    <section
-      id="multispectral"
-      className="relative py-20 bg-white border-t border-border overflow-hidden"
-    >
-      <div className="max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="multispectral" className="relative py-24 bg-background border-t border-border/40 overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.03),transparent)] pointer-events-none" />
+
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="max-w-2xl mb-14">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-ink tracking-tight mb-5">
+        <div className="max-w-3xl mx-auto text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-6">
             Complementary spectral intelligence
           </h2>
-
-          <p className="text-base sm:text-lg text-slate leading-relaxed">
+          <p className="text-lg text-muted-foreground leading-relaxed">
             Multispectral sensors capture discrete wavebands far beyond the visible spectrum. Each band provides complementary physical measurements of Earth’s atmosphere, vegetation, soil, and water.
           </p>
         </div>
 
         {/* 4 Spectral Band Cards */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-14">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {bands.map((band) => {
             const isSelected = selectedBand === band.id;
             return (
-              <div
+              <Card
                 key={band.id}
                 onClick={() => setSelectedBand(band.id)}
-                className={`cursor-pointer rounded-lg p-6 border transition-all duration-200 flex flex-col justify-between ${
+                className={`cursor-pointer overflow-hidden transition-all duration-300 group flex flex-col justify-between ${
                   isSelected
-                    ? 'bg-white border-band-blue shadow-card-hover -translate-y-1'
-                    : 'bg-white border-border hover:border-slate/30'
+                    ? `bg-card border-border/80 shadow-lg -translate-y-1.5 ${band.borderGlow}`
+                    : 'bg-card/40 border-border/40 hover:bg-card/60 hover:border-border/60'
                 }`}
               >
-                <div>
-                  {/* Top Bar: Icon + Band Code */}
-                  <div className="flex items-center justify-between mb-5">
-                    <div className={`w-10 h-10 rounded-md bg-wash border border-border flex items-center justify-center ${band.themeColor}`}>
-                      {band.icon}
-                    </div>
-                    <span className="px-2 py-0.5 rounded border border-border bg-wash text-[11px] font-mono font-medium text-slate">
-                      {band.bandCode}
-                    </span>
-                  </div>
-
-                  {/* Title & Wavelength */}
-                  <div className="mb-4">
-                    <h3 className="text-xl font-bold text-ink mb-1">
-                      {band.name}
-                    </h3>
-                    <div className="flex items-center gap-2">
-                      <span className={`text-[13px] font-mono font-medium ${band.themeColor}`}>
-                        λ {band.wavelength}
-                      </span>
-                      <span className="text-[12px] text-slate font-mono">
-                        ({band.range})
+                <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-[50px] opacity-0 transition-opacity duration-500 pointer-events-none ${isSelected ? 'opacity-100 bg-current ' + band.themeColor : 'group-hover:opacity-50 bg-muted-foreground'}`} />
+                
+                <CardContent className="p-6 relative z-10 flex flex-col h-full">
+                  <div>
+                    {/* Top Bar: Icon + Band Code */}
+                    <div className="flex items-center justify-between mb-6">
+                      <div className={`w-12 h-12 rounded-xl bg-background border border-border/50 flex items-center justify-center transition-transform ${isSelected ? 'scale-110 shadow-md ' + band.themeColor : 'text-muted-foreground'}`}>
+                        {band.icon}
+                      </div>
+                      <span className="px-2.5 py-1 rounded bg-background border border-border/50 text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground">
+                        {band.bandCode}
                       </span>
                     </div>
-                  </div>
 
-                  <p className="text-[13px] text-slate leading-relaxed mb-6">
-                    {band.summary}
-                  </p>
-                </div>
-
-                {/* Primary Applications List */}
-                <div className="pt-4 border-t border-border space-y-2">
-                  <div className="text-[11px] font-mono font-medium text-slate mb-2">
-                    Key Indicators
-                  </div>
-                  {band.primaryUses.map((use, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-[13px] text-slate">
-                      <span className={`w-1 h-1 rounded-full ${band.themeColor} bg-current`} />
-                      <span className="truncate">{use}</span>
+                    {/* Title & Wavelength */}
+                    <div className="mb-4">
+                      <h3 className={`text-xl font-bold mb-2 ${isSelected ? 'text-foreground' : 'text-muted-foreground'}`}>
+                        {band.name}
+                      </h3>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-[13px] font-mono font-bold ${band.themeColor}`}>
+                          λ {band.wavelength}
+                        </span>
+                        <span className="text-[12px] text-muted-foreground font-mono">
+                          ({band.range})
+                        </span>
+                      </div>
                     </div>
-                  ))}
-                </div>
-              </div>
+
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-8 min-h-[80px]">
+                      {band.summary}
+                    </p>
+                  </div>
+
+                  {/* Primary Applications List */}
+                  <div className="pt-5 border-t border-border/50 space-y-3 mt-auto">
+                    <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground/70 mb-3">
+                      Key Indicators
+                    </div>
+                    {band.primaryUses.map((use, idx) => (
+                      <div key={idx} className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                        <span className={`w-1.5 h-1.5 rounded-full ${band.themeColor} bg-current`} />
+                        <span className="truncate">{use}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             );
           })}
         </div>
@@ -191,25 +194,35 @@ export const Multispectral: React.FC = () => {
         {(() => {
           const current = bands.find((b) => b.id === selectedBand) || bands[3];
           return (
-            <div className="rounded-lg bg-wash border border-border p-6 sm:p-8">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-border mb-4">
-                <div className="flex items-center gap-3">
-                  <span className={`text-lg font-bold font-mono ${current.themeColor}`}>
-                    {current.name} Channel
-                  </span>
-                  <span className="px-2 py-0.5 rounded bg-white border border-border font-mono text-[11px] text-slate">
-                    Sentinel-2 MSI
-                  </span>
+            <motion.div 
+              key={current.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className={`rounded-2xl bg-card/60 backdrop-blur-md border border-border/50 p-6 sm:p-8 shadow-lg overflow-hidden relative`}
+            >
+              <div className={`absolute inset-0 bg-gradient-to-r ${current.accentBg} pointer-events-none opacity-50`} />
+              
+              <div className="relative z-10">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-border/50 mb-5">
+                  <div className="flex items-center gap-4">
+                    <span className={`text-xl font-bold font-mono ${current.themeColor} flex items-center gap-2`}>
+                      <Info size={20} /> {current.name} Channel
+                    </span>
+                    <span className="px-2.5 py-1 rounded bg-background border border-border/50 font-mono text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                      Sentinel-2 MSI
+                    </span>
+                  </div>
+                  <div className="font-mono text-[11px] text-muted-foreground tracking-wide font-medium bg-background px-3 py-1.5 rounded border border-border/50">
+                    GSD: 10m Native <span className="mx-2 text-border">|</span> <span className="text-primary font-bold">TerraSR: 3.3m</span>
+                  </div>
                 </div>
-                <div className="font-mono text-[12px] text-slate">
-                  GSD: 10m Native • TerraSR Scale: 3.3m
-                </div>
+                <p className="text-base text-muted-foreground leading-relaxed">
+                  <strong className="text-foreground font-semibold uppercase tracking-wider text-sm mr-2">Radiometric Role:</strong>
+                  {current.scientificValue}
+                </p>
               </div>
-              <p className="text-[14px] text-slate leading-relaxed">
-                <strong className="text-ink font-medium">Radiometric Role: </strong>
-                {current.scientificValue}
-              </p>
-            </div>
+            </motion.div>
           );
         })()}
       </div>

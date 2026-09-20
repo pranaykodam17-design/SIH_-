@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { AlertCircle, CheckCircle2, ZoomIn, Eye, Layers, ArrowRight } from 'lucide-react';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Card, CardContent } from '../ui/Card';
 
 export const Challenge: React.FC = () => {
   const [selectedAspect, setSelectedAspect] = useState<'urban' | 'agri' | 'disaster'>('agri');
@@ -24,172 +24,167 @@ export const Challenge: React.FC = () => {
   };
 
   return (
-    <section
-      id="challenge"
-      className="relative py-20 bg-white border-t border-border overflow-hidden"
-    >
-      <div className="max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="challenge" className="relative py-24 bg-background border-t border-border/40 overflow-hidden">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="max-w-2xl mb-14">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-ink tracking-tight mb-5">
+        <div className="max-w-3xl mx-auto text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
             The spatial resolution bottleneck
           </h2>
-
-          <p className="text-base sm:text-lg text-slate leading-relaxed mb-3">
-            Satellite imagery is essential for Earth observation, but spatial resolution limits what can be detected.
-          </p>
-
-          <p className="text-sm sm:text-base text-slate leading-relaxed">
-            Sentinel-2 offers 5-day global revisit, but at 10m GSD, small features and fine boundaries remain unresolved.
+          <p className="text-lg text-muted-foreground leading-relaxed">
+            Sentinel-2 offers unprecedented 5-day global revisit times, but at 10m GSD, critical structural details and fine boundaries remain unresolved. We break through this limitation.
           </p>
         </div>
 
         {/* Interactive Comparison Cards */}
-        <div className="grid lg:grid-cols-2 gap-8 mb-12">
+        <div className="grid lg:grid-cols-2 gap-8 mb-16">
           {/* Card 1: Low Resolution */}
-          <div className="group rounded-lg bg-white border border-border p-6 sm:p-8 transition-all duration-200 hover:shadow-card-hover relative overflow-hidden">
-
-            <div className="flex items-center justify-between gap-4 mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-md bg-red-50 border border-red-200 flex items-center justify-center text-band-nir">
-                  <AlertCircle size={18} />
+          <Card className="group relative overflow-hidden border-border/50 bg-card/40 backdrop-blur-sm transition-all duration-300 hover:border-border">
+            <CardContent className="p-6 sm:p-8">
+              <div className="flex items-center justify-between gap-4 mb-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-destructive/10 border border-destructive/20 flex items-center justify-center text-destructive">
+                    <AlertCircle size={22} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-foreground">Low resolution</h3>
+                    <p className="text-sm text-muted-foreground font-mono mt-0.5">10m GSD (Sentinel-2)</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-ink">Low resolution</h3>
-                  <p className="text-[12px] text-slate font-mono">10m GSD (Sentinel-2)</p>
+                <span className="px-3 py-1.5 rounded-md bg-destructive/10 text-destructive font-mono text-xs font-semibold uppercase tracking-wider">
+                  Original 1×
+                </span>
+              </div>
+
+              {/* Visual Display */}
+              <div className="relative aspect-video rounded-xl overflow-hidden border border-border/50 mb-8 bg-muted/20">
+                <img
+                  src="/sample-satellite/lr.png"
+                  alt="Low Resolution Satellite Input"
+                  className="w-full h-full object-cover filter blur-[0.6px] contrast-95 scale-105"
+                />
+                <div className="absolute inset-0 bg-destructive/10 pointer-events-none mix-blend-overlay" />
+                <div className="absolute inset-0 bg-[radial-gradient(hsl(var(--foreground)/0.1)_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+
+                <div className="absolute bottom-4 left-4 px-3 py-1.5 rounded-lg bg-background/80 backdrop-blur-md text-xs font-mono text-destructive font-medium border border-destructive/20">
+                  1 Pixel = 100 m²
                 </div>
               </div>
-              <span className="px-2.5 py-1 rounded bg-red-50 text-band-nir font-mono text-[11px] font-medium">
-                Original 1×
-              </span>
-            </div>
 
-            {/* Visual Display */}
-            <div className="relative aspect-video rounded-lg overflow-hidden border border-border mb-6 bg-wash">
-              <img
-                src="/sample-satellite/lr.png"
-                alt="Low Resolution Satellite Input"
-                className="w-full h-full object-cover filter blur-[0.6px] contrast-95 scale-105"
-              />
-              <div className="absolute inset-0 bg-red-950/15 pointer-events-none" />
-              {/* Simulated Pixel Grid Overlay */}
-              <div className="absolute inset-0 bg-[radial-gradient(#ffffff15_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
-
-              <div className="absolute bottom-3 left-3 px-2.5 py-1 rounded-md bg-white backdrop-blur-md text-[11px] font-mono text-red-700 border border-red-500/30">
-                1 Pixel = 100 m²
-              </div>
-            </div>
-
-            {/* Constraints List */}
-            <ul className="space-y-3 text-sm text-[#425873]">
-              <li className="flex items-start gap-2.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-red-400 mt-2 flex-shrink-0" />
-                <span><strong className="text-[#10233F]">Spectral Bleeding:</strong> Small features blend with surrounding terrain.</span>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-red-400 mt-2 flex-shrink-0" />
-                <span><strong className="text-[#10233F]">Pixelated Edges:</strong> Road curves and field perimeters become staircase artifacts.</span>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-red-400 mt-2 flex-shrink-0" />
-                <span><strong className="text-[#10233F]">Limited Analytics:</strong> Critical geospatial algorithms fail to classify sub-10m structures.</span>
-              </li>
-            </ul>
-          </div>
+              {/* Constraints List */}
+              <ul className="space-y-4 text-sm text-muted-foreground">
+                <li className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-destructive/60 mt-2 flex-shrink-0" />
+                  <span><strong className="text-foreground font-medium">Spectral Bleeding:</strong> Small features blend with surrounding terrain.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-destructive/60 mt-2 flex-shrink-0" />
+                  <span><strong className="text-foreground font-medium">Pixelated Edges:</strong> Road curves and field perimeters become staircase artifacts.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-destructive/60 mt-2 flex-shrink-0" />
+                  <span><strong className="text-foreground font-medium">Limited Analytics:</strong> Critical geospatial algorithms fail to classify sub-10m structures.</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
 
           {/* Card 2: Enhanced Resolution */}
-          <div className="group rounded-3xl bg-gradient-to-b from-white/[0.07] to-white/[0.02] border border-cyan-200 hover:border-cyan-400/60 p-6 sm:p-8 backdrop-blur-xl transition-all duration-300 relative overflow-hidden shadow-[0_0_40px_rgba(0,212,255,0.08)]">
-            <div className="absolute top-0 right-0 w-36 h-36 bg-[#1677FF]/20 rounded-full blur-2xl pointer-events-none" />
-
-            <div className="flex items-center justify-between gap-4 mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#1677FF]/20 border border-cyan-200 flex items-center justify-center text-cyan-700 shadow-[0_0_15px_rgba(0,212,255,0.3)]">
-                  <CheckCircle2 size={20} />
+          <Card className="group relative overflow-hidden border-primary/30 bg-primary/5 backdrop-blur-sm transition-all duration-500 hover:border-primary/60 hover:shadow-[0_0_40px_hsl(var(--primary)/0.15)]">
+            <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/20 rounded-full blur-[60px] pointer-events-none group-hover:bg-primary/30 transition-colors duration-500" />
+            
+            <CardContent className="p-6 sm:p-8 relative z-10">
+              <div className="flex items-center justify-between gap-4 mb-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-primary/20 border border-primary/30 flex items-center justify-center text-primary shadow-[0_0_15px_hsl(var(--primary)/0.2)]">
+                    <CheckCircle2 size={22} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-foreground">Enhanced Resolution</h3>
+                    <p className="text-sm text-primary/80 font-mono mt-0.5">Sub-4m Reconstructed (SwinIR)</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold text-[#10233F]">Enhanced Resolution</h3>
-                  <p className="text-xs text-cyan-700 font-mono">Sub-4m Reconstructed GSD (SwinIR-SRM)</p>
+                <span className="px-3 py-1.5 rounded-md bg-primary text-primary-foreground font-mono text-xs font-bold uppercase tracking-wider shadow-[0_0_15px_hsl(var(--primary)/0.4)]">
+                  Enhanced 3×
+                </span>
+              </div>
+
+              {/* Visual Display */}
+              <div className="relative aspect-video rounded-xl overflow-hidden border border-primary/30 mb-8 bg-muted/20 shadow-[0_0_20px_hsl(var(--primary)/0.1)]">
+                <img
+                  src="/sample-satellite/sr.png"
+                  alt="Enhanced Resolution Super-Resolved Imagery"
+                  className="w-full h-full object-cover scale-105 transition-transform duration-700 group-hover:scale-110"
+                />
+                
+                <div className="absolute bottom-4 left-4 px-3 py-1.5 rounded-lg bg-background/80 backdrop-blur-md text-xs font-mono text-primary font-medium border border-primary/30">
+                  1 Pixel = 11.1 m² (9× Density)
                 </div>
               </div>
-              <span className="px-3 py-1 rounded-full bg-[#1677FF]/20 border border-cyan-200 text-cyan-800 font-mono text-xs font-bold">
-                Enhanced 3×
-              </span>
-            </div>
 
-            {/* Visual Display */}
-            <div className="relative aspect-video rounded-2xl overflow-hidden border border-cyan-200 mb-6 bg-[#F5FAFF] shadow-[0_0_20px_rgba(0,212,255,0.15)]">
-              <img
-                src="/sample-satellite/sr.png"
-                alt="Enhanced Resolution Super-Resolved Imagery"
-                className="w-full h-full object-cover scale-105 transition-transform duration-500 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-cyan-950/10 pointer-events-none" />
-
-              <div className="absolute bottom-3 left-3 px-2.5 py-1 rounded-md bg-white backdrop-blur-md text-[11px] font-mono text-cyan-700 border border-cyan-200">
-                1 Pixel = 11.1 m² (9× Pixel Density)
-              </div>
-            </div>
-
-            {/* Super-Resolution Advantages */}
-            <ul className="space-y-3 text-sm text-[#425873]">
-              <li className="flex items-start gap-2.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-2 flex-shrink-0" />
-                <span><strong className="text-[#10233F]">True Sub-Pixel Recovery:</strong> Deep transformer self-attention reconstructs sub-10m textures.</span>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-2 flex-shrink-0" />
-                <span><strong className="text-[#10233F]">Radiometric Consistency:</strong> Preserves multispectral reflectance and NDVI fidelity.</span>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-2 flex-shrink-0" />
-                <span><strong className="text-[#10233F]">Commercial-Grade Detail:</strong> Near-commercial geospatial analytics without proprietary satellite costs.</span>
-              </li>
-            </ul>
-          </div>
+              {/* Super-Resolution Advantages */}
+              <ul className="space-y-4 text-sm text-muted-foreground">
+                <li className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary/80 mt-2 flex-shrink-0" />
+                  <span><strong className="text-foreground font-medium">True Sub-Pixel Recovery:</strong> Deep transformer self-attention reconstructs sub-10m textures.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary/80 mt-2 flex-shrink-0" />
+                  <span><strong className="text-foreground font-medium">Radiometric Consistency:</strong> Preserves multispectral reflectance and NDVI fidelity.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary/80 mt-2 flex-shrink-0" />
+                  <span><strong className="text-foreground font-medium">Commercial-Grade Detail:</strong> Near-commercial geospatial analytics without proprietary costs.</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Interactive Domain Context Selector */}
-        <div className="rounded-2xl bg-white border border-[#D7E6F4] p-6 backdrop-blur-md">
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-            <span className="text-xs font-mono uppercase tracking-wider text-[#526A82]">
-              Impact on Decision-Making:
-            </span>
-            <div className="flex items-center gap-2">
-              {(['agri', 'urban', 'disaster'] as const).map((key) => (
-                <button
-                  key={key}
-                  onClick={() => setSelectedAspect(key)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 ${
-                    selectedAspect === key
-                      ? 'bg-[#1677FF]/20 text-cyan-700 border border-cyan-200 shadow-[0_0_15px_rgba(0,212,255,0.2)]'
-                      : 'bg-white text-[#526A82] hover:text-[#425873] border border-[#D7E6F4]'
-                  }`}
-                >
-                  {aspects[key].title}
-                </button>
-              ))}
+        <Card className="bg-card/40 border-border/40 backdrop-blur-md overflow-hidden">
+          <CardContent className="p-6 sm:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
+              <span className="text-sm font-mono uppercase tracking-widest text-muted-foreground font-semibold">
+                Impact on Decision-Making
+              </span>
+              <div className="flex flex-wrap items-center gap-2">
+                {(['agri', 'urban', 'disaster'] as const).map((key) => (
+                  <button
+                    key={key}
+                    onClick={() => setSelectedAspect(key)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                      selectedAspect === key
+                        ? 'bg-primary/15 text-primary border border-primary/30 shadow-[0_0_15px_hsl(var(--primary)/0.15)]'
+                        : 'bg-muted/30 text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-transparent'
+                    }`}
+                  >
+                    {aspects[key].title}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          <div className="grid md:grid-cols-2 gap-6 pt-3 border-t border-[#D7E6F4]">
-            <div>
-              <div className="text-xs font-mono text-red-600 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                <AlertCircle size={13} /> Bottleneck at 10m
+            <div className="grid md:grid-cols-2 gap-8 pt-6 border-t border-border/30">
+              <div className="bg-destructive/5 rounded-xl p-5 border border-destructive/10">
+                <div className="text-xs font-mono text-destructive uppercase tracking-wider mb-3 flex items-center gap-2 font-semibold">
+                  <AlertCircle size={14} /> Bottleneck at 10m
+                </div>
+                <p className="text-muted-foreground leading-relaxed text-sm">
+                  {aspects[selectedAspect].lr}
+                </p>
               </div>
-              <p className="text-sm text-[#425873] leading-relaxed">
-                {aspects[selectedAspect].lr}
-              </p>
-            </div>
-            <div>
-              <div className="text-xs font-mono text-cyan-700 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                <CheckCircle2 size={13} /> TerraSR Solution at 3.3m
+              <div className="bg-primary/5 rounded-xl p-5 border border-primary/10">
+                <div className="text-xs font-mono text-primary uppercase tracking-wider mb-3 flex items-center gap-2 font-semibold">
+                  <CheckCircle2 size={14} /> TerraSR Solution at 3.3m
+                </div>
+                <p className="text-muted-foreground leading-relaxed text-sm">
+                  {aspects[selectedAspect].sr}
+                </p>
               </div>
-              <p className="text-sm text-[#425873] leading-relaxed">
-                {aspects[selectedAspect].sr}
-              </p>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </section>
   );
