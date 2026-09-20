@@ -26,61 +26,46 @@ export const Challenge: React.FC = () => {
   return (
     <section
       id="challenge"
-      className="relative py-24 bg-white border-t border-[#D7E6F4] overflow-hidden"
+      className="relative py-20 bg-white border-t border-border overflow-hidden"
     >
-      {/* Background ambient lighting */}
-      <div className="absolute top-1/3 left-10 w-96 h-96 rounded-full bg-[#1677FF]/[0.03] blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-indigo-500/[0.03] blur-3xl pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1677FF]/20 border border-cyan-400/25 mb-4">
-            <Layers size={13} className="text-[#1677FF]" />
-            <span className="font-mono text-xs font-semibold tracking-wider text-cyan-700 uppercase">
-              SECTION 01 — THE CHALLENGE
-            </span>
-          </div>
-
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#10233F] tracking-tight mb-6">
-            The Spatial Resolution{' '}
-            <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-              Bottleneck
-            </span>
+        <div className="max-w-2xl mb-14">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-ink tracking-tight mb-5">
+            The spatial resolution bottleneck
           </h2>
 
-          <p className="text-lg sm:text-xl text-[#425873] font-medium italic mb-4 leading-relaxed">
-            &ldquo;Satellite imagery provides valuable information for Earth observation, but spatial resolution can limit detailed analysis.&rdquo;
+          <p className="text-base sm:text-lg text-slate leading-relaxed mb-3">
+            Satellite imagery is essential for Earth observation, but spatial resolution limits what can be detected.
           </p>
 
-          <p className="text-sm sm:text-base text-[#526A82] max-w-2xl mx-auto leading-relaxed">
-            Freely available constellations like Sentinel-2 offer unmatched 5-day global revisit rates, but their 10m Ground Sample Distance (GSD) leaves small physical assets and fine boundaries undetectable.
+          <p className="text-sm sm:text-base text-slate leading-relaxed">
+            Sentinel-2 offers 5-day global revisit, but at 10m GSD, small features and fine boundaries remain unresolved.
           </p>
         </div>
 
         {/* Interactive Comparison Cards */}
         <div className="grid lg:grid-cols-2 gap-8 mb-12">
           {/* Card 1: Low Resolution */}
-          <div className="group rounded-3xl bg-gradient-to-b from-white/[0.05] to-white/[0.02] border border-red-500/20 hover:border-red-500/40 p-6 sm:p-8 backdrop-blur-xl transition-all duration-300 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="group rounded-lg bg-white border border-border p-6 sm:p-8 transition-all duration-200 hover:shadow-card-hover relative overflow-hidden">
 
             <div className="flex items-center justify-between gap-4 mb-6">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-red-500/15 border border-red-400/30 flex items-center justify-center text-red-600">
-                  <AlertCircle size={20} />
+                <div className="w-9 h-9 rounded-md bg-red-50 border border-red-200 flex items-center justify-center text-band-nir">
+                  <AlertCircle size={18} />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-[#10233F]">Low Resolution</h3>
-                  <p className="text-xs text-[#526A82] font-mono">10m Ground Sample Distance (Sentinel-2)</p>
+                  <h3 className="text-lg font-semibold text-ink">Low resolution</h3>
+                  <p className="text-[12px] text-slate font-mono">10m GSD (Sentinel-2)</p>
                 </div>
               </div>
-              <span className="px-3 py-1 rounded-full bg-red-500/15 text-red-700 font-mono text-xs font-semibold">
+              <span className="px-2.5 py-1 rounded bg-red-50 text-band-nir font-mono text-[11px] font-medium">
                 Original 1×
               </span>
             </div>
 
             {/* Visual Display */}
-            <div className="relative aspect-video rounded-2xl overflow-hidden border border-[#D7E6F4] mb-6 bg-[#F5FAFF]">
+            <div className="relative aspect-video rounded-lg overflow-hidden border border-border mb-6 bg-wash">
               <img
                 src="/sample-satellite/lr.png"
                 alt="Low Resolution Satellite Input"

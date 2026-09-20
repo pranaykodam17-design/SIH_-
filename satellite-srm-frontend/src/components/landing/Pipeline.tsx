@@ -120,44 +120,24 @@ export const Pipeline: React.FC = () => {
   return (
     <section
       id="approach"
-      className="relative py-28 bg-white border-t border-[#D7E6F4] overflow-hidden"
+      className="relative py-20 bg-white border-t border-border overflow-hidden"
     >
-      {/* Dynamic Background Flows */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[400px] bg-cyan-600/[0.04] blur-[150px] pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-20">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1677FF]/20 border border-cyan-400/25 mb-4">
-            <Workflow size={14} className="text-[#1677FF]" />
-            <span className="font-mono text-xs font-semibold tracking-wider text-cyan-700 uppercase">
-              SECTION 02 — OUR APPROACH
-            </span>
-          </div>
-
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#10233F] tracking-tight mb-6">
-            End-to-End{' '}
-            <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-500 bg-clip-text text-transparent">
-              Super-Resolution Pipeline
-            </span>
+        <div className="max-w-2xl mb-16">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-ink tracking-tight mb-5">
+            End-to-end super-resolution pipeline
           </h2>
 
-          <p className="text-base sm:text-lg text-[#526A82] max-w-2xl mx-auto leading-relaxed">
-            From raw multispectral GeoTIFF telemetry to sub-4m spatial clarity, powered by state-of-the-art transformer vision architectures.
+          <p className="text-base sm:text-lg text-slate leading-relaxed">
+            From raw multispectral GeoTIFF to sub-4m spatial clarity, using transformer-based vision architectures.
           </p>
         </div>
 
         {/* ── DESKTOP HORIZONTAL CONNECTED PIPELINE ── */}
         <div className="relative hidden xl:block mb-16">
-          {/* Continuous Glowing Connector Line */}
-          <div className="absolute top-[52px] left-[6%] right-[6%] h-[2px] bg-gradient-to-r from-blue-500/30 via-cyan-400/70 to-emerald-400/50 z-0">
-            {/* Animated Energy Pulse travelling along the pipe */}
-            <motion.div
-              animate={{ x: ['0%', '100%'] }}
-              transition={{ repeat: Infinity, duration: 3.5, ease: 'linear' }}
-              className="w-24 h-full bg-gradient-to-r from-transparent via-cyan-300 to-white shadow-[0_0_15px_#00e5ff]"
-            />
-          </div>
+          {/* Thin connector line */}
+          <div className="absolute top-[44px] left-[8%] right-[8%] h-px bg-border z-0" />
 
           {/* 5 Sequential Stage Nodes */}
           <div className="grid grid-cols-5 gap-4 relative z-10">
@@ -167,10 +147,10 @@ export const Pipeline: React.FC = () => {
                 <div
                   key={stage.id}
                   onClick={() => setActiveStage(stage.id)}
-                  className={`cursor-pointer rounded-2xl p-5 transition-all duration-300 backdrop-blur-xl border ${
+                  className={`cursor-pointer rounded-lg p-4 transition-all duration-200 border ${
                     isSelected
-                      ? `bg-white ${stage.borderColor} ${stage.glowColor} -translate-y-2`
-                      : 'bg-white border-[#D7E6F4] hover:border-[#D7E6F4] hover:bg-white'
+                      ? 'bg-white border-band-blue shadow-card-hover -translate-y-1'
+                      : 'bg-white border-border hover:border-slate/30'
                   }`}
                 >
                   {/* Top: Icon + Indicator */}

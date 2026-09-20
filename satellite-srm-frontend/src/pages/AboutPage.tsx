@@ -6,10 +6,10 @@ export const AboutPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#F5FAFF] bg-earth-decor">
+    <div className="min-h-screen bg-wash bg-earth-decor">
       {/* Header */}
-      <div className="border-b border-[#D7E6F4] bg-white/60 backdrop-blur-sm sticky top-[68px] z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex items-center gap-4">
+      <div className="border-b border-border bg-white/80 backdrop-blur-sm sticky top-[64px] z-40">
+        <div className="max-w-[1120px] mx-auto px-4 sm:px-6 py-5 flex items-center gap-4">
           <button
             onClick={() => navigate(-1)}
             className="w-9 h-9 flex items-center justify-center rounded-xl text-[#6B7F95] hover:text-[#425873] hover:bg-white transition-all"

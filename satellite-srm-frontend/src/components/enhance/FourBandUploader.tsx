@@ -453,10 +453,10 @@ export const FourBandUploader: React.FC<FourBandUploaderProps> = ({
             id="multispectral-validate-btn"
             onClick={onValidate}
             disabled={!allBandsLoaded || isValidating || disabled}
-            className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 shadow-lg ${
+            className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-bold text-sm transition-all duration-200 ${
               allBandsLoaded && !isValidating && !disabled
-                ? 'bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-400 text-[#10233F] shadow-[0_0_25px_rgba(0,212,255,0.4)] hover:shadow-[0_0_35px_rgba(0,212,255,0.6)] cursor-pointer'
-                : 'bg-white border border-[#D7E6F4] text-[#6B7F95] cursor-not-allowed'
+                ? 'btn-primary'
+                : 'bg-wash border border-border text-slate cursor-not-allowed'
             }`}
           >
             {isValidating ? (

@@ -18,7 +18,7 @@ import { AboutPage } from './pages/AboutPage';
 // Wrapper for platform tool pages
 const PlatformLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className="flex flex-col min-h-screen bg-[#F8FCFF] bg-earth-decor text-[#425873] font-sans selection:bg-[#1677FF]/20 selection:text-cyan-900 relative">
+    <div className="flex flex-col min-h-screen bg-wash bg-earth-decor text-ink font-sans selection:bg-band-blue/15 selection:text-ink relative">
       <Navbar />
       <main className="flex-1 flex flex-col relative z-10">
         {children}

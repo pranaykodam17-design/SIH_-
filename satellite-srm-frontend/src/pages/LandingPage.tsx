@@ -13,7 +13,7 @@ import {
 
 export const LandingPage: React.FC = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-white text-[#10233F] overflow-x-hidden selection:bg-[#1677FF]/20 selection:text-cyan-900">
+    <div className="flex flex-col min-h-screen bg-white text-ink overflow-x-hidden selection:bg-band-blue/15 selection:text-ink">
       {/* 1. Fixed Transparent Glass Navbar */}
       <Navbar />
 

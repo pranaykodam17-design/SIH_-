@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import {
-  Satellite, Search, HelpCircle, Menu, X, ChevronRight,
-  Zap, Bell
-} from 'lucide-react';
+import { Satellite, Search, HelpCircle, Menu, X, ChevronRight, Bell } from 'lucide-react';
 
 const NAV_LINKS = [
   { label: 'Home', to: '/' },
@@ -27,7 +24,6 @@ export const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => setMenuOpen(false), [location.pathname]);
 
   const isActive = (to: string) => {
@@ -39,119 +35,110 @@ export const Navbar: React.FC = () => {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled || menuOpen ? 'navbar-blur' : 'bg-transparent'
-          }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
+          scrolled || menuOpen
+            ? 'bg-white/95 backdrop-blur-md border-b border-[#D4DEE8] shadow-[0_1px_3px_rgba(0,0,0,0.04)]'
+            : 'bg-white'
+        }`}
         style={{ height: 'var(--nav-height)' }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+        <div className="max-w-[1120px] mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 flex-shrink-0 group">
-            <div className="relative">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center shadow-glow-cyan group-hover:shadow-btn-cyan-lg transition-shadow duration-300">
-                <Satellite size={18} className="text-[#10233F]" />
-              </div>
-              <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-cyan-400 border-2 border-[#020c1b] animate-pulse-slow" />
+          <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
+            <div className="w-8 h-8 rounded-md bg-band-blue flex items-center justify-center">
+              <Satellite size={16} className="text-white" />
             </div>
             <div className="hidden sm:block">
-              <div className="text-base font-black text-[#10233F] tracking-tight leading-none">SRM</div>
-              <div className="text-[10px] font-medium text-[#6B7F95] tracking-wider leading-none mt-0.5">
-                Sharper Earth. Better Decisions.
+              <div className="text-[15px] font-bold text-ink leading-none">TerraSR</div>
+              <div className="text-[11px] text-slate leading-none mt-0.5">
+                Satellite Super-Resolution
               </div>
             </div>
           </Link>
 
-          {/* Desktop Nav Links */}
-          <div className="hidden lg:flex items-center gap-1">
+          {/* Desktop Nav */}
+          <div className="hidden lg:flex items-center gap-0.5">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
-                className={`relative px-3.5 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${isActive(link.to)
-                  ? 'text-[#1677FF] bg-cyan-400/8'
-                  : 'text-[#526A82] hover:text-[#10233F] hover:bg-white'
-                  }`}
+                className={`relative px-3 py-2 text-[13px] font-medium rounded-md transition-colors duration-150 ${
+                  isActive(link.to)
+                    ? 'text-band-blue'
+                    : 'text-slate hover:text-ink'
+                }`}
               >
                 {link.label}
                 {isActive(link.to) && (
-                  <span className="absolute bottom-0.5 left-3 right-3 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full" />
+                  <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-band-blue rounded-full" />
                 )}
               </Link>
             ))}
           </div>
 
           {/* Right Actions */}
-          <div className="hidden lg:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-1.5">
             <button
-              className="w-9 h-9 flex items-center justify-center rounded-xl text-[#6B7F95] hover:text-[#425873] hover:bg-white transition-all duration-200"
+              className="w-8 h-8 flex items-center justify-center rounded-md text-slate hover:text-ink hover:bg-wash transition-colors duration-150"
               title="Search"
             >
-              <Search size={16} />
+              <Search size={15} />
             </button>
             <button
-              className="w-9 h-9 flex items-center justify-center rounded-xl text-[#6B7F95] hover:text-[#425873] hover:bg-white transition-all duration-200 relative"
+              className="w-8 h-8 flex items-center justify-center rounded-md text-slate hover:text-ink hover:bg-wash transition-colors duration-150 relative"
               title="Notifications"
             >
-              <Bell size={16} />
-              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-cyan-400 rounded-full" />
+              <Bell size={15} />
             </button>
             <button
-              className="w-9 h-9 flex items-center justify-center rounded-xl text-[#6B7F95] hover:text-[#425873] hover:bg-white transition-all duration-200"
+              className="w-8 h-8 flex items-center justify-center rounded-md text-slate hover:text-ink hover:bg-wash transition-colors duration-150"
               title="Help"
             >
-              <HelpCircle size={16} />
+              <HelpCircle size={15} />
             </button>
-            <div className="w-px h-5 bg-white mx-1" />
+            <div className="w-px h-4 bg-border mx-1" />
             <button
               onClick={() => navigate('/platform')}
-              className="btn-primary text-xs py-2 px-4"
+              className="btn-primary text-[13px] py-2 px-4"
             >
-              <Zap size={13} />
-              Get Started
+              Launch platform
             </button>
           </div>
 
-          {/* Mobile: Get Started + Hamburger */}
+          {/* Mobile */}
           <div className="flex lg:hidden items-center gap-2">
             <button
               onClick={() => navigate('/platform')}
               className="btn-primary text-xs py-2 px-3"
             >
-              <Zap size={12} />
-              Start
+              Platform
             </button>
             <button
               onClick={() => setMenuOpen((v) => !v)}
-              className="w-9 h-9 flex items-center justify-center rounded-xl text-[#526A82] hover:text-[#10233F] hover:bg-white transition-all duration-200"
+              className="w-8 h-8 flex items-center justify-center rounded-md text-slate hover:text-ink hover:bg-wash transition-colors duration-150"
             >
-              {menuOpen ? <X size={20} /> : <Menu size={20} />}
+              {menuOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
         {menuOpen && (
-          <div className="lg:hidden navbar-blur border-t border-[#D7E6F4] px-4 py-3 space-y-1 animate-fade-in">
+          <div className="lg:hidden bg-white border-t border-border px-4 py-3 space-y-0.5 anim-fade-in">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
-                className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${isActive(link.to)
-                  ? 'bg-cyan-400/10 text-[#1677FF] border border-cyan-400/20'
-                  : 'text-[#526A82] hover:text-[#10233F] hover:bg-white'
-                  }`}
+                className={`flex items-center justify-between px-3 py-2.5 rounded-md text-[13px] font-medium transition-colors duration-150 ${
+                  isActive(link.to)
+                    ? 'bg-wash text-band-blue'
+                    : 'text-slate hover:text-ink hover:bg-wash'
+                }`}
               >
                 {link.label}
-                <ChevronRight size={14} className="opacity-40" />
+                <ChevronRight size={13} className="opacity-30" />
               </Link>
             ))}
-            <div className="pt-2 pb-1 flex gap-3">
-              <button className="flex-1 btn-secondary text-xs py-2.5 justify-center">
-                <Search size={13} /> Search
-              </button>
-              <button className="flex-1 btn-secondary text-xs py-2.5 justify-center">
-                <HelpCircle size={13} /> Help
-              </button>
-            </div>
           </div>
         )}
       </nav>

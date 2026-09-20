@@ -253,19 +253,19 @@ export const EnhancePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5FAFF] bg-earth-decor py-10 px-4 sm:px-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-wash bg-earth-decor py-10 px-4 sm:px-6">
+      <div className="max-w-[1120px] mx-auto">
         {/* ── Header ── */}
-        <div className="text-center mb-10">
-          <div className="tag-cyan mx-auto mb-4 w-fit">
+        <div className="mb-10">
+          <div className="tag-cyan mb-3 w-fit">
             <Zap size={11} />
-            Option A · 4-Band Sentinel-2 Super Resolution
+            4-band Sentinel-2 super-resolution
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-[#10233F] mb-3">
-            Enhance Multispectral Satellite Imagery
+          <h1 className="text-3xl sm:text-4xl font-bold text-ink mb-3">
+            Enhance multispectral imagery
           </h1>
-          <p className="text-[#6B7F95] max-w-xl mx-auto leading-relaxed">
-            Ingest separate 10m Sentinel-2 bands (B02 Blue, B03 Green, B04 Red, B08 NIR), validate spatial compatibility, and reconstruct sub-4m spatial representation using SwinIR.
+          <p className="text-slate max-w-xl leading-relaxed">
+            Upload separate 10m Sentinel-2 bands (B02, B03, B04, B08), validate spatial compatibility, and reconstruct sub-4m maps using SwinIR.
           </p>
         </div>
 
@@ -310,27 +310,27 @@ export const EnhancePage: React.FC = () => {
                       ? 'opacity-100'
                       : isCompleted
                       ? 'opacity-90'
-                      : 'opacity-30'
+                      : 'opacity-40'
                   }`}
                 >
                   <div
-                    className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all duration-300 ${
+                    className={`w-9 h-9 rounded-md flex items-center justify-center border transition-all duration-200 ${
                       isCurrent
-                        ? 'bg-[#1677FF]/20 border-cyan-200 text-[#1677FF] shadow-[0_0_15px_rgba(0,212,255,0.2)]'
+                        ? 'bg-wash border-band-blue text-band-blue'
                         : isCompleted
-                        ? 'bg-emerald-500/10 border-emerald-500/25 text-emerald-600'
-                        : 'bg-white border-[#D7E6F4] text-[#526A82]'
+                        ? 'bg-emerald-50 border-emerald-200 text-emerald-600'
+                        : 'bg-white border-border text-slate'
                     }`}
                   >
-                    {isCompleted ? <CheckCircle2 size={15} className="text-emerald-600" /> : icon}
+                    {isCompleted ? <CheckCircle2 size={15} /> : icon}
                   </div>
                   <span
-                    className={`text-[11px] font-semibold tracking-tight ${
+                    className={`text-[11px] font-medium tracking-tight ${
                       isCurrent
-                        ? 'text-[#1677FF]'
+                        ? 'text-band-blue'
                         : isCompleted
                         ? 'text-emerald-600'
-                        : 'text-[#526A82]'
+                        : 'text-slate'
                     }`}
                   >
                     {label}
@@ -338,10 +338,10 @@ export const EnhancePage: React.FC = () => {
                 </div>
                 {i < STEP_LABELS.length - 1 && (
                   <div
-                    className={`flex-1 h-px mx-2 mb-4 transition-colors duration-300 ${
+                    className={`flex-1 h-px mx-2 mb-4 transition-colors duration-200 ${
                       isCompleted
-                        ? 'bg-gradient-to-r from-emerald-500/40 to-cyan-500/30'
-                        : 'bg-white'
+                        ? 'bg-emerald-200'
+                        : 'bg-border'
                     }`}
                   />
                 )}

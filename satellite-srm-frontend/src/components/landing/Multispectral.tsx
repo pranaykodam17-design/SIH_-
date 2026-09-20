@@ -111,31 +111,17 @@ export const Multispectral: React.FC = () => {
   return (
     <section
       id="multispectral"
-      className="relative py-28 bg-white border-t border-[#D7E6F4] overflow-hidden"
+      className="relative py-20 bg-white border-t border-border overflow-hidden"
     >
-      {/* Background ambient lighting */}
-      <div className="absolute top-1/4 right-10 w-[500px] h-[500px] rounded-full bg-violet-600/[0.04] blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-10 left-10 w-[450px] h-[450px] rounded-full bg-cyan-600/[0.04] blur-[130px] pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1677FF]/20 border border-cyan-400/25 mb-4">
-            <Waves size={14} className="text-[#1677FF]" />
-            <span className="font-mono text-xs font-semibold tracking-wider text-cyan-700 uppercase">
-              SECTION 03 — MULTISPECTRAL DATA
-            </span>
-          </div>
-
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#10233F] tracking-tight mb-6">
-            Complementary Spectral{' '}
-            <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent">
-              Intelligence
-            </span>
+        <div className="max-w-2xl mb-14">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-ink tracking-tight mb-5">
+            Complementary spectral intelligence
           </h2>
 
-          <p className="text-base sm:text-lg text-[#425873] max-w-2xl mx-auto leading-relaxed">
-            Multispectral satellite sensors capture discrete wavebands far beyond the visible spectrum. Each band provides complementary physical measurements of Earth’s atmosphere, vegetation, soil, and water.
+          <p className="text-base sm:text-lg text-slate leading-relaxed">
+            Multispectral sensors capture discrete wavebands far beyond the visible spectrum. Each band provides complementary physical measurements of Earth’s atmosphere, vegetation, soil, and water.
           </p>
         </div>
 
@@ -147,51 +133,51 @@ export const Multispectral: React.FC = () => {
               <div
                 key={band.id}
                 onClick={() => setSelectedBand(band.id)}
-                className={`cursor-pointer rounded-3xl p-6 sm:p-7 backdrop-blur-xl border transition-all duration-300 flex flex-col justify-between ${
+                className={`cursor-pointer rounded-lg p-6 border transition-all duration-200 flex flex-col justify-between ${
                   isSelected
-                    ? `bg-gradient-to-b ${band.accentBg} border-[#D7E6F4] shadow-[0_0_35px_rgba(255,255,255,0.06)] -translate-y-2`
-                    : 'bg-white border-[#D7E6F4]'
-                } ${band.borderGlow}`}
+                    ? 'bg-white border-band-blue shadow-card-hover -translate-y-1'
+                    : 'bg-white border-border hover:border-slate/30'
+                }`}
               >
                 <div>
                   {/* Top Bar: Icon + Band Code */}
                   <div className="flex items-center justify-between mb-5">
-                    <div className={`w-12 h-12 rounded-2xl bg-white border border-[#D7E6F4] flex items-center justify-center ${band.themeColor}`}>
+                    <div className={`w-10 h-10 rounded-md bg-wash border border-border flex items-center justify-center ${band.themeColor}`}>
                       {band.icon}
                     </div>
-                    <span className={`px-2.5 py-1 rounded-full border text-[11px] font-mono font-bold ${band.badgeColor}`}>
+                    <span className="px-2 py-0.5 rounded border border-border bg-wash text-[11px] font-mono font-medium text-slate">
                       {band.bandCode}
                     </span>
                   </div>
 
                   {/* Title & Wavelength */}
                   <div className="mb-4">
-                    <h3 className="text-2xl font-black text-[#10233F] tracking-tight">
+                    <h3 className="text-xl font-bold text-ink mb-1">
                       {band.name}
                     </h3>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className={`text-sm font-bold font-mono ${band.themeColor}`}>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-[13px] font-mono font-medium ${band.themeColor}`}>
                         λ {band.wavelength}
                       </span>
-                      <span className="text-xs text-[#526A82] font-mono">
+                      <span className="text-[12px] text-slate font-mono">
                         ({band.range})
                       </span>
                     </div>
                   </div>
 
-                  <p className="text-xs text-[#425873] leading-relaxed mb-6">
+                  <p className="text-[13px] text-slate leading-relaxed mb-6">
                     {band.summary}
                   </p>
                 </div>
 
                 {/* Primary Applications List */}
-                <div className="pt-4 border-t border-[#D7E6F4] space-y-2">
-                  <div className="text-[10px] font-mono uppercase tracking-wider text-[#526A82] mb-1">
+                <div className="pt-4 border-t border-border space-y-2">
+                  <div className="text-[11px] font-mono font-medium text-slate mb-2">
                     Key Indicators
                   </div>
                   {band.primaryUses.map((use, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-xs text-[#425873]">
-                      <span className={`w-1.5 h-1.5 rounded-full ${band.themeColor} bg-current`} />
+                    <div key={idx} className="flex items-center gap-2 text-[13px] text-slate">
+                      <span className={`w-1 h-1 rounded-full ${band.themeColor} bg-current`} />
                       <span className="truncate">{use}</span>
                     </div>
                   ))}
@@ -205,22 +191,22 @@ export const Multispectral: React.FC = () => {
         {(() => {
           const current = bands.find((b) => b.id === selectedBand) || bands[3];
           return (
-            <div className="rounded-3xl bg-gradient-to-r from-white/[0.04] to-cyan-500/[0.02] border border-[#D7E6F4] p-6 sm:p-8 backdrop-blur-xl">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-[#D7E6F4] mb-4">
+            <div className="rounded-lg bg-wash border border-border p-6 sm:p-8">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-border mb-4">
                 <div className="flex items-center gap-3">
-                  <span className={`text-xl font-bold font-mono ${current.themeColor}`}>
-                    {current.name} Channel Deep Dive
+                  <span className={`text-lg font-bold font-mono ${current.themeColor}`}>
+                    {current.name} Channel
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-md bg-white font-mono text-xs text-[#425873]">
+                  <span className="px-2 py-0.5 rounded bg-white border border-border font-mono text-[11px] text-slate">
                     Sentinel-2 MSI
                   </span>
                 </div>
-                <div className="font-mono text-xs text-[#526A82]">
+                <div className="font-mono text-[12px] text-slate">
                   GSD: 10m Native • TerraSR Scale: 3.3m
                 </div>
               </div>
-              <p className="text-sm text-[#425873] leading-relaxed">
-                <strong className="text-[#10233F]">Radiometric Role: </strong>
+              <p className="text-[14px] text-slate leading-relaxed">
+                <strong className="text-ink font-medium">Radiometric Role: </strong>
                 {current.scientificValue}
               </p>
             </div>
