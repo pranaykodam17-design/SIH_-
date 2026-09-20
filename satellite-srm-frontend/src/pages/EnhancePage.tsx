@@ -253,7 +253,7 @@ export const EnhancePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5FAFF] py-10 px-4 sm:px-6">
+    <div className="min-h-screen bg-[#F5FAFF] bg-earth-decor py-10 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
         {/* ── Header ── */}
         <div className="text-center mb-10">

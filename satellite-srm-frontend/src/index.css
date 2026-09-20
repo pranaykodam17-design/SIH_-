@@ -640,6 +640,14 @@ input[type='range']::-webkit-slider-thumb:hover {
   box-shadow: 0 4px 18px rgba(30, 100, 170, 0.08);
 }
 
+.bg-earth-decor {
+  background-image: url('/assets/terrars-earth-background.jpg');
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
 /* ── Page wrapper ── */
 .page-enter {
   animation: fadeIn 0.35s ease both;

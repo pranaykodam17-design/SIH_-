@@ -53,7 +53,7 @@ export const GalleryPage: React.FC = () => {
     : EXAMPLES.filter(e => e.category === activeCategory);
 
   return (
-    <div className="min-h-screen bg-[#F5FAFF]">
+    <div className="min-h-screen bg-[#F5FAFF] bg-earth-decor">
       {/* Header */}
       <div className="border-b border-[#D7E6F4] bg-white/60 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex items-center gap-4">
