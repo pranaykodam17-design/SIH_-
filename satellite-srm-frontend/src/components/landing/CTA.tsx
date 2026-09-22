@@ -5,7 +5,7 @@ import { Button } from '../ui/Button';
 
 export const CTA: React.FC = () => {
   return (
-    <section className="relative py-24 bg-background border-t border-border/40 overflow-hidden">
+    <section className="relative py-24 glass-panel border-t border-border/40 overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,hsl(var(--primary)/0.08),transparent_50%)] pointer-events-none" />
       
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -33,7 +33,7 @@ export const CTA: React.FC = () => {
               <Button 
                 variant="outline" 
                 size="lg" 
-                className="h-14 px-8 text-base font-semibold bg-background/50 backdrop-blur-sm border-border/50 hover:bg-muted/50 transition-colors"
+                className="h-14 px-8 text-base font-semibold bg-background/50 backdrop-blur-sm border-border/50 hover:bg-muted transition-colors"
               >
                 Browse Gallery
               </Button>
@@ -42,7 +42,7 @@ export const CTA: React.FC = () => {
 
           <div className="flex flex-wrap items-center gap-8 text-sm text-muted-foreground relative z-10 font-medium">
             <div className="flex items-center gap-2">
-              <ShieldCheck size={18} className="text-emerald-400" />
+              <ShieldCheck size={18} className="text-emerald-600 dark:text-emerald-400" />
               <span>Radiometric Integrity</span>
             </div>
             <div className="flex items-center gap-2">
@@ -50,7 +50,7 @@ export const CTA: React.FC = () => {
               <span>GPU-Accelerated</span>
             </div>
             <div className="flex items-center gap-2">
-              <Satellite size={18} className="text-cyan-400" />
+              <Satellite size={18} className="text-cyan-600 dark:text-cyan-400" />
               <span>Cloud-Optimized GeoTIFF</span>
             </div>
           </div>

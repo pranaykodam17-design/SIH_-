@@ -24,11 +24,11 @@ export const Challenge: React.FC = () => {
   };
 
   return (
-    <section id="challenge" className="relative py-24 bg-background border-t border-border/40 overflow-hidden">
+    <section id="challenge" className="relative py-24 glass-panel border-t border-border/40 overflow-hidden scroll-mt-[var(--nav-height)]">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6 text-foreground">
             The spatial resolution bottleneck
           </h2>
           <p className="text-lg text-muted-foreground leading-relaxed">
@@ -39,7 +39,7 @@ export const Challenge: React.FC = () => {
         {/* Interactive Comparison Cards */}
         <div className="grid lg:grid-cols-2 gap-8 mb-16">
           {/* Card 1: Low Resolution */}
-          <Card className="group relative overflow-hidden border-border/50 bg-card/40 backdrop-blur-sm transition-all duration-300 hover:border-border">
+          <Card className="group relative overflow-hidden border-border/50 glass-panel transition-all duration-300 hover:border-border">
             <CardContent className="p-6 sm:p-8">
               <div className="flex items-center justify-between gap-4 mb-6">
                 <div className="flex items-center gap-4">
@@ -66,7 +66,7 @@ export const Challenge: React.FC = () => {
                 <div className="absolute inset-0 bg-destructive/10 pointer-events-none mix-blend-overlay" />
                 <div className="absolute inset-0 bg-[radial-gradient(hsl(var(--foreground)/0.1)_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
 
-                <div className="absolute bottom-4 left-4 px-3 py-1.5 rounded-lg bg-background/80 backdrop-blur-md text-xs font-mono text-destructive font-medium border border-destructive/20">
+                <div className="absolute bottom-4 left-4 px-3 py-1.5 rounded-lg glass-panel text-xs font-mono text-destructive font-medium border border-destructive/20">
                   1 Pixel = 100 m²
                 </div>
               </div>
@@ -101,7 +101,7 @@ export const Challenge: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-foreground">Enhanced Resolution</h3>
-                    <p className="text-sm text-primary/80 font-mono mt-0.5">Sub-4m Reconstructed (SwinIR)</p>
+                    <p className="text-sm text-primary opacity-80 font-mono mt-0.5">Sub-4m Reconstructed (SwinIR)</p>
                   </div>
                 </div>
                 <span className="px-3 py-1.5 rounded-md bg-primary text-primary-foreground font-mono text-xs font-bold uppercase tracking-wider shadow-[0_0_15px_hsl(var(--primary)/0.4)]">
@@ -117,7 +117,7 @@ export const Challenge: React.FC = () => {
                   className="w-full h-full object-cover scale-105 transition-transform duration-700 group-hover:scale-110"
                 />
                 
-                <div className="absolute bottom-4 left-4 px-3 py-1.5 rounded-lg bg-background/80 backdrop-blur-md text-xs font-mono text-primary font-medium border border-primary/30">
+                <div className="absolute bottom-4 left-4 px-3 py-1.5 rounded-lg glass-panel text-xs font-mono text-primary font-medium border border-primary/30">
                   1 Pixel = 11.1 m² (9× Density)
                 </div>
               </div>
@@ -156,7 +156,7 @@ export const Challenge: React.FC = () => {
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                       selectedAspect === key
                         ? 'bg-primary/15 text-primary border border-primary/30 shadow-[0_0_15px_hsl(var(--primary)/0.15)]'
-                        : 'bg-muted/30 text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-transparent'
+                        : 'bg-background/40 text-muted-foreground hover:text-foreground hover:bg-muted border border-transparent'
                     }`}
                   >
                     {aspects[key].title}

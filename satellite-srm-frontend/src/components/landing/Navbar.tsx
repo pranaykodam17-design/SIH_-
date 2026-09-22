@@ -53,7 +53,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled || mobileOpen
-          ? 'bg-background/80 backdrop-blur-md border-b border-border/50'
+          ? 'glass-panel border-b border-border/50'
           : 'bg-transparent border-b border-transparent'
         }`}
     >
@@ -86,7 +86,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
             <button
               key={item.label}
               onClick={() => handleNavClick(item)}
-              className="px-4 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all duration-200"
+              className="px-4 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-full transition-all duration-200"
             >
               {item.label}
             </button>
@@ -110,7 +110,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
           <ThemeToggle />
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="w-10 h-10 rounded-xl bg-background border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground"
+            className="w-10 h-10 rounded-xl glass-panel border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground"
             aria-label="Toggle menu"
           >
             {mobileOpen ? <X size={20} /> : <Menu size={20} />}
@@ -125,7 +125,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
             <button
               key={item.label}
               onClick={() => handleNavClick(item)}
-              className="w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+              className="w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
             >
               {item.label}
             </button>

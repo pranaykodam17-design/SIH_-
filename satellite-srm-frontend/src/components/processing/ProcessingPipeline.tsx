@@ -19,30 +19,30 @@ export const ProcessingPipeline: React.FC<ProcessingPipelineProps> = ({ job }) =
     <div className="w-full space-y-6">
       
       {/* Overall Progress Banner */}
-      <Card className="border-cyan-200 bg-white p-6 shadow-sm relative overflow-hidden">
+      <Card className="border-cyan-200 glass-panel p-6 shadow-sm relative overflow-hidden">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-cyan-950/80 border border-cyan-200 text-[#1677FF] flex items-center justify-center shadow-lg">
+            <div className="h-10 w-10 rounded-xl bg-cyan-950/80 border border-cyan-200 text-accent flex items-center justify-center shadow-lg">
               <Satellite className="h-5 w-5 animate-pulse-slow" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold font-mono text-[#10233F]">
+                <h2 className="text-lg font-bold font-mono text-primary">
                   MISSION: {job.jobId}
                 </h2>
                 <Badge variant={job.status === 'completed' ? 'emerald' : 'cyan'} dot>
                   {job.status === 'completed' ? 'MISSION COMPLETED' : 'RECONSTRUCTING RASTER'}
                 </Badge>
               </div>
-              <p className="text-xs font-mono text-[#526A82] mt-0.5">
+              <p className="text-xs font-mono text-secondary mt-0.5">
                 {job.message}
               </p>
             </div>
           </div>
 
           <div className="text-right font-mono">
-            <span className="text-2xl font-bold text-[#1677FF]">{job.overallProgress}%</span>
-            <span className="text-xs text-[#526A82] block">Overall Pipeline Progress</span>
+            <span className="text-2xl font-bold text-accent">{job.overallProgress}%</span>
+            <span className="text-xs text-secondary block">Overall Pipeline Progress</span>
           </div>
         </div>
 
@@ -55,10 +55,10 @@ export const ProcessingPipeline: React.FC<ProcessingPipelineProps> = ({ job }) =
       {/* 7 Granular Stages List */}
       <div className="space-y-3">
         <div className="flex items-center justify-between px-1">
-          <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-[#526A82]">
+          <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-secondary">
             Pipeline Computational Execution Sequence
           </h3>
-          <span className="text-xs font-mono text-[#526A82]">
+          <span className="text-xs font-mono text-secondary">
             Active: Step {Math.min(7, Math.max(1, currentStageIndex + 1))} of 7
           </span>
         </div>

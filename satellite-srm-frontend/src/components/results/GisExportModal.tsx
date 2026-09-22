@@ -35,7 +35,7 @@ const GisExport2DFallback: React.FC<{ phase: GisExportPhase }> = ({ phase }) => 
     <span className="text-xs font-mono text-emerald-700 uppercase tracking-widest font-bold">
       GIS GeoTIFF Compilation
     </span>
-    <span className="text-[11px] font-mono text-[#526A82] mt-1">
+    <span className="text-[11px] font-mono text-secondary mt-1">
       {phase === 'ready' ? 'GeoTIFF Export Ready' : 'Geospatial Packaging in Progress'}
     </span>
   </div>
@@ -160,18 +160,18 @@ export const GisExportModal: React.FC<GisExportModalProps> = ({
     : '16.8 MB';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-white backdrop-blur-md anim-fade-in select-none">
-      <div className="relative w-full max-w-4xl rounded-3xl border border-[#D7E6F4] bg-white/95 shadow-[0_0_60px_rgba(16,185,129,0.15)] overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 glass-panel backdrop-blur-md anim-fade-in select-none">
+      <div className="relative w-full max-w-4xl rounded-3xl border border-theme bg-surface/95 shadow-[0_0_60px_rgba(16,185,129,0.15)] overflow-hidden flex flex-col">
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#D7E6F4] bg-white">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-theme glass-panel">
           <div className="flex items-center gap-3">
             <div
               className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all ${
                 phase === 'ready'
                   ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-600 shadow-[0_0_15px_rgba(16,185,129,0.3)]'
                   : phase === 'error'
-                  ? 'bg-red-500/15 border-red-500/40 text-red-600'
-                  : 'bg-[#1677FF]/20 border-cyan-200 text-cyan-700 shadow-[0_0_15px_rgba(0,212,255,0.2)]'
+                  ? 'bg-red-500/15 border-red-500/40 text-red-600 dark:text-red-400'
+                  : 'bg-accent/20 border-cyan-200 text-cyan-700 dark:text-cyan-400 shadow-[0_0_15px_rgba(0,212,255,0.2)]'
               }`}
             >
               {phase === 'ready' ? (
@@ -183,23 +183,23 @@ export const GisExportModal: React.FC<GisExportModalProps> = ({
               )}
             </div>
             <div>
-              <h3 className="text-sm sm:text-base font-bold text-[#10233F] tracking-wide flex items-center gap-2">
+              <h3 className="text-sm sm:text-base font-bold text-primary tracking-wide flex items-center gap-2">
                 <span>GIS Export Pipeline</span>
                 {phase === 'ready' ? (
                   <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-700 font-bold">
                     EXPORT READY
                   </span>
                 ) : phase === 'error' ? (
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-red-500/20 border border-red-500/40 text-red-700 font-bold">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-red-500/20 border border-red-500/40 text-red-700 dark:text-red-400 font-bold">
                     EXPORT FAILED
                   </span>
                 ) : (
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#1677FF]/20 border border-cyan-200 text-cyan-700 animate-pulse font-semibold">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-accent/20 border border-cyan-200 text-cyan-700 dark:text-cyan-400 animate-pulse font-semibold">
                     COMPILING GEOTIFF
                   </span>
                 )}
               </h3>
-              <p className="text-[11px] text-[#526A82] font-mono">
+              <p className="text-[11px] text-secondary font-mono">
                 Georeferenced 4-Band Multispectral Product (.tif)
               </p>
             </div>
@@ -207,7 +207,7 @@ export const GisExportModal: React.FC<GisExportModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-[#526A82] hover:text-[#10233F] hover:bg-white transition-colors"
+            className="p-1.5 rounded-lg text-secondary hover:text-primary hover:glass-panel transition-colors"
           >
             <X size={18} />
           </button>
@@ -216,7 +216,7 @@ export const GisExportModal: React.FC<GisExportModalProps> = ({
         {/* Modal Body: 3D Visualization + Sequential Steps */}
         <div className="grid md:grid-cols-2 gap-0">
           {/* Left Column: 3D Earth / Satellite Scene */}
-          <div className="relative h-[270px] md:h-[350px] bg-white border-b md:border-b-0 md:border-r border-[#D7E6F4] overflow-hidden">
+          <div className="relative h-[270px] md:h-[350px] glass-panel border-b md:border-b-0 md:border-r border-theme overflow-hidden">
             {hasWebGL ? (
               <ErrorBoundary fallback={<GisExport2DFallback phase={phase} />}>
                 <div className="absolute inset-0">
@@ -236,26 +236,26 @@ export const GisExportModal: React.FC<GisExportModalProps> = ({
             )}
 
             {/* Top Overlay Badge */}
-            <div className="absolute top-3 left-3 pointer-events-none z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-[#D7E6F4] text-[10px] font-mono text-cyan-700">
-              <Radio size={11} className="text-[#1677FF] animate-pulse" />
+            <div className="absolute top-3 left-3 pointer-events-none z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg glass-panel border border-theme text-[10px] font-mono text-cyan-700 dark:text-cyan-400">
+              <Radio size={11} className="text-accent animate-pulse" />
               <span>Orbit Nadir Tracking · Sentinel-2</span>
             </div>
 
             {/* Bottom Overlay Badge */}
-            <div className="absolute bottom-3 left-3 right-3 pointer-events-none z-10 flex items-center justify-between text-[10px] font-mono text-[#526A82]">
-              <span className="bg-white px-2 py-0.5 rounded border border-[#D7E6F4]">
+            <div className="absolute bottom-3 left-3 right-3 pointer-events-none z-10 flex items-center justify-between text-[10px] font-mono text-secondary">
+              <span className="glass-panel px-2 py-0.5 rounded border border-theme">
                 CRS: {crs.split(' ')[0]}
               </span>
-              <span className="bg-white px-2 py-0.5 rounded border border-[#D7E6F4] text-emerald-700">
+              <span className="glass-panel px-2 py-0.5 rounded border border-theme text-emerald-700 dark:text-emerald-400">
                 {resolution}
               </span>
             </div>
           </div>
 
           {/* Right Column: Visual Sequence Pipeline */}
-          <div className="p-5 md:p-6 flex flex-col justify-between bg-white/60 space-y-4">
+          <div className="p-5 md:p-6 flex flex-col justify-between bg-surface/60 space-y-4">
             <div className="space-y-2">
-              <div className="text-[10px] font-bold text-[#526A82] uppercase tracking-widest font-mono mb-2">
+              <div className="text-[10px] font-bold text-secondary uppercase tracking-widest font-mono mb-2">
                 Geospatial Referencing Sequence
               </div>
 
@@ -271,27 +271,27 @@ export const GisExportModal: React.FC<GisExportModalProps> = ({
                       <div
                         className={`flex items-center justify-between p-2 rounded-xl border text-xs font-mono transition-all duration-300 ${
                           isCurrent && phase !== 'ready'
-                            ? 'border-cyan-400/50 bg-[#1677FF]/20 text-cyan-700 shadow-[0_0_15px_rgba(0,212,255,0.15)] ring-1 ring-cyan-400/30'
+                            ? 'border-cyan-400/50 bg-accent/20 text-cyan-700 dark:text-cyan-400 shadow-[0_0_15px_rgba(0,212,255,0.15)] ring-1 ring-cyan-400/30'
                             : isDone
-                            ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700'
-                            : 'border-[#D7E6F4] bg-white text-[#6B7F95] opacity-50'
+                            ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
+                            : 'border-theme glass-panel text-muted-foreground'
                         }`}
                       >
                         <div className="flex items-center gap-2">
                           <div
                             className={`w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold ${
                               isDone
-                                ? 'bg-emerald-500 text-black'
+                                ? 'bg-emerald-500 text-foreground'
                                 : isCurrent
-                                ? 'bg-cyan-400 text-black animate-pulse'
-                                : 'bg-white text-[#6B7F95]'
+                                ? 'bg-cyan-400 text-foreground animate-pulse'
+                                : 'glass-panel text-muted-foreground'
                             }`}
                           >
                             {isDone ? '✓' : idx + 1}
                           </div>
                           <span className="font-bold text-[11px]">{step.label}</span>
                         </div>
-                        <span className="text-[9px] text-[#526A82] hidden sm:inline">{step.sub}</span>
+                        <span className="text-[9px] text-secondary hidden sm:inline">{step.sub}</span>
                       </div>
 
                       {idx < EXPORT_STEPS.length - 1 && (
@@ -299,7 +299,7 @@ export const GisExportModal: React.FC<GisExportModalProps> = ({
                           <ArrowDown
                             size={10}
                             className={`transition-colors ${
-                              isDone ? 'text-emerald-600/60' : 'text-[#425873]'
+                              isDone ? 'text-emerald-600/60' : 'text-secondary'
                             }`}
                           />
                         </div>
@@ -327,7 +327,7 @@ export const GisExportModal: React.FC<GisExportModalProps> = ({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <ShieldCheck size={16} className="text-emerald-600" />
-                    <span className="text-xs font-black text-[#10233F] uppercase tracking-wider">
+                    <span className="text-xs font-black text-primary uppercase tracking-wider">
                       GeoTIFF Export Ready
                     </span>
                   </div>
@@ -336,13 +336,13 @@ export const GisExportModal: React.FC<GisExportModalProps> = ({
                   </span>
                 </div>
 
-                <div className="text-[10px] font-mono text-[#425873] grid grid-cols-2 gap-2 bg-white p-2 rounded-lg">
+                <div className="text-[10px] font-mono text-secondary grid grid-cols-2 gap-2 glass-panel p-2 rounded-lg">
                   <div>
-                    <span className="text-[#6B7F95] block">Raster Grid:</span>
+                    <span className="text-muted-foreground block">Raster Grid:</span>
                     <span>{dimensions}</span>
                   </div>
                   <div>
-                    <span className="text-[#6B7F95] block">Format:</span>
+                    <span className="text-muted-foreground block">Format:</span>
                     <span>4-Band GeoTIFF (EPSG:32644)</span>
                   </div>
                 </div>
@@ -350,14 +350,14 @@ export const GisExportModal: React.FC<GisExportModalProps> = ({
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleDownload}
-                    className="flex-1 py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)] flex items-center justify-center gap-2"
+                    className="flex-1 py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-foreground font-black text-xs transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)] flex items-center justify-center gap-2"
                   >
                     <Download size={14} />
                     <span>{downloadTriggered ? 'Downloaded · Download Again' : 'Download GeoTIFF (.tif)'}</span>
                   </button>
                   <button
                     onClick={onClose}
-                    className="py-2.5 px-3 rounded-xl bg-white hover:bg-white border border-[#D7E6F4] text-[#425873] text-xs font-semibold transition-colors"
+                    className="py-2.5 px-3 rounded-xl glass-panel hover:glass-panel border border-theme text-secondary text-xs font-semibold transition-colors"
                   >
                     Done
                   </button>
@@ -367,12 +367,12 @@ export const GisExportModal: React.FC<GisExportModalProps> = ({
 
             {/* Compiling In-Progress Status Bar */}
             {phase !== 'ready' && phase !== 'error' && (
-              <div className="flex items-center justify-between p-3 rounded-xl bg-[#1677FF]/[0.06] border border-cyan-200 text-xs text-cyan-700 font-mono">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-accent/[0.06] border border-cyan-200 text-xs text-cyan-700 dark:text-cyan-400 font-mono">
                 <div className="flex items-center gap-2">
-                  <RefreshCw size={13} className="animate-spin text-[#1677FF]" />
+                  <RefreshCw size={13} className="animate-spin text-accent" />
                   <span>Verifying GeoTIFF packaging…</span>
                 </div>
-                <span className="text-[10px] text-[#6B7F95]">Non-destructive</span>
+                <span className="text-[10px] text-muted-foreground">Non-destructive</span>
               </div>
             )}
           </div>

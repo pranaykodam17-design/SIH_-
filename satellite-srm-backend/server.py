@@ -587,20 +587,28 @@ def generate_product_for_raster(input_path: str, job_id: str, scale_factor: floa
         gray = sr_img.convert("L")
         edges = np.array(gray.filter(ImageFilter.FIND_EDGES), dtype=np.float32) / 255.0
         unc_val = np.clip(edges * 0.85 + np.random.uniform(0.02, 0.12, (target_h, target_w)), 0.0, 1.0)
-        unc_rgb = np.zeros((target_h, target_w, 3), dtype=np.uint8)
-        for y in range(target_h):
-            for x in range(target_w):
-                u = unc_val[y, x]
-                if u < 0.25: unc_rgb[y, x] = [int(15 + u*60), int(20 + u*70), int(65 + u*180)]
-                elif u < 0.55:
-                    t = (u - 0.25) / 0.3
-                    unc_rgb[y, x] = [int(30 + t*50), int(95 + t*120), int(135 + t*90)]
-                elif u < 0.8:
-                    t = (u - 0.55) / 0.25
-                    unc_rgb[y, x] = [int(190 + t*55), int(175 + t*50), 30]
-                else:
-                    t = (u - 0.8) / 0.2
-                    unc_rgb[y, x] = [int(245 + t*10), int(60 - t*35), int(50 - t*30)]
+        
+        # Magma/Inferno like colormap (vectorized)
+        unc_val_3d = np.expand_dims(unc_val, axis=-1)
+        c0 = np.array([0, 0, 4])          # Black/dark blue
+        c1 = np.array([114, 31, 129])     # Purple
+        c2 = np.array([241, 96, 93])      # Orange/Red
+        c3 = np.array([253, 252, 169])    # Yellow/White
+
+        cond1 = unc_val_3d < 0.33
+        cond2 = (unc_val_3d >= 0.33) & (unc_val_3d < 0.66)
+        cond3 = unc_val_3d >= 0.66
+
+        t1 = unc_val_3d / 0.33
+        t2 = (unc_val_3d - 0.33) / 0.33
+        t3 = (unc_val_3d - 0.66) / 0.34
+
+        unc_rgb = np.zeros((target_h, target_w, 3), dtype=np.float32)
+        unc_rgb += cond1 * (c0 * (1 - t1) + c1 * t1)
+        unc_rgb += cond2 * (c1 * (1 - t2) + c2 * t2)
+        unc_rgb += cond3 * (c2 * (1 - t3) + c3 * t3)
+        unc_rgb = np.clip(unc_rgb, 0, 255).astype(np.uint8)
+        
         unc_img = Image.fromarray(unc_rgb)
 
         # 5. Output Filenames
@@ -614,12 +622,16 @@ def generate_product_for_raster(input_path: str, job_id: str, scale_factor: floa
         b08_png_name = f"b08_{job_id}.png"
         false_color_png_name = f"false_color_{job_id}.png"
         sr_tif_name = f"SR_product_{job_id}.tif"
+        unc_tif_name = f"uncertainty_map_{job_id}.tif"
         metrics_json_name = f"metrics_{job_id}.json"
 
         sr_img.save(OUTPUT_DIR / sr_png_name, "PNG")
         lr_img.save(OUTPUT_DIR / lr_png_name, "PNG")
         ndvi_img.save(OUTPUT_DIR / ndvi_png_name, "PNG")
         unc_img.save(OUTPUT_DIR / uncertainty_png_name, "PNG")
+        
+        # Save Float32 Uncertainty Map
+        Image.fromarray(unc_val.astype(np.float32)).save(OUTPUT_DIR / unc_tif_name, format="TIFF")
 
         # 6. Real Single Bands and False Color (CIR)
         r_u8 = r.astype(np.uint8)
@@ -691,7 +703,7 @@ def generate_product_for_raster(input_path: str, job_id: str, scale_factor: floa
 
         return {
             "sr_tif_name": sr_tif_name,
-            "uncertainty_tif_name": sr_tif_name,
+            "uncertainty_tif_name": unc_tif_name,
             "metrics_json_name": metrics_json_name,
             "lr_png_name": lr_png_name,
             "sr_png_name": sr_png_name,
@@ -795,7 +807,7 @@ async def process_satellite_srm_task(job_id: str, input_path: str, model_name: s
             jobs_db[job_id]["updatedAt"] = time.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-@app.get("/health")
+@app.get("/api/v1/health")
 def health_check():
     return {
         "status": "healthy",

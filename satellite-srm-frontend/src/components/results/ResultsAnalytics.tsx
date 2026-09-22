@@ -23,7 +23,7 @@ const ProgressBar: React.FC<{ value: number; max?: number; color: string }> = ({
 }) => {
   const pct = Math.min(100, Math.max(0, (value / max) * 100));
   return (
-    <div className="h-1.5 w-full bg-white rounded-full overflow-hidden mt-2">
+    <div className="h-1.5 w-full glass-panel rounded-full overflow-hidden mt-2">
       <div
         className={`h-full rounded-full transition-all duration-700 ${color}`}
         style={{ width: `${pct}%` }}
@@ -41,11 +41,11 @@ const DataCell: React.FC<{
   barValue?: number;
   barMax?: number;
   barColor?: string;
-}> = ({ label, value, sub, accent = 'text-[#10233F]', barValue, barMax, barColor }) => (
-  <div className="p-3.5 bg-white border border-[#D7E6F4] rounded-xl">
-    <span className="text-[11px] font-mono text-[#6B7F95] block mb-1">{label}</span>
+}> = ({ label, value, sub, accent = 'text-primary', barValue, barMax, barColor }) => (
+  <div className="p-3.5 glass-panel border border-theme rounded-xl">
+    <span className="text-[11px] font-mono text-muted-foreground block mb-1">{label}</span>
     <span className={`text-xl font-black font-mono ${accent} leading-none`}>{value}</span>
-    {sub && <span className="text-[10px] text-[#6B7F95] block mt-1">{sub}</span>}
+    {sub && <span className="text-[10px] text-muted-foreground block mt-1">{sub}</span>}
     {barValue !== undefined && barMax !== undefined && barColor && (
       <ProgressBar value={barValue} max={barMax} color={barColor} />
     )}
@@ -54,9 +54,9 @@ const DataCell: React.FC<{
 
 /** "Not available" placeholder */
 const NA: React.FC<{ label: string }> = ({ label }) => (
-  <div className="p-3.5 bg-white border border-[#D7E6F4] rounded-xl">
-    <span className="text-[11px] font-mono text-[#526A82] block mb-1">{label}</span>
-    <span className="text-xs text-[#526A82] italic">Not available for this input</span>
+  <div className="p-3.5 glass-panel border border-theme rounded-xl">
+    <span className="text-[11px] font-mono text-secondary block mb-1">{label}</span>
+    <span className="text-xs text-secondary italic">Not available for this input</span>
   </div>
 );
 
@@ -68,11 +68,11 @@ const Section: React.FC<{
   hoverBorder: string;
   children: React.ReactNode;
 }> = ({ icon, title, badge, hoverBorder, children }) => (
-  <div className={`glass rounded-2xl p-5 border border-[#D7E6F4] space-y-4 transition-all duration-300 ${hoverBorder}`}>
-    <div className="flex items-center justify-between border-b border-[#D7E6F4] pb-3">
+  <div className={`glass rounded-2xl p-5 border border-theme space-y-4 transition-all duration-300 ${hoverBorder}`}>
+    <div className="flex items-center justify-between border-b border-theme pb-3">
       <div className="flex items-center gap-2">
         {icon}
-        <h4 className="text-sm font-bold text-[#10233F] uppercase tracking-wider font-mono">{title}</h4>
+        <h4 className="text-sm font-bold text-primary uppercase tracking-wider font-mono">{title}</h4>
       </div>
       {badge}
     </div>
@@ -90,13 +90,13 @@ const ChartTooltip = ({
 }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-[#EEF7FF] border border-[#D7E6F4] rounded-xl px-3 py-2 shadow-xl text-xs">
-      <div className="text-[#526A82] mb-1 font-mono">{label}</div>
+    <div className="glass-panel-secondary border border-theme rounded-xl px-3 py-2 shadow-xl text-xs">
+      <div className="text-secondary mb-1 font-mono">{label}</div>
       {payload.map((p) => (
         <div key={p.name} className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full" style={{ background: p.color }} />
-          <span className="text-[#526A82]">{p.name}:</span>
-          <span className="font-bold text-[#10233F]">{p.value}</span>
+          <span className="text-secondary">{p.name}:</span>
+          <span className="font-bold text-primary">{p.value}</span>
         </div>
       ))}
     </div>
@@ -168,22 +168,22 @@ export const ResultsAnalytics: React.FC<ResultsAnalyticsProps> = ({ job }) => {
     <div className="space-y-6">
 
       {/* ── Section Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#D7E6F4] pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-theme pb-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-6 h-6 rounded-lg bg-[#1677FF]/20 border border-cyan-500/25 flex items-center justify-center">
-              <BarChart3 size={13} className="text-[#1677FF]" />
+            <div className="w-6 h-6 rounded-lg bg-accent/20 border border-cyan-500/25 flex items-center justify-center">
+              <BarChart3 size={13} className="text-accent" />
             </div>
-            <span className="text-xs font-mono font-bold tracking-wider text-[#1677FF] uppercase">
+            <span className="text-xs font-mono font-bold tracking-wider text-accent uppercase">
               Mission Analytics
             </span>
           </div>
-          <h3 className="text-xl font-bold text-[#10233F] tracking-tight">
+          <h3 className="text-xl font-bold text-primary tracking-tight">
             Comprehensive Verification &amp; Metrics
           </h3>
         </div>
         <div className="flex items-center gap-2">
-          <span className="px-2.5 py-1 rounded-full text-xs font-mono bg-white border border-[#D7E6F4] text-[#526A82]">
+          <span className="px-2.5 py-1 rounded-full text-xs font-mono glass-panel border border-theme text-secondary">
             Engine: {telemetry?.model || 'SwinIR-SRM'}
           </span>
           {hasReference && (
@@ -201,39 +201,39 @@ export const ResultsAnalytics: React.FC<ResultsAnalyticsProps> = ({ job }) => {
             1. MODEL RESULT
         ══════════════════════════════════════════════════════ */}
         <Section
-          icon={<Scale size={16} className="text-[#1677FF]" />}
+          icon={<Scale size={16} className="text-accent" />}
           title="1. Model Result"
-          badge={<span className="text-[11px] font-mono text-[#6B7F95]">Resolution Magnification</span>}
+          badge={<span className="text-[11px] font-mono text-muted-foreground">Resolution Magnification</span>}
           hoverBorder="hover:border-cyan-200"
         >
           <div className="grid grid-cols-3 gap-3">
             {inputGsd
-              ? <DataCell label="Input GSD"    value={inputGsd}         sub="Sentinel-2 Native"  accent="text-[#10233F]"    />
+              ? <DataCell label="Input GSD"    value={inputGsd}         sub="Sentinel-2 Native"  accent="text-primary"    />
               : <NA label="Input GSD" />}
             {outputGsd
               ? <DataCell label="Output GSD"   value={outputGsd}        sub="Deep Learning SR"   accent="text-cyan-700" />
               : <NA label="Output GSD" />}
             {scaleFactor != null
-              ? <DataCell label="Scale Factor" value={`${scaleFactor}\u00d7`} sub="Spatial Expansion"  accent="text-[#10233F]"    />
+              ? <DataCell label="Scale Factor" value={`${scaleFactor}\u00d7`} sub="Spatial Expansion"  accent="text-primary"    />
               : <NA label="Scale Factor" />}
           </div>
 
           {/* Pixel sub-division bar */}
           {scaleFactor != null && inputGsd && outputGsd && (
-            <div className="p-3 bg-white border border-[#D7E6F4] rounded-xl space-y-2">
-              <div className="flex items-center justify-between text-[11px] font-mono text-[#526A82]">
+            <div className="p-3 glass-panel border border-theme rounded-xl space-y-2">
+              <div className="flex items-center justify-between text-[11px] font-mono text-secondary">
                 <span>Macro-Pixel \u2192 Sub-Pixel Reconstruction</span>
-                <span className="text-[#1677FF] font-semibold">
+                <span className="text-accent font-semibold">
                   1:{Math.round(scaleFactor * scaleFactor)} Pixel Sub-Division
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="flex-1 h-3.5 rounded bg-slate-700/60 border border-slate-600 flex items-center justify-center text-[9px] font-mono text-[#425873]">
+                <div className="flex-1 h-3.5 rounded glass-panel-secondary/60 border border-slate-600 flex items-center justify-center text-[9px] font-mono text-secondary">
                   {inputGsd} Input Pixel
                 </div>
-                <div className="text-[#6B7F95] text-xs font-mono">\u27a1</div>
+                <div className="text-muted-foreground text-xs font-mono">\u27a1</div>
                 <div
-                  className="flex-1 h-3.5 rounded bg-[#1677FF]/20 border border-cyan-200 grid gap-0.5 p-0.5"
+                  className="flex-1 h-3.5 rounded bg-accent/20 border border-cyan-200 grid gap-0.5 p-0.5"
                   style={{ gridTemplateColumns: `repeat(${Math.round(scaleFactor)}, 1fr)` }}
                 >
                   {Array.from({ length: Math.round(scaleFactor) * Math.round(scaleFactor) }).map((_, i) => (
@@ -249,12 +249,12 @@ export const ResultsAnalytics: React.FC<ResultsAnalyticsProps> = ({ job }) => {
             2. IMAGE QUALITY
         ══════════════════════════════════════════════════════ */}
         <Section
-          icon={<Activity size={16} className="text-[#1677FF]" />}
+          icon={<Activity size={16} className="text-accent" />}
           title="2. Image Quality"
           badge={
             hasReference
               ? <span className="text-[11px] font-mono text-emerald-600 flex items-center gap-1"><CheckCircle2 size={12} /> Reference Data Active</span>
-              : <span className="text-[11px] font-mono text-[#6B7F95]">No Ground Truth Reference</span>
+              : <span className="text-[11px] font-mono text-muted-foreground">No Ground Truth Reference</span>
           }
           hoverBorder="hover:border-blue-500/30"
         >
@@ -273,8 +273,8 @@ export const ResultsAnalytics: React.FC<ResultsAnalyticsProps> = ({ job }) => {
                   ? (
                     <DataCell
                       label="PSNR (dB)"
-                      accent="text-[#10233F]"
-                      value={<>{psnr.model.toFixed(1)}<span className="text-sm font-normal text-[#6B7F95] ml-1">dB</span></>}
+                      accent="text-primary"
+                      value={<>{psnr.model.toFixed(1)}<span className="text-sm font-normal text-muted-foreground ml-1">dB</span></>}
                       sub={`vs ${psnr.bicubic.toFixed(1)} dB baseline \u2022 +${psnr.gain.toFixed(2)} dB gain`}
                       barValue={psnr.model}
                       barMax={50}
@@ -287,7 +287,7 @@ export const ResultsAnalytics: React.FC<ResultsAnalyticsProps> = ({ job }) => {
                   ? (
                     <DataCell
                       label="SSIM"
-                      accent="text-[#10233F]"
+                      accent="text-primary"
                       value={ssim.model.toFixed(4)}
                       sub={`vs ${ssim.bicubic.toFixed(4)} baseline \u2022 +${ssim.gain.toFixed(4)} gain`}
                       barValue={ssim.model}
@@ -299,8 +299,8 @@ export const ResultsAnalytics: React.FC<ResultsAnalyticsProps> = ({ job }) => {
               </div>
 
               {/* Spectral Consistency */}
-              <div className="p-3 bg-white border border-[#D7E6F4] rounded-xl space-y-2">
-                <span className="text-[11px] font-mono text-[#526A82] uppercase tracking-wider block">
+              <div className="p-3 glass-panel border border-theme rounded-xl space-y-2">
+                <span className="text-[11px] font-mono text-secondary uppercase tracking-wider block">
                   Spectral Consistency Metrics
                 </span>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
@@ -311,17 +311,17 @@ export const ResultsAnalytics: React.FC<ResultsAnalyticsProps> = ({ job }) => {
                     { label: 'NDVI MAE',    m: ndviMae,  fmt: (v: number) => v.toFixed(4),             good: false },
                   ] as const).map(({ label, m, fmt, good }) =>
                     m ? (
-                      <div key={label} className="p-2 rounded bg-white border border-[#D7E6F4]">
-                        <span className="text-[10px] text-[#6B7F95] block">{label}</span>
-                        <span className="font-bold text-[#10233F]">{fmt(m.model)}</span>
+                      <div key={label} className="p-2 rounded glass-panel border border-theme">
+                        <span className="text-[10px] text-muted-foreground block">{label}</span>
+                        <span className="font-bold text-primary">{fmt(m.model)}</span>
                         <span className={`text-[9px] block ${good ? 'text-emerald-600' : 'text-sky-600'}`}>
                           {good && m.gain > 0 ? '+' : ''}{m.gain.toFixed(3)} vs base
                         </span>
                       </div>
                     ) : (
-                      <div key={label} className="p-2 rounded bg-white border border-[#D7E6F4]">
-                        <span className="text-[10px] text-[#6B7F95] block">{label}</span>
-                        <span className="text-[10px] text-[#526A82] italic">N/A</span>
+                      <div key={label} className="p-2 rounded glass-panel border border-theme">
+                        <span className="text-[10px] text-muted-foreground block">{label}</span>
+                        <span className="text-[10px] text-secondary italic">N/A</span>
                       </div>
                     )
                   )}
@@ -330,8 +330,8 @@ export const ResultsAnalytics: React.FC<ResultsAnalyticsProps> = ({ job }) => {
 
               {/* Model vs Bicubic bar chart */}
               {qualityChartData && (
-                <div className="p-3 bg-white border border-[#D7E6F4] rounded-xl">
-                  <div className="text-[11px] font-mono text-[#526A82] uppercase tracking-wider mb-3">
+                <div className="p-3 glass-panel border border-theme rounded-xl">
+                  <div className="text-[11px] font-mono text-secondary uppercase tracking-wider mb-3">
                     Model vs Bicubic Baseline
                   </div>
                   <ResponsiveContainer width="100%" height={120}>
@@ -352,9 +352,9 @@ export const ResultsAnalytics: React.FC<ResultsAnalyticsProps> = ({ job }) => {
                       </Bar>
                     </BarChart>
                   </ResponsiveContainer>
-                  <div className="flex flex-wrap items-center gap-4 mt-2 text-[10px] font-mono text-[#6B7F95]">
+                  <div className="flex flex-wrap items-center gap-4 mt-2 text-[10px] font-mono text-muted-foreground">
                     <span className="flex items-center gap-1.5">
-                      <span className="w-3 h-2 rounded-sm bg-slate-500/60 inline-block" /> Bicubic
+                      <span className="w-3 h-2 rounded-sm glass-panel-secondary0/60 inline-block" /> Bicubic
                     </span>
                     <span className="flex items-center gap-1.5">
                       <span className="w-3 h-2 rounded-sm bg-cyan-400 inline-block" /> Model (SwinIR-SRM)
@@ -367,9 +367,9 @@ export const ResultsAnalytics: React.FC<ResultsAnalyticsProps> = ({ job }) => {
           )}
 
           {/* Disclaimer — always shown */}
-          <div className="flex items-start gap-2 px-3 py-2.5 bg-[#1677FF]/[0.05] border border-blue-500/15 rounded-xl">
-            <Info size={12} className="text-[#1677FF] flex-shrink-0 mt-0.5" />
-            <p className="text-[11px] text-[#1677FF]/75 leading-relaxed">
+          <div className="flex items-start gap-2 px-3 py-2.5 bg-accent/[0.05] border border-blue-500/15 rounded-xl">
+            <Info size={12} className="text-accent flex-shrink-0 mt-0.5" />
+            <p className="text-[11px] text-accent/75 leading-relaxed">
               Metrics computed vs. a bicubic upsampling baseline. Validate against high-resolution reference data for critical applications.
             </p>
           </div>
@@ -381,7 +381,7 @@ export const ResultsAnalytics: React.FC<ResultsAnalyticsProps> = ({ job }) => {
         <Section
           icon={<ShieldAlert size={16} className="text-amber-600" />}
           title="3. Uncertainty"
-          badge={<span className="text-[11px] font-mono text-[#526A82]">Monte Carlo Variance</span>}
+          badge={<span className="text-[11px] font-mono text-secondary">Monte Carlo Variance</span>}
           hoverBorder="hover:border-amber-500/30"
         >
           <div className="grid grid-cols-2 gap-3">
@@ -391,7 +391,7 @@ export const ResultsAnalytics: React.FC<ResultsAnalyticsProps> = ({ job }) => {
                   label="Mean Uncertainty"
                   accent="text-amber-700"
                   value={
-                    <>{meanUnc.toFixed(4)}<span className="text-sm font-normal text-[#6B7F95] ml-1">({(meanUnc * 100).toFixed(1)}%)</span></>
+                    <>{meanUnc.toFixed(4)}<span className="text-sm font-normal text-muted-foreground ml-1">({(meanUnc * 100).toFixed(1)}%)</span></>
                   }
                   sub="Average spatial variance"
                   barValue={meanUnc}
@@ -407,7 +407,7 @@ export const ResultsAnalytics: React.FC<ResultsAnalyticsProps> = ({ job }) => {
                   label="Max Uncertainty"
                   accent="text-rose-400"
                   value={
-                    <>{maxUnc.toFixed(4)}<span className="text-sm font-normal text-[#6B7F95] ml-1">({(maxUnc * 100).toFixed(1)}%)</span></>
+                    <>{maxUnc.toFixed(4)}<span className="text-sm font-normal text-muted-foreground ml-1">({(maxUnc * 100).toFixed(1)}%)</span></>
                   }
                   sub="Peak boundary variance"
                   barValue={maxUnc}
@@ -420,33 +420,33 @@ export const ResultsAnalytics: React.FC<ResultsAnalyticsProps> = ({ job }) => {
 
           {/* Confidence gauge — only shown when meanUnc is available from backend */}
           {confidencePct != null && (
-            <div className="p-3 bg-white border border-[#D7E6F4] rounded-xl space-y-2">
+            <div className="p-3 glass-panel border border-theme rounded-xl space-y-2">
               <div className="flex items-center justify-between text-[11px] font-mono">
-                <span className="text-[#526A82]">Overall Model Confidence</span>
+                <span className="text-secondary">Overall Model Confidence</span>
                 <span className="text-emerald-600 font-bold">{confidencePct}%</span>
               </div>
-              <div className="h-2 w-full bg-white rounded-full overflow-hidden">
+              <div className="h-2 w-full glass-panel rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-cyan-400 transition-all duration-700"
                   style={{ width: `${confidencePct}%` }}
                 />
               </div>
-              <p className="text-[10px] text-[#6B7F95]">
+              <p className="text-[10px] text-muted-foreground">
                 Derived from mean uncertainty: 1 \u2212 {meanUnc!.toFixed(4)} = {confidencePct}% model confidence
               </p>
             </div>
           )}
 
           {/* Uncertainty visualisation */}
-          <div className="p-3 bg-white border border-[#D7E6F4] rounded-xl space-y-3">
+          <div className="p-3 glass-panel border border-theme rounded-xl space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-mono text-[#526A82] uppercase tracking-wider">
+              <span className="text-[11px] font-mono text-secondary uppercase tracking-wider">
                 Uncertainty Visualization Layer
               </span>
               {uncertaintyUrl && (
                 <button
                   onClick={() => setShowUncertaintyModal(true)}
-                  className="text-[11px] font-mono text-[#1677FF] hover:text-cyan-700 flex items-center gap-1"
+                  className="text-[11px] font-mono text-accent hover:text-cyan-700 flex items-center gap-1"
                 >
                   <Maximize2 size={10} /> Expand Map
                 </button>
@@ -457,33 +457,33 @@ export const ResultsAnalytics: React.FC<ResultsAnalyticsProps> = ({ job }) => {
               <div className="flex items-center gap-3">
                 <div
                   onClick={() => setShowUncertaintyModal(true)}
-                  className="w-20 h-20 rounded-lg overflow-hidden border border-[#D7E6F4] cursor-pointer flex-shrink-0 relative group"
+                  className="w-20 h-20 rounded-lg overflow-hidden border border-theme cursor-pointer flex-shrink-0 relative group"
                 >
                   <img
                     src={uncertaintyUrl}
                     alt="Uncertainty Heatmap"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                   />
-                  <div className="absolute inset-0 bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Maximize2 size={14} className="text-[#10233F]" />
+                  <div className="absolute inset-0 glass-panel flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Maximize2 size={14} className="text-primary" />
                   </div>
                 </div>
                 <div className="flex-1 space-y-1.5">
-                  <div className="flex items-center justify-between text-[10px] font-mono text-[#526A82]">
+                  <div className="flex items-center justify-between text-[10px] font-mono text-secondary">
                     <span>Low Variance (&lt;0.10)</span>
                     <span>High Variance (&gt;0.40)</span>
                   </div>
                   <div
-                    className="h-2 rounded-full w-full border border-[#D7E6F4]"
+                    className="h-2 rounded-full w-full border border-theme"
                     style={{ background: 'linear-gradient(to right, #0f1441, #1e5f87, #beaf1e, #f53c32)' }}
                   />
-                  <p className="text-[10px] text-[#6B7F95] leading-tight">
+                  <p className="text-[10px] text-muted-foreground leading-tight">
                     Navy: High Confidence \u2022 Yellow/Red: Complex Edges &amp; Shadows
                   </p>
                 </div>
               </div>
             ) : (
-              <div className="text-xs text-[#526A82] italic py-1">
+              <div className="text-xs text-secondary italic py-1">
                 Not available for this input
               </div>
             )}
@@ -496,51 +496,51 @@ export const ResultsAnalytics: React.FC<ResultsAnalyticsProps> = ({ job }) => {
         <Section
           icon={<Cpu size={16} className="text-violet-400" />}
           title="4. Processing"
-          badge={<span className="text-[11px] font-mono text-[#526A82]">Compute Telemetry</span>}
+          badge={<span className="text-[11px] font-mono text-secondary">Compute Telemetry</span>}
           hoverBorder="hover:border-violet-500/30"
         >
           <div className="grid grid-cols-2 gap-3">
             {processingTime ? (
-              <div className="p-3.5 bg-white border border-[#D7E6F4] rounded-xl">
-                <div className="flex items-center gap-1.5 mb-1 text-[#6B7F95] text-[11px] font-mono">
+              <div className="p-3.5 glass-panel border border-theme rounded-xl">
+                <div className="flex items-center gap-1.5 mb-1 text-muted-foreground text-[11px] font-mono">
                   <Clock size={11} />
                   <span>Processing Time</span>
                 </div>
-                <span className="text-xl font-black text-[#10233F] font-mono">{processingTime}</span>
-                <span className="text-[10px] text-[#6B7F95] block mt-1">Total Pipeline Duration</span>
+                <span className="text-xl font-black text-primary font-mono">{processingTime}</span>
+                <span className="text-[10px] text-muted-foreground block mt-1">Total Pipeline Duration</span>
               </div>
             ) : <NA label="Processing Time" />}
 
             {inferenceTime ? (
-              <div className="p-3.5 bg-white border border-[#D7E6F4] rounded-xl">
-                <div className="flex items-center gap-1.5 mb-1 text-[#6B7F95] text-[11px] font-mono">
+              <div className="p-3.5 glass-panel border border-theme rounded-xl">
+                <div className="flex items-center gap-1.5 mb-1 text-muted-foreground text-[11px] font-mono">
                   <Sparkles size={11} />
                   <span>Inference Time</span>
                 </div>
                 <span className="text-xl font-black text-violet-300 font-mono">{inferenceTime}</span>
-                <span className="text-[10px] text-[#6B7F95] block mt-1">SwinIR Neural Pass</span>
+                <span className="text-[10px] text-muted-foreground block mt-1">SwinIR Neural Pass</span>
               </div>
             ) : <NA label="Inference Time" />}
 
             {imageDims ? (
-              <div className="p-3.5 bg-white border border-[#D7E6F4] rounded-xl">
-                <div className="flex items-center gap-1.5 mb-1 text-[#6B7F95] text-[11px] font-mono">
+              <div className="p-3.5 glass-panel border border-theme rounded-xl">
+                <div className="flex items-center gap-1.5 mb-1 text-muted-foreground text-[11px] font-mono">
                   <Compass size={11} />
                   <span>Image Dimensions</span>
                 </div>
-                <span className="text-lg font-black text-[#10233F] font-mono leading-tight">{imageDims}</span>
-                <span className="text-[10px] text-[#6B7F95] block mt-1">SR Output Raster Grid</span>
+                <span className="text-lg font-black text-primary font-mono leading-tight">{imageDims}</span>
+                <span className="text-[10px] text-muted-foreground block mt-1">SR Output Raster Grid</span>
               </div>
             ) : <NA label="Image Dimensions" />}
 
             {bandCount != null ? (
-              <div className="p-3.5 bg-white border border-[#D7E6F4] rounded-xl">
-                <div className="flex items-center gap-1.5 mb-1 text-[#6B7F95] text-[11px] font-mono">
+              <div className="p-3.5 glass-panel border border-theme rounded-xl">
+                <div className="flex items-center gap-1.5 mb-1 text-muted-foreground text-[11px] font-mono">
                   <Layers size={11} />
                   <span>Number of Bands</span>
                 </div>
-                <span className="text-xl font-black text-[#10233F] font-mono">{bandCount} Bands</span>
-                <span className="text-[10px] text-[#6B7F95] block mt-1">
+                <span className="text-xl font-black text-primary font-mono">{bandCount} Bands</span>
+                <span className="text-[10px] text-muted-foreground block mt-1">
                   {bandNames ?? 'B02, B03, B04, B08'}
                 </span>
               </div>
@@ -549,16 +549,16 @@ export const ResultsAnalytics: React.FC<ResultsAnalyticsProps> = ({ job }) => {
 
           {/* Tile progress */}
           {telemetry?.tileProgress && (
-            <div className="p-2.5 bg-white border border-[#D7E6F4] rounded-xl text-[11px] font-mono text-[#526A82]">
-              Tile Progress: <strong className="text-[#10233F]">{telemetry.tileProgress}</strong>
+            <div className="p-2.5 glass-panel border border-theme rounded-xl text-[11px] font-mono text-secondary">
+              Tile Progress: <strong className="text-primary">{telemetry.tileProgress}</strong>
             </div>
           )}
 
           {/* Hardware row */}
-          <div className="p-2.5 bg-white border border-[#D7E6F4] rounded-xl flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-[#526A82]">
-            <span>Device: <strong className="text-[#10233F]">{telemetry?.device ?? 'CUDA GPU / PyTorch Fallback'}</strong></span>
+          <div className="p-2.5 glass-panel border border-theme rounded-xl flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-secondary">
+            <span>Device: <strong className="text-primary">{telemetry?.device ?? 'CUDA GPU / PyTorch Fallback'}</strong></span>
             {telemetry?.memoryAllocated && (
-              <span>VRAM: <strong className="text-[#1677FF]">{telemetry.memoryAllocated}</strong></span>
+              <span>VRAM: <strong className="text-accent">{telemetry.memoryAllocated}</strong></span>
             )}
           </div>
         </Section>
@@ -566,22 +566,22 @@ export const ResultsAnalytics: React.FC<ResultsAnalyticsProps> = ({ job }) => {
 
       {/* ── Uncertainty full-screen modal ── */}
       {showUncertaintyModal && uncertaintyUrl && (
-        <div className="fixed inset-0 z-50 bg-white backdrop-blur-md flex items-center justify-center p-4 sm:p-6">
-          <div className="glass rounded-2xl p-6 border border-[#D7E6F4] max-w-2xl w-full space-y-4 shadow-sm">
-            <div className="flex items-center justify-between border-b border-[#D7E6F4] pb-3">
+        <div className="fixed inset-0 z-50 glass-panel backdrop-blur-md flex items-center justify-center p-4 sm:p-6">
+          <div className="glass rounded-2xl p-6 border border-theme max-w-2xl w-full space-y-4 shadow-sm">
+            <div className="flex items-center justify-between border-b border-theme pb-3">
               <div className="flex items-center gap-2">
                 <ShieldAlert size={18} className="text-amber-600" />
-                <h3 className="text-base font-bold text-[#10233F]">Spatial Uncertainty Variance Layer</h3>
+                <h3 className="text-base font-bold text-primary">Spatial Uncertainty Variance Layer</h3>
               </div>
               <button
                 onClick={() => setShowUncertaintyModal(false)}
-                className="w-7 h-7 rounded-lg bg-white hover:bg-white flex items-center justify-center text-[#425873]"
+                className="w-7 h-7 rounded-lg glass-panel hover:glass-panel flex items-center justify-center text-secondary"
               >
                 <X size={14} />
               </button>
             </div>
 
-            <div className="w-full h-80 sm:h-96 rounded-xl overflow-hidden border border-[#D7E6F4] bg-white flex items-center justify-center">
+            <div className="w-full h-80 sm:h-96 rounded-xl overflow-hidden border border-theme glass-panel flex items-center justify-center">
               <img
                 src={uncertaintyUrl}
                 alt="High-Resolution Uncertainty Layer"
@@ -589,29 +589,29 @@ export const ResultsAnalytics: React.FC<ResultsAnalyticsProps> = ({ job }) => {
               />
             </div>
 
-            <div className="p-3 bg-white border border-[#D7E6F4] rounded-xl space-y-1.5 text-xs font-mono">
+            <div className="p-3 glass-panel border border-theme rounded-xl space-y-1.5 text-xs font-mono">
               <div className="flex flex-wrap items-center justify-between gap-2 text-[11px]">
-                <span className="text-[#526A82]">
+                <span className="text-secondary">
                   Mean: <strong className="text-amber-700">
                     {meanUnc != null ? meanUnc.toFixed(4) : 'N/A'}
                   </strong>
                 </span>
-                <span className="text-[#526A82]">
+                <span className="text-secondary">
                   Max: <strong className="text-rose-400">
                     {maxUnc != null ? maxUnc.toFixed(4) : 'N/A'}
                   </strong>
                 </span>
                 {confidencePct != null && (
-                  <span className="text-[#526A82]">
+                  <span className="text-secondary">
                     Confidence: <strong className="text-emerald-600">{confidencePct}%</strong>
                   </span>
                 )}
               </div>
               <div
-                className="h-2.5 rounded-full w-full border border-[#D7E6F4]"
+                className="h-2.5 rounded-full w-full border border-theme"
                 style={{ background: 'linear-gradient(to right, #0f1441, #1e5f87, #beaf1e, #f53c32)' }}
               />
-              <div className="flex items-center justify-between text-[10px] text-[#526A82] pt-1">
+              <div className="flex items-center justify-between text-[10px] text-secondary pt-1">
                 <span>0.00: High Confidence</span>
                 <span>0.25: Moderate</span>
                 <span>0.50+: Edge Variance</span>

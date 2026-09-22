@@ -28,20 +28,20 @@ const SPECTRAL_DATA = [
 const FEATURE_CLASSES = [
   { name: 'Vegetation',   icon: <TreePine size={14} />,   pct: 42, color: 'bg-emerald-500', textColor: 'text-emerald-600' },
   { name: 'Bare Soil',    icon: <Layers size={14} />,     pct: 31, color: 'bg-amber-500',   textColor: 'text-amber-600'   },
-  { name: 'Water Bodies', icon: <Droplets size={14} />,   pct: 12, color: 'bg-[#1677FF]',    textColor: 'text-[#1677FF]'    },
-  { name: 'Built-up',     icon: <Building size={14} />,   pct: 15, color: 'bg-slate-500',   textColor: 'text-[#526A82]'   },
+  { name: 'Water Bodies', icon: <Droplets size={14} />,   pct: 12, color: 'bg-accent',    textColor: 'text-accent'    },
+  { name: 'Built-up',     icon: <Building size={14} />,   pct: 15, color: 'glass-panel-secondary0',   textColor: 'text-secondary'   },
 ];
 
 const CUSTOM_TOOLTIP = ({ active, payload, label }: { active?: boolean; payload?: { name: string; value: number; color: string }[]; label?: string }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-[#EEF7FF] border border-[#D7E6F4] rounded-xl p-3 shadow-xl">
-      <div className="text-[11px] text-[#526A82] mb-2">{label}</div>
+    <div className="bg-white/95 dark:bg-slate-900/95 border border-slate-900/10 dark:border-white/15 rounded-xl p-3 shadow-xl backdrop-blur-md">
+      <div className="text-[11px] text-secondary mb-2 font-semibold">{label}</div>
       {payload.map((p) => (
         <div key={p.name} className="flex items-center gap-2 text-xs">
           <div className="w-2 h-2 rounded-full" style={{ background: p.color }} />
-          <span className="text-[#526A82]">{p.name}:</span>
-          <span className="font-bold text-[#10233F]">{p.value}</span>
+          <span className="text-muted-foreground font-medium">{p.name}:</span>
+          <span className="font-bold text-primary">{p.value}</span>
         </div>
       ))}
     </div>
@@ -56,6 +56,7 @@ export const AnalysisPage: React.FC = () => {
   const meta    = job.metadata;
 
   const [activeTab, setActiveTab] = useState<'spectral' | 'quality' | 'landcover' | 'uncertainty'>('spectral');
+  const [showHeatmap, setShowHeatmap] = useState<boolean>(true);
 
   const tabs = [
     { id: 'spectral' as const,   label: 'Spectral',    icon: <Activity size={14} />  },
@@ -64,25 +65,42 @@ export const AnalysisPage: React.FC = () => {
     { id: 'uncertainty' as const, label: 'Uncertainty', icon: <Info size={14} />     },
   ];
 
+  // Derive confidence from mean uncertainty (if available)
+  const uncMean = metrics?.uncertainty?.mean ?? 0.0842;
+  const confidencePercent = Math.max(0, Math.min(100, (1 - uncMean) * 100));
+  
+  let confidenceLabel = "High Confidence";
+  let confidenceColor = "bg-emerald-500";
+  let confidenceTextColor = "text-emerald-600 dark:text-emerald-400";
+  if (confidencePercent < 65) {
+    confidenceLabel = "Low Confidence";
+    confidenceColor = "bg-pink-500";
+    confidenceTextColor = "text-pink-600 dark:text-pink-400";
+  } else if (confidencePercent < 85) {
+    confidenceLabel = "Moderate Confidence";
+    confidenceColor = "bg-amber-400";
+    confidenceTextColor = "text-amber-600 dark:text-amber-400";
+  }
+
   return (
     <div className="min-h-screen ">
       {/* Header */}
-      <div className="border-b border-border bg-white/80 backdrop-blur-sm">
+      <div className="border-b border-slate-900/10 dark:border-white/15 bg-white/75 dark:bg-[#071428]/65 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center gap-4">
           <button
             onClick={() => navigate(-1)}
-            className="w-9 h-9 flex items-center justify-center rounded-xl text-[#6B7F95] hover:text-[#425873] hover:bg-white transition-all"
+            className="w-9 h-9 flex items-center justify-center rounded-xl text-muted-foreground hover:text-primary hover:bg-slate-900/5 dark:hover:bg-white/10 transition-all"
           >
             <ArrowLeft size={18} />
           </button>
           <div>
-            <h1 className="text-xl font-black text-[#10233F] leading-none">Satellite Analysis</h1>
-            <p className="text-xs text-[#6B7F95] mt-0.5">Post-enhancement quality and spectral evaluation</p>
+            <h1 className="text-xl font-black text-primary leading-none">Satellite Analysis</h1>
+            <p className="text-xs text-secondary mt-0.5">Post-enhancement quality and spectral evaluation</p>
           </div>
 
           {activeJobs.length > 1 && (
-            <div className="flex items-center gap-1.5 ml-2 sm:ml-6 bg-white p-1 rounded-xl border border-[#D7E6F4]">
-              <span className="text-[11px] font-semibold text-[#526A82] px-2">Batch:</span>
+            <div className="flex items-center gap-1.5 ml-2 sm:ml-6 bg-slate-900/5 dark:bg-white/10 p-1 rounded-xl border border-slate-900/10 dark:border-white/20">
+              <span className="text-[11px] font-semibold text-secondary px-2">Batch:</span>
               {activeJobs.map((j, idx) => (
                 <button
                   key={j.jobId}
@@ -92,8 +110,8 @@ export const AnalysisPage: React.FC = () => {
                   }}
                   className={`px-2.5 py-1 text-xs font-mono rounded-lg transition-all ${
                     (selectedJobId || job.jobId) === j.jobId
-                      ? 'bg-[#1677FF]/25 text-cyan-700 border border-cyan-200 font-bold'
-                      : 'text-[#6B7F95] hover:text-[#425873]'
+                      ? 'bg-blue-500/15 dark:bg-cyan-400/20 text-blue-700 dark:text-cyan-400 border border-blue-500/30 dark:border-cyan-400/30 font-bold'
+                      : 'text-muted-foreground hover:text-primary'
                   }`}
                   title={j.metadata?.filename}
                 >
@@ -109,7 +127,7 @@ export const AnalysisPage: React.FC = () => {
               a.download = 'SRM_Enhanced.png';
               a.click();
             }}
-            className="ml-auto btn-secondary text-xs py-2"
+            className="ml-auto flex items-center gap-2 bg-slate-900 dark:bg-cyan-500 hover:bg-slate-800 dark:hover:bg-cyan-400 text-white dark:text-slate-900 text-xs font-semibold py-2 px-4 rounded-xl transition-colors shadow-sm"
           >
             <Download size={13} />
             Download Results
@@ -154,15 +172,15 @@ export const AnalysisPage: React.FC = () => {
         </div>
 
         {/* Tab bar */}
-        <div className="flex gap-1 p-1 bg-white border border-[#D7E6F4] rounded-xl w-fit">
+        <div className="flex gap-1 p-1 bg-white/70 dark:bg-slate-950/60 backdrop-blur-xl border border-slate-900/10 dark:border-white/15 rounded-xl w-fit">
           {tabs.map(({ id, label, icon }) => (
             <button
               key={id}
               onClick={() => setActiveTab(id)}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border border-transparent ${
                 activeTab === id
-                  ? 'bg-[#1677FF]/20 border border-cyan-200 text-[#1677FF]'
-                  : 'text-[#6B7F95] hover:text-[#425873]'
+                  ? 'bg-blue-500/10 dark:bg-cyan-400/20 border-blue-500/30 dark:border-cyan-400/30 text-blue-700 dark:text-cyan-400'
+                  : 'text-secondary hover:text-primary hover:bg-slate-900/5 dark:hover:bg-white/5'
               }`}
             >
               {icon}
@@ -174,30 +192,30 @@ export const AnalysisPage: React.FC = () => {
         {/* ── SPECTRAL TAB ── */}
         {activeTab === 'spectral' && (
           <div className="grid lg:grid-cols-3 gap-6 anim-fade-in">
-            <div className="lg:col-span-2 glass rounded-2xl p-6">
+            <div className="lg:col-span-2 rounded-2xl p-6 bg-white/40 dark:bg-slate-950/30 backdrop-blur-md border border-slate-900/10 dark:border-white/15">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h2 className="text-base font-bold text-[#10233F]">Spectral Reflectance Profile</h2>
-                  <p className="text-xs text-[#6B7F95] mt-0.5">Band-by-band reflectance: original vs enhanced</p>
+                  <h2 className="text-base font-bold text-primary">Spectral Reflectance Profile</h2>
+                  <p className="text-xs text-secondary mt-0.5">Band-by-band reflectance: original vs enhanced</p>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-[#6B7F95]">
-                  <div className="flex items-center gap-1.5"><div className="w-3 h-0.5 bg-slate-500 rounded" /> Original</div>
-                  <div className="flex items-center gap-1.5"><div className="w-3 h-0.5 bg-cyan-400 rounded" /> Enhanced</div>
+                <div className="flex items-center gap-3 text-xs font-semibold">
+                  <div className="flex items-center gap-1.5 text-secondary"><div className="w-3 h-0.5 bg-slate-500 rounded" /> Original</div>
+                  <div className="flex items-center gap-1.5 text-secondary"><div className="w-3 h-0.5 bg-[#00d4ff] rounded" /> Enhanced</div>
                 </div>
               </div>
-              <ResponsiveContainer width="100%" height={280}>
+              <ResponsiveContainer width="100%" height={280} className="text-secondary">
                 <LineChart data={SPECTRAL_DATA} margin={{ top: 5, right: 10, bottom: 5, left: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                  <XAxis dataKey="band" tick={{ fill: '#4A6080', fontSize: 10 }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fill: '#4A6080', fontSize: 10 }} axisLine={false} tickLine={false} />
-                  <Tooltip content={<CUSTOM_TOOLTIP />} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-slate-900/15 dark:text-white/15" />
+                  <XAxis dataKey="band" tick={{ fill: 'currentColor', fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fill: 'currentColor', fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <Tooltip content={<CUSTOM_TOOLTIP />} cursor={{ stroke: 'currentColor', strokeWidth: 1, strokeDasharray: '4 4', className: 'text-slate-900/15 dark:text-white/15' }} />
                   <Line type="monotone" dataKey="original" stroke="#64748b" strokeWidth={2} dot={false} name="Original" />
                   <Line type="monotone" dataKey="enhanced" stroke="#00d4ff" strokeWidth={2} dot={{ fill: '#00d4ff', r: 3 }} name="Enhanced" strokeDasharray="5 2" />
                 </LineChart>
               </ResponsiveContainer>
-              <div className="mt-4 flex items-start gap-2 px-3 py-2.5 bg-[#1677FF]/[0.05] border border-blue-500/15 rounded-xl">
-                <Info size={12} className="text-[#1677FF] flex-shrink-0 mt-0.5" />
-                <p className="text-[11px] text-[#1677FF]/75 leading-relaxed">
+              <div className="mt-4 flex items-start gap-2 px-3 py-2.5 bg-slate-900/5 dark:bg-white/5 border border-slate-900/10 dark:border-white/10 rounded-xl">
+                <Info size={12} className="text-muted-foreground flex-shrink-0 mt-0.5" />
+                <p className="text-[11px] text-muted-foreground leading-relaxed">
                   Enhanced imagery maintains spectral consistency with source data. Deviations within ±0.5% 
                   indicate high fidelity spectral reconstruction.
                 </p>
@@ -205,29 +223,34 @@ export const AnalysisPage: React.FC = () => {
             </div>
 
             <div className="space-y-4">
-              <div className="glass rounded-2xl p-5">
-                <div className="text-xs font-bold text-[#6B7F95] uppercase tracking-widest mb-4">Spectral Metrics</div>
+              <div className="rounded-2xl p-5 bg-white/75 dark:bg-slate-950/65 backdrop-blur-xl border border-slate-900/10 dark:border-white/15">
+                <div className="text-xs font-bold text-primary uppercase tracking-widest mb-4">Spectral Metrics</div>
                 <InlineMetric label="SAM (deg)" value={metrics.sam_deg.model.toFixed(2)} unit="°" color="amber" />
                 <InlineMetric label="ERGAS"     value={metrics.ergas.model.toFixed(1)}            color="amber" />
                 <InlineMetric label="NDVI MAE"  value={metrics.ndvi_mae.model.toFixed(4)}         color="default" />
                 <InlineMetric label="NDVI Corr" value={metrics.ndvi_correlation.model.toFixed(4)} color="emerald" />
               </div>
 
-              <div className="glass rounded-2xl p-5">
-                <div className="text-xs font-bold text-[#6B7F95] uppercase tracking-widest mb-3">vs Bicubic Baseline</div>
-                <div className="space-y-3">
+              <div className="rounded-2xl p-5 bg-white/75 dark:bg-slate-950/65 backdrop-blur-xl border border-slate-900/10 dark:border-white/15">
+                <div className="text-xs font-bold text-primary uppercase tracking-widest mb-4">vs Bicubic Baseline</div>
+                <div className="flex flex-col">
                   {Object.entries({
-                    'PSNR (dB)': { m: metrics.psnr_db.model, b: metrics.psnr_db.bicubic },
-                    'SSIM':      { m: metrics.ssim.model,     b: metrics.ssim.bicubic     },
-                    'SAM':       { m: metrics.sam_deg.model,  b: metrics.sam_deg.bicubic  },
-                  }).map(([key, { m, b }]) => (
-                    <div key={key}>
-                      <div className="flex justify-between text-xs mb-1">
-                        <span className="text-[#6B7F95]">{key}</span>
-                        <div className="flex gap-3">
-                          <span className="text-[#526A82]">Bicubic: {b}</span>
-                          <span className="text-[#1677FF] font-mono">Model: {m}</span>
+                    'PSNR (dB)': { m: metrics.psnr_db.model, b: metrics.psnr_db.bicubic, max: 50 },
+                    'SSIM':      { m: metrics.ssim.model,     b: metrics.ssim.bicubic, max: 1 },
+                    'SAM':       { m: metrics.sam_deg.model,  b: metrics.sam_deg.bicubic, max: 10 },
+                  }).map(([key, { m, b, max }]) => (
+                    <div key={key} className="py-3 border-b border-slate-900/10 dark:border-white/15 last:border-0 first:pt-0 last:pb-0">
+                      <div className="flex items-center justify-between text-xs mb-2.5">
+                        <span className="font-semibold text-secondary">{key}</span>
+                        <div className="flex items-center gap-3 font-mono text-[10px]">
+                          <span className="text-muted-foreground">Bicubic: <span className="text-primary font-bold">{b}</span></span>
+                          <span className="text-cyan-700 dark:text-cyan-400">Model: <span className="text-primary font-bold">{m}</span></span>
                         </div>
+                      </div>
+                      {/* Comparison bars */}
+                      <div className="relative h-1.5 bg-slate-900/5 dark:bg-white/10 rounded-full overflow-hidden">
+                        <div className="absolute top-0 left-0 bottom-0 bg-slate-400 dark:bg-slate-500/80 rounded-full" style={{ width: `${(b/max)*100}%` }} />
+                        <div className="absolute top-0 left-0 bottom-0 bg-cyan-500/90 dark:bg-cyan-400/90 rounded-full shadow-[0_0_10px_rgba(6,182,212,0.4)]" style={{ width: `${(m/max)*100}%` }} />
                       </div>
                     </div>
                   ))}
@@ -265,15 +288,15 @@ export const AnalysisPage: React.FC = () => {
 
             {/* NDVI comparison image */}
             <div className="glass rounded-2xl p-5">
-              <h3 className="text-sm font-bold text-[#10233F] mb-3">NDVI Comparison</h3>
-              <div className="rounded-xl overflow-hidden border border-[#D7E6F4]">
+              <h3 className="text-sm font-bold text-primary mb-3">NDVI Comparison</h3>
+              <div className="rounded-xl overflow-hidden border border-theme">
                 <img
                   src={job.outputs?.ndviPreviewUrl ?? '/sample-satellite/ndvi_comparison.png'}
                   alt="NDVI Comparison"
                   className="w-full object-cover max-h-72"
                 />
               </div>
-              <p className="text-xs text-[#526A82] mt-2 flex items-center gap-1.5">
+              <p className="text-xs text-secondary mt-2 flex items-center gap-1.5">
                 <Info size={11} />
                 NDVI Pearson correlation: {metrics.ndvi_correlation.model.toFixed(4)} — spectral vegetation index consistency
               </p>
@@ -285,8 +308,8 @@ export const AnalysisPage: React.FC = () => {
         {activeTab === 'landcover' && (
           <div className="grid lg:grid-cols-2 gap-6 anim-fade-in">
             <div className="glass rounded-2xl p-6">
-              <h2 className="text-base font-bold text-[#10233F] mb-2">Land Cover Classification</h2>
-              <p className="text-xs text-[#6B7F95] mb-6">Estimated from enhanced imagery spectral signature</p>
+              <h2 className="text-base font-bold text-primary mb-2">Land Cover Classification</h2>
+              <p className="text-xs text-muted-foreground mb-6">Estimated from enhanced imagery spectral signature</p>
               <div className="space-y-4">
                 {FEATURE_CLASSES.map(({ name, icon, pct, color, textColor }) => (
                   <div key={name}>
@@ -294,7 +317,7 @@ export const AnalysisPage: React.FC = () => {
                       <div className={`flex items-center gap-2 text-sm font-medium ${textColor}`}>
                         {icon} {name}
                       </div>
-                      <span className="text-sm font-bold text-[#425873]">{pct}%</span>
+                      <span className="text-sm font-bold text-secondary">{pct}%</span>
                     </div>
                     <div className="progress-track">
                       <div className={`${color} h-full rounded-full transition-all duration-700`} style={{ width: `${pct}%` }} />
@@ -302,16 +325,16 @@ export const AnalysisPage: React.FC = () => {
                   </div>
                 ))}
               </div>
-              <p className="mt-5 text-[11px] text-[#526A82] flex items-start gap-1.5">
+              <p className="mt-5 text-[11px] text-secondary flex items-start gap-1.5">
                 <Info size={11} className="mt-0.5 flex-shrink-0" />
                 Land cover estimates are model-inferred from spectral signatures. Ground-truth validation recommended.
               </p>
             </div>
 
             <div className="glass rounded-2xl p-6">
-              <h2 className="text-base font-bold text-[#10233F] mb-2">Enhanced Image Preview</h2>
-              <p className="text-xs text-[#6B7F95] mb-4">Super-resolved RGB composite</p>
-              <div className="rounded-xl overflow-hidden border border-[#D7E6F4]">
+              <h2 className="text-base font-bold text-primary mb-2">Enhanced Image Preview</h2>
+              <p className="text-xs text-muted-foreground mb-4">Super-resolved RGB composite</p>
+              <div className="rounded-xl overflow-hidden border border-theme">
                 <img
                   src={resolveApiUrl(job.outputs?.srPreviewUrl) || '/sample-satellite/sr.png'}
                   alt="Enhanced SR"
@@ -321,13 +344,13 @@ export const AnalysisPage: React.FC = () => {
               <div className="grid grid-cols-2 gap-3 mt-4">
                 {[
                   { label: 'Detected Vegetation', val: '42%', color: 'text-emerald-600' },
-                  { label: 'Urban Structures',    val: '15%', color: 'text-[#1677FF]'    },
-                  { label: 'Water Bodies',        val: '12%', color: 'text-[#1677FF]'    },
+                  { label: 'Urban Structures',    val: '15%', color: 'text-accent'    },
+                  { label: 'Water Bodies',        val: '12%', color: 'text-accent'    },
                   { label: 'Bare Soil / Other',   val: '31%', color: 'text-amber-600'   },
                 ].map(({ label, val, color }) => (
-                  <div key={label} className="bg-white rounded-xl p-3 border border-[#D7E6F4]">
+                  <div key={label} className="glass-panel rounded-xl p-3 border border-theme">
                     <div className={`text-lg font-black ${color}`}>{val}</div>
-                    <div className="text-[11px] text-[#526A82]">{label}</div>
+                    <div className="text-[11px] text-secondary">{label}</div>
                   </div>
                 ))}
               </div>
@@ -338,59 +361,155 @@ export const AnalysisPage: React.FC = () => {
         {/* ── UNCERTAINTY TAB ── */}
         {activeTab === 'uncertainty' && (
           <div className="grid lg:grid-cols-2 gap-6 anim-fade-in">
-            <div className="glass rounded-2xl p-6">
-              <h2 className="text-base font-bold text-[#10233F] mb-2">Uncertainty Map</h2>
-              <p className="text-xs text-[#6B7F95] mb-4">
-                Spatial predictive variance from 10 Monte Carlo Dropout forward passes
-              </p>
-              <div className="rounded-xl overflow-hidden border border-violet-500/20">
-                <img
-                  src={resolveApiUrl(job.outputs?.uncertaintyPreviewUrl) || '/sample-satellite/uncertainty.png'}
-                  alt="Uncertainty map"
-                  className="w-full"
-                />
-              </div>
-              <div className="mt-3 flex items-start gap-2">
-                <div className="flex items-center gap-3 text-xs text-[#6B7F95] flex-wrap">
-                  <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded bg-[#1677FF]" /> Low confidence
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded bg-yellow-500" /> Medium confidence
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded bg-red-500" /> High uncertainty
-                  </div>
+            {/* Uncertainty Map Card */}
+            <div className="rounded-2xl p-6 bg-white/75 dark:bg-slate-950/65 backdrop-blur-xl border border-slate-900/15 dark:border-white/20">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                <div>
+                  <h2 className="text-base font-bold text-primary">Uncertainty Map</h2>
+                  <p className="text-xs text-secondary mt-0.5">
+                    Spatial predictive variance from 10 Monte Carlo Dropout forward passes
+                  </p>
+                </div>
+                
+                {/* Heatmap Toggle */}
+                <div className="flex bg-slate-900/5 dark:bg-slate-800 p-1 rounded-lg border border-slate-900/10 dark:border-white/10 shrink-0">
+                  <button
+                    onClick={() => setShowHeatmap(false)}
+                    className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+                      !showHeatmap 
+                        ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' 
+                        : 'text-muted-foreground hover:text-secondary'
+                    }`}
+                  >
+                    SR Image
+                  </button>
+                  <button
+                    onClick={() => setShowHeatmap(true)}
+                    className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+                      showHeatmap 
+                        ? 'bg-purple-500 text-white shadow-sm' 
+                        : 'text-muted-foreground hover:text-secondary'
+                    }`}
+                  >
+                    Uncertainty Heatmap
+                  </button>
                 </div>
               </div>
+              
+              <div className="rounded-xl overflow-hidden border border-slate-900/10 dark:border-white/10 bg-slate-100 dark:bg-slate-900 min-h-[200px] flex items-center justify-center relative">
+                <img
+                  src={showHeatmap 
+                    ? (resolveApiUrl(job.outputs?.uncertaintyPreviewUrl) || '/sample-satellite/uncertainty.png')
+                    : (resolveApiUrl(job.outputs?.srPreviewUrl) || '/sample-satellite/sr.png')}
+                  alt={showHeatmap ? "Uncertainty map" : "Super-resolved image"}
+                  className="w-full h-full object-cover text-sm text-muted-foreground font-medium"
+                />
+              </div>
+              
+              {showHeatmap && (
+                <div className="mt-4 flex items-start gap-2">
+                  <div className="flex items-center gap-4 text-xs font-medium text-secondary flex-wrap">
+                    <span className="text-muted-foreground font-semibold mr-2">Legend:</span>
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-3 h-3 rounded bg-black" /> Low Uncertainty (High Confidence)
+                    </div>
+                    <div className="flex items-center gap-1.5 text-slate-400">→</div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-3 h-3 rounded bg-purple-600" />
+                    </div>
+                    <div className="flex items-center gap-1.5 text-slate-400">→</div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-3 h-3 rounded bg-orange-500" />
+                    </div>
+                    <div className="flex items-center gap-1.5 text-slate-400">→</div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-3 h-3 rounded bg-yellow-200" /> High Uncertainty (Low Confidence)
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="space-y-4">
-              <div className="glass rounded-2xl p-5">
-                <h3 className="text-sm font-bold text-[#10233F] mb-4">What is Uncertainty?</h3>
-                <p className="text-sm text-[#526A82] leading-relaxed mb-4">
+              {/* What is Uncertainty? Card */}
+              <div className="rounded-2xl p-5 bg-white/75 dark:bg-slate-950/65 backdrop-blur-xl border border-slate-900/10 dark:border-white/15">
+                <h3 className="text-sm font-bold text-primary mb-4">What is Uncertainty?</h3>
+                <p className="text-sm text-secondary leading-relaxed mb-4">
                   SRM uses Monte Carlo Dropout to estimate spatial uncertainty. 
                   The model runs 10 stochastic inference passes with active dropout, 
                   then computes the pixel-wise standard deviation across passes.
                 </p>
-                <p className="text-sm text-[#6B7F95] leading-relaxed">
+                <p className="text-sm text-secondary leading-relaxed">
                   High-uncertainty regions indicate where the model has less confidence 
                   in the enhanced detail — typically at edges, texture boundaries, and 
                   spectrally ambiguous areas.
                 </p>
               </div>
 
-              <div className="glass rounded-2xl p-5">
-                <h3 className="text-sm font-bold text-[#10233F] mb-3">Uncertainty Summary</h3>
-                <InlineMetric label="MC Dropout passes"   value="10"      color="cyan"    />
-                <InlineMetric label="Mean confidence"     value="87.3%"   color="emerald" />
-                <InlineMetric label="High-uncertainty px" value="4.2%"    color="amber"   />
-                <InlineMetric label="Low-uncertainty px"  value="91.5%"   color="emerald" />
+              {/* Confidence Level Card */}
+              <div className="rounded-2xl p-5 bg-white/75 dark:bg-slate-950/65 backdrop-blur-xl border border-slate-900/10 dark:border-white/15">
+                <h3 className="text-sm font-bold text-primary mb-3">Confidence Level</h3>
+                <div className="flex items-end gap-3 mb-2">
+                  <span className={`text-3xl font-black ${confidenceTextColor}`}>
+                    {confidencePercent.toFixed(1)}%
+                  </span>
+                  <span className={`text-sm font-semibold mb-1 ${confidenceTextColor}`}>
+                    {confidenceLabel}
+                  </span>
+                </div>
+                <div className="h-2 w-full bg-slate-900/10 dark:bg-slate-700 rounded-full overflow-hidden mb-3">
+                  <div 
+                    className={`h-full ${confidenceColor} transition-all duration-1000`}
+                    style={{ width: `${confidencePercent}%` }}
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Confidence is derived from the model's uncertainty estimation (1 - μ). 
+                  The heatmap highlights areas where the super-resolution model has higher or lower prediction uncertainty.
+                </p>
               </div>
 
-              <div className="flex items-start gap-2.5 px-4 py-3 bg-amber-500/[0.06] border border-amber-500/15 rounded-xl">
-                <Info size={13} className="text-amber-600 flex-shrink-0 mt-0.5" />
-                <p className="text-[11px] text-amber-600/80 leading-relaxed">
+              {/* Uncertainty Summary Card */}
+              <div className="rounded-2xl p-5 bg-white/75 dark:bg-slate-950/65 backdrop-blur-xl border border-slate-900/10 dark:border-white/15">
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="text-sm font-bold text-primary">Uncertainty Summary</h3>
+                  {job.outputs?.uncertaintyGeoTiffUrl && (
+                    <button 
+                      onClick={() => {
+                        const a = document.createElement('a');
+                        a.href = resolveApiUrl(job.outputs?.uncertaintyGeoTiffUrl)!;
+                        a.download = 'uncertainty_map.tif';
+                        a.click();
+                      }}
+                      className="text-xs flex items-center gap-1 text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 dark:hover:text-cyan-300 font-semibold transition-colors"
+                      title="Download float32 Uncertainty TIFF"
+                    >
+                      <Download size={13} />
+                      Export TIFF
+                    </button>
+                  )}
+                </div>
+                <div className="flex flex-col">
+                  {[
+                    { label: "MC Dropout passes", value: "10", color: "text-cyan-700 dark:text-cyan-400" },
+                    { label: "Mean Variance (μ)", value: metrics?.uncertainty?.mean?.toFixed(4) || "0.0842", color: "text-purple-600 dark:text-purple-400" },
+                    { label: "Max Variance (max)", value: metrics?.uncertainty?.max?.toFixed(4) || "0.4820", color: "text-amber-600 dark:text-amber-400" },
+                    { label: "Min Variance (min)", value: metrics?.uncertainty?.min?.toFixed(4) || "0.0120", color: "text-emerald-600 dark:text-emerald-400" }
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center justify-between py-3 border-b border-slate-900/10 dark:border-white/15 last:border-0 last:pb-0">
+                      <span className="text-xs text-secondary font-semibold">{item.label}</span>
+                      <span className={`text-sm font-bold font-mono ${item.color}`}>
+                        {item.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Info Alert */}
+              <div className="flex items-start gap-2.5 px-4 py-3 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border border-amber-500/30 rounded-xl">
+                <Info size={14} className="text-amber-600 dark:text-amber-500 flex-shrink-0 mt-0.5" />
+                <p className="text-[11px] text-primary leading-relaxed">
                   Always validate enhanced imagery in high-uncertainty regions against 
                   available high-resolution reference data before operational use.
                 </p>
@@ -400,8 +519,8 @@ export const AnalysisPage: React.FC = () => {
         )}
 
         {/* Metadata footer */}
-        <div className="glass rounded-2xl p-5 border border-[#D7E6F4]">
-          <div className="text-xs font-bold text-[#6B7F95] uppercase tracking-widest mb-4">Image Metadata</div>
+        <div className="glass rounded-2xl p-5 border border-theme">
+          <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4">Image Metadata</div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-3">
             {[
               { label: 'Filename',    value: meta?.filename         ?? 'S2A_agriculture.tif'        },
@@ -412,8 +531,8 @@ export const AnalysisPage: React.FC = () => {
               { label: 'Acquired',    value: meta?.acquisitionDate  ?? '2026-05-15'                 },
             ].map(({ label, value }) => (
               <div key={label}>
-                <div className="text-[10px] text-[#526A82] mb-0.5">{label}</div>
-                <div className="text-xs text-[#526A82] font-mono truncate" title={value}>{value}</div>
+                <div className="text-[10px] text-secondary mb-0.5">{label}</div>
+                <div className="text-xs text-secondary font-mono truncate" title={value}>{value}</div>
               </div>
             ))}
           </div>

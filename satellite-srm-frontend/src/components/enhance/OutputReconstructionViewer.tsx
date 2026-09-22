@@ -11,7 +11,7 @@ interface OutputReconstructionViewerProps {
 }
 
 const BAND_STREAMS = [
-  { id: 'B02', name: 'B02', label: 'Blue (490nm)', color: '#00e5ff', border: 'border-cyan-200', text: 'text-[#1677FF]', bg: 'bg-[#1677FF]/20' },
+  { id: 'B02', name: 'B02', label: 'Blue (490nm)', color: '#00e5ff', border: 'border-cyan-200', text: 'text-accent', bg: 'bg-accent/20' },
   { id: 'B03', name: 'B03', label: 'Green (560nm)', color: '#10b981', border: 'border-emerald-500/40', text: 'text-emerald-600', bg: 'bg-emerald-500/10' },
   { id: 'B04', name: 'B04', label: 'Red (665nm)', color: '#ef4444', border: 'border-red-500/40', text: 'text-red-600', bg: 'bg-red-500/10' },
   { id: 'B08', name: 'B08', label: 'NIR (842nm)', color: '#a855f7', border: 'border-purple-500/40', text: 'text-purple-400', bg: 'bg-purple-500/10' },
@@ -24,9 +24,9 @@ const Reconstruction2DFallback: React.FC = () => (
       <Activity size={16} className="animate-spin" />
       <span>Multispectral Output Reconstruction (2D Fallback)</span>
     </div>
-    <div className="flex items-center gap-3 font-mono text-xs text-[#425873]">
+    <div className="flex items-center gap-3 font-mono text-xs text-secondary">
       <div className="flex flex-col text-left text-[11px] gap-1">
-        <span className="text-[#1677FF]">B02 ─┐</span>
+        <span className="text-accent">B02 ─┐</span>
         <span className="text-emerald-600">B03 ─┤</span>
         <span className="text-red-600">B04 ─┼──&gt;</span>
         <span className="text-purple-400">B08 ─┘</span>
@@ -68,7 +68,7 @@ export const OutputReconstructionViewer: React.FC<OutputReconstructionViewerProp
 
   return (
     <div
-      className={`relative w-full rounded-2xl border border-[#D7E6F4] bg-white shadow-[0_0_35px_rgba(16,185,129,0.08)] overflow-hidden ${className}`}
+      className={`relative w-full rounded-2xl border border-theme glass-panel shadow-[0_0_35px_rgba(16,185,129,0.08)] overflow-hidden ${className}`}
     >
       {/* 3D Visualizer Canvas */}
       <div className="relative h-[240px] sm:h-[280px] w-full">
@@ -94,12 +94,12 @@ export const OutputReconstructionViewer: React.FC<OutputReconstructionViewerProp
         )}
 
         {/* Top Left Header Badge */}
-        <div className="absolute top-3 left-3 pointer-events-none z-10 flex items-center gap-2 bg-white backdrop-blur-md px-3 py-1.5 rounded-xl border border-[#D7E6F4]">
+        <div className="absolute top-3 left-3 pointer-events-none z-10 flex items-center gap-2 glass-panel backdrop-blur-md px-3 py-1.5 rounded-xl border border-theme">
           <div className="w-5 h-5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-700">
             <Layers size={12} className="animate-pulse" />
           </div>
           <div>
-            <div className="text-[11px] font-bold text-[#10233F] leading-none">
+            <div className="text-[11px] font-bold text-primary leading-none">
               Reconstructing Output
             </div>
             <div className="text-[9px] text-emerald-700 font-mono mt-0.5">
@@ -109,7 +109,7 @@ export const OutputReconstructionViewer: React.FC<OutputReconstructionViewerProp
         </div>
 
         {/* Top Right Channel Fusion Badge */}
-        <div className="absolute top-3 right-3 pointer-events-none z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-emerald-500/30 text-[10px] font-mono text-emerald-700">
+        <div className="absolute top-3 right-3 pointer-events-none z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg glass-panel border border-emerald-500/30 text-[10px] font-mono text-emerald-700">
           <Sparkles size={11} className="text-emerald-600 animate-pulse" />
           <span>4-Channel Synthesis</span>
         </div>
@@ -118,7 +118,7 @@ export const OutputReconstructionViewer: React.FC<OutputReconstructionViewerProp
         <div className="absolute bottom-3 left-3 right-3 pointer-events-none z-10 flex items-center justify-center">
           <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-500/25 via-cyan-500/25 to-emerald-500/25 border border-emerald-400/50 shadow-[0_0_20px_rgba(16,185,129,0.25)] anim-fade-in">
             <Sparkles size={13} className="text-emerald-700 animate-pulse" />
-            <span className="text-xs font-black text-[#10233F] tracking-wider uppercase">
+            <span className="text-xs font-black text-primary tracking-wider uppercase">
               SUPER-RESOLVED MULTISPECTRAL OUTPUT
             </span>
           </div>
@@ -126,7 +126,7 @@ export const OutputReconstructionViewer: React.FC<OutputReconstructionViewerProp
       </div>
 
       {/* Spectral Layer Convergence Diagram (B02/B03/B04/B08 -> SUPER-RESOLVED OUTPUT) */}
-      <div className="px-4 py-3 border-t border-[#D7E6F4] bg-white/95">
+      <div className="px-4 py-3 border-t border-theme bg-surface/95">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
           {/* Visual ASCII / Circuit HUD Flow */}
           <div className="flex items-center gap-2 sm:gap-3 text-xs font-mono select-none">
@@ -138,7 +138,7 @@ export const OutputReconstructionViewer: React.FC<OutputReconstructionViewerProp
                   className={`flex items-center justify-between gap-2 px-2 py-0.5 rounded border text-[10px] transition-all duration-300 ${
                     activeBandIdx === idx
                       ? `${band.border} ${band.bg} ${band.text} shadow-[0_0_10px_rgba(0,229,255,0.2)] font-bold`
-                      : 'border-[#D7E6F4] bg-white text-[#526A82]'
+                      : 'border-theme glass-panel text-secondary'
                   }`}
                 >
                   <span className="font-bold">{band.name}</span>
@@ -166,14 +166,14 @@ export const OutputReconstructionViewer: React.FC<OutputReconstructionViewerProp
                 <ShieldCheck size={13} className="text-emerald-600" />
                 <span>SUPER-RESOLVED OUTPUT</span>
               </div>
-              <div className="text-[9px] text-[#526A82] font-mono">
+              <div className="text-[9px] text-secondary font-mono">
                 ~3.3m GSD · Refined Raster Grid · 4 Bands Blended
               </div>
             </div>
           </div>
 
           {/* Backend Authoritative Notice */}
-          <div className="text-[10px] text-[#6B7F95] flex items-center gap-1 text-right">
+          <div className="text-[10px] text-muted-foreground flex items-center gap-1 text-right">
             <span>* Backend output authoritative · Transitions to Results upon completion</span>
           </div>
         </div>

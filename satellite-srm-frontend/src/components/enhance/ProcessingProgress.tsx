@@ -100,30 +100,30 @@ export const ProcessingProgress: React.FC<ProcessingProgressProps> = ({ job }) =
   return (
     <div className="space-y-6">
       {/* Overall progress header */}
-      <div className="rounded-2xl border border-[#D7E6F4] bg-white/90 p-5 shadow-[0_0_30px_rgba(0,212,255,0.06)]">
+      <div className="rounded-2xl border border-theme bg-surface/90 p-5 shadow-[0_0_30px_rgba(0,212,255,0.06)]">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2.5">
             {isCompleted ? (
               <CheckCircle2 size={18} className="text-emerald-600" />
             ) : (
-              <Loader2 size={18} className="text-[#1677FF] animate-spin" />
+              <Loader2 size={18} className="text-accent animate-spin" />
             )}
             <div>
-              <h3 className="text-sm font-bold text-[#10233F] leading-none">
+              <h3 className="text-sm font-bold text-primary leading-none">
                 {isCompleted ? 'Reconstruction Complete' : 'Super-Resolution Engine Active'}
               </h3>
-              <p className="text-[11px] text-[#526A82] mt-1">
+              <p className="text-[11px] text-secondary mt-1">
                 {job.message || 'Processing multispectral satellite imagery…'}
               </p>
             </div>
           </div>
-          <span className={`text-base font-black font-mono ${isCompleted ? 'text-emerald-600' : 'text-[#1677FF]'}`}>
+          <span className={`text-base font-black font-mono ${isCompleted ? 'text-emerald-600' : 'text-accent'}`}>
             {job.overallProgress}%
           </span>
         </div>
 
         {/* Progress Bar */}
-        <div className="w-full h-2 rounded-full bg-white overflow-hidden">
+        <div className="w-full h-2 rounded-full glass-panel overflow-hidden">
           <div
             className={`h-full transition-all duration-500 ${
               isCompleted
@@ -169,7 +169,7 @@ export const ProcessingProgress: React.FC<ProcessingProgressProps> = ({ job }) =
 
       {/* Real Backend Processing Flow (Vertical Flow with ↓ connectors) */}
       <div className="space-y-1.5">
-        <div className="text-[10px] font-bold text-[#526A82] uppercase tracking-widest px-1 mb-2">
+        <div className="text-[10px] font-bold text-secondary uppercase tracking-widest px-1 mb-2">
           Execution Stages
         </div>
 
@@ -182,26 +182,26 @@ export const ProcessingProgress: React.FC<ProcessingProgressProps> = ({ job }) =
               <div
                 className={`flex items-start gap-3.5 p-3 rounded-xl border transition-all duration-300 ${
                   status === 'active'
-                    ? 'bg-[#1677FF]/[0.08] border-cyan-200 shadow-[0_0_15px_rgba(0,212,255,0.1)]'
+                    ? 'bg-accent/[0.08] border-cyan-200 shadow-[0_0_15px_rgba(0,212,255,0.1)]'
                     : status === 'completed'
                     ? 'bg-emerald-500/[0.04] border-emerald-500/20'
-                    : 'bg-white border-[#D7E6F4] opacity-40'
+                    : 'glass-panel border-theme text-muted-foreground'
                 }`}
               >
                 {/* Status Indicator Icon */}
                 <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${
                   status === 'completed'
-                    ? 'bg-emerald-500/15 text-emerald-600 border border-emerald-500/30'
+                    ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
                     : status === 'active'
-                    ? 'bg-[#1677FF]/20 text-cyan-700 border border-cyan-200'
-                    : 'bg-white text-[#526A82] border border-[#D7E6F4]'
+                    ? 'bg-accent/20 text-cyan-700 dark:text-cyan-400 border border-cyan-200'
+                    : 'glass-panel text-secondary border border-theme'
                 }`}>
                   {status === 'completed' ? (
                     <CheckCircle2 size={14} className="text-emerald-600" />
                   ) : status === 'active' ? (
-                    <Loader2 size={13} className="text-[#1677FF] animate-spin" />
+                    <Loader2 size={13} className="text-accent animate-spin" />
                   ) : (
-                    <Clock size={12} className="text-[#526A82]" />
+                    <Clock size={12} className="text-secondary" />
                   )}
                 </div>
 
@@ -209,20 +209,20 @@ export const ProcessingProgress: React.FC<ProcessingProgressProps> = ({ job }) =
                   <div className="flex items-center justify-between">
                     <span className={`text-xs font-bold leading-tight ${
                       status === 'active'
-                        ? 'text-cyan-700'
+                        ? 'text-cyan-700 dark:text-cyan-400'
                         : status === 'completed'
-                        ? 'text-[#425873]'
-                        : 'text-[#6B7F95]'
+                        ? 'text-secondary'
+                        : 'text-muted-foreground'
                     }`}>
                       {stage.label}
                     </span>
                     {status === 'active' && (
-                      <span className="text-[10px] font-mono text-[#1677FF] bg-[#1677FF]/20 px-2 py-0.5 rounded border border-cyan-200 animate-pulse">
+                      <span className="text-[10px] font-mono text-accent bg-accent/20 px-2 py-0.5 rounded border border-cyan-200 animate-pulse">
                         RUNNING
                       </span>
                     )}
                   </div>
-                  <p className="text-[11px] text-[#526A82] leading-relaxed mt-0.5">
+                  <p className="text-[11px] text-secondary leading-relaxed mt-0.5">
                     {stage.description}
                   </p>
                 </div>
@@ -234,7 +234,7 @@ export const ProcessingProgress: React.FC<ProcessingProgressProps> = ({ job }) =
                   <ArrowDown
                     size={11}
                     className={`transition-colors duration-300 ${
-                      status === 'completed' ? 'text-emerald-600/50' : 'text-[#425873]'
+                      status === 'completed' ? 'text-emerald-600/50' : 'text-secondary'
                     }`}
                   />
                 </div>
@@ -245,35 +245,35 @@ export const ProcessingProgress: React.FC<ProcessingProgressProps> = ({ job }) =
       </div>
 
       {/* Real Live Telemetry Panel */}
-      <div className="rounded-2xl border border-[#D7E6F4] bg-white/80 p-4">
-        <div className="text-[10px] font-bold text-[#526A82] uppercase tracking-widest mb-3">
+      <div className="rounded-2xl border border-theme bg-surface/80 p-4">
+        <div className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-3">
           Backend System Telemetry
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-          <div className="p-2.5 rounded-lg bg-white border border-[#D7E6F4]">
-            <span className="text-[10px] text-[#6B7F95] block mb-0.5">Model</span>
-            <span className="font-mono text-cyan-700 font-bold truncate block" title={job.telemetry.model}>
+          <div className="p-2.5 rounded-lg glass-panel border border-theme">
+            <span className="text-[10px] text-muted-foreground block mb-0.5">Model</span>
+            <span className="font-mono text-cyan-700 dark:text-cyan-400 font-bold truncate block" title={job.telemetry.model}>
               {job.telemetry.model || 'SwinIR-SRM'}
             </span>
           </div>
 
-          <div className="p-2.5 rounded-lg bg-white border border-[#D7E6F4]">
-            <span className="text-[10px] text-[#6B7F95] block mb-0.5">Resolution</span>
-            <span className="font-mono text-[#10233F] truncate block">
+          <div className="p-2.5 rounded-lg glass-panel border border-theme">
+            <span className="text-[10px] text-muted-foreground block mb-0.5">Resolution</span>
+            <span className="font-mono text-primary truncate block">
               {job.telemetry.inputGsd} → {job.telemetry.targetGsd}
             </span>
           </div>
 
-          <div className="p-2.5 rounded-lg bg-white border border-[#D7E6F4]">
-            <span className="text-[10px] text-[#6B7F95] block mb-0.5">Elapsed</span>
-            <span className="font-mono text-amber-700 font-bold">
+          <div className="p-2.5 rounded-lg glass-panel border border-theme">
+            <span className="text-[10px] text-muted-foreground block mb-0.5">Elapsed</span>
+            <span className="font-mono text-amber-700 dark:text-amber-400 font-bold">
               {job.telemetry.elapsedSeconds}s
             </span>
           </div>
 
-          <div className="p-2.5 rounded-lg bg-white border border-[#D7E6F4]">
-            <span className="text-[10px] text-[#6B7F95] block mb-0.5">Operation</span>
-            <span className="font-mono text-emerald-700 truncate block" title={job.telemetry.activeOperation}>
+          <div className="p-2.5 rounded-lg glass-panel border border-theme">
+            <span className="text-[10px] text-muted-foreground block mb-0.5">Operation</span>
+            <span className="font-mono text-emerald-700 dark:text-emerald-400 truncate block" title={job.telemetry.activeOperation}>
               {job.telemetry.activeOperation || 'Active'}
             </span>
           </div>
@@ -282,7 +282,7 @@ export const ProcessingProgress: React.FC<ProcessingProgressProps> = ({ job }) =
 
       {/* Safety Notice */}
       {!isCompleted && (
-        <div className="flex items-center gap-2 px-3 py-2 bg-amber-500/20 border border-amber-500/20 rounded-xl text-amber-700 text-xs">
+        <div className="flex items-center gap-2 px-3 py-2 bg-amber-500/20 border border-amber-500/20 rounded-xl text-amber-700 dark:text-amber-400 text-xs">
           <AlertCircle size={14} className="flex-shrink-0" />
           <span>Processing in progress on backend — do not close or navigate away.</span>
         </div>

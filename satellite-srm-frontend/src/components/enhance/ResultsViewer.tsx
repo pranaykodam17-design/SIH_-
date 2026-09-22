@@ -38,9 +38,23 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
   const [revealedCount, setRevealedCount] = useState<number>(1);
   const [isAnimationComplete, setIsAnimationComplete] = useState<boolean>(false);
   const [isGisExportModalOpen, setIsGisExportModalOpen] = useState<boolean>(false);
+  const [showHeatmap, setShowHeatmap] = useState<boolean>(true);
 
   const outputs = job.outputs;
   const metrics = job.metrics;
+
+  const uncMean = metrics?.uncertainty?.mean ?? 0.0842;
+  const confidencePercent = Math.max(0, Math.min(100, (1 - uncMean) * 100));
+  
+  let confidenceColor = "bg-emerald-500 text-emerald-600 dark:text-emerald-400";
+  let confidenceLabel = "High Confidence";
+  if (confidencePercent < 65) {
+    confidenceColor = "bg-pink-500 text-pink-600 dark:text-pink-400";
+    confidenceLabel = "Low Confidence";
+  } else if (confidencePercent < 85) {
+    confidenceColor = "bg-amber-400 text-amber-600 dark:text-amber-400";
+    confidenceLabel = "Moderate Confidence";
+  }
 
   const lrUrl  = resolveApiUrl(outputs?.lrPreviewUrl) || '/sample-satellite/lr.png';
   const srUrl  = resolveApiUrl(outputs?.srPreviewUrl) || '/sample-satellite/sr.png';
@@ -99,16 +113,16 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
   return (
     <div className="space-y-8">
       {/* ── Animation 8: Results Reveal Sequential Progress HUD ── */}
-      <div className="rounded-2xl border border-[#D7E6F4] bg-white p-3 sm:p-4 shadow-[0_0_30px_rgba(0,212,255,0.06)]">
+      <div className="rounded-2xl border border-theme glass-panel p-3 sm:p-4 shadow-[0_0_30px_rgba(0,212,255,0.06)]">
         <div className="flex items-center justify-between gap-2 mb-3">
-          <div className="flex items-center gap-2 text-xs font-mono text-[#1677FF]">
-            <Sparkles size={14} className="text-[#1677FF] animate-pulse" />
+          <div className="flex items-center gap-2 text-xs font-mono text-accent">
+            <Sparkles size={14} className="text-accent animate-pulse" />
             <span className="font-bold uppercase tracking-wider">Results Reveal Sequence</span>
           </div>
           {!isAnimationComplete && (
             <button
               onClick={handleRevealAll}
-              className="text-[11px] font-mono text-[#526A82] hover:text-cyan-700 underline transition-colors"
+              className="text-[11px] font-mono text-secondary hover:text-cyan-700 underline transition-colors"
             >
               Skip Animation · Show All
             </button>
@@ -126,10 +140,10 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
                 <div
                   className={`flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-lg border text-[10px] font-mono transition-all duration-300 ${
                     isJustRevealed
-                      ? 'border-cyan-400/60 bg-[#1677FF]/20 text-blue-900 shadow-[0_0_15px_rgba(0,212,255,0.3)] ring-1 ring-cyan-400/40'
+                      ? 'border-cyan-400/60 bg-accent/20 text-cyan-800 dark:text-cyan-300 shadow-[0_0_15px_rgba(0,212,255,0.3)] ring-1 ring-cyan-400/40'
                       : isRevealed
-                      ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700'
-                      : 'border-[#D7E6F4] bg-white text-[#526A82] opacity-40'
+                      ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
+                      : 'border-theme glass-panel text-muted-foreground'
                   }`}
                 >
                   {isRevealed ? (
@@ -141,7 +155,7 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
                 </div>
 
                 {idx < REVEAL_STAGES.length - 1 && (
-                  <span className={`text-[9px] transition-colors ${isRevealed ? 'text-emerald-600/60' : 'text-[#425873]'}`}>
+                  <span className={`text-[9px] transition-colors ${isRevealed ? 'text-emerald-600/60' : 'text-secondary'}`}>
                     →
                   </span>
                 )}
@@ -152,54 +166,54 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
       </div>
 
       {/* ── 0. SUPER-RESOLUTION COMPLETE Banner ── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-4 py-3.5 bg-gradient-to-r from-emerald-500/[0.12] via-srm-base to-cyan-500/[0.08] border border-emerald-500/30 rounded-2xl shadow-[0_0_25px_rgba(16,185,129,0.12)] anim-fade-in">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-5 py-4 bg-white/75 dark:bg-[#071428]/65 backdrop-blur-xl border border-slate-900/15 dark:border-white/20 rounded-2xl shadow-sm anim-fade-in">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-600 shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-emerald-500/20 dark:bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-700 dark:text-emerald-400 shrink-0">
             <CheckCircle size={18} className="animate-pulse" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-bold text-[#10233F] tracking-wide">
+              <span className="text-sm font-bold text-primary tracking-wide">
                 SUPER-RESOLUTION COMPLETE ✓
               </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-700 font-bold">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-bold">
                 STANDBY_READY
               </span>
             </div>
-            <p className="text-xs text-[#526A82] mt-0.5">
+            <p className="text-xs text-secondary mt-0.5">
               {job.message || 'All sub-4m super-resolution products verified and ready for review.'}
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2 self-end sm:self-center">
-          <span className="text-xs text-[#6B7F95] font-mono">
-            Elapsed: <span className="text-amber-700 font-bold">{job.telemetry.elapsedSeconds}s</span>
+          <span className="text-xs text-secondary font-mono">
+            Elapsed: <span className="text-amber-600 dark:text-amber-400 font-bold">{job.telemetry.elapsedSeconds}s</span>
           </span>
         </div>
       </div>
 
       {/* ── Action Buttons ── */}
       <div className="flex flex-wrap gap-3">
-        <button onClick={handleDownload} className="btn-primary flex-1 sm:flex-none justify-center">
+        <button onClick={handleDownload} className="flex items-center gap-2 px-4 py-2 bg-slate-900 dark:bg-cyan-500 hover:bg-slate-800 dark:hover:bg-cyan-400 text-white dark:text-slate-900 font-semibold rounded-xl flex-1 sm:flex-none justify-center transition-colors">
           <Download size={15} />
           Download PNG
         </button>
         {tifUrl && (
-          <button onClick={handleDownloadTiff} className="btn-secondary flex-1 sm:flex-none justify-center text-[#1677FF] border-cyan-200 hover:bg-[#1677FF]/20">
+          <button onClick={handleDownloadTiff} className="flex items-center gap-2 px-4 py-2 bg-white/70 hover:bg-white/90 dark:bg-white/10 dark:hover:bg-white/20 border border-slate-900/15 dark:border-white/20 text-primary font-semibold rounded-xl flex-1 sm:flex-none justify-center transition-colors">
             <Download size={14} />
             Download GeoTIFF (.tif)
           </button>
         )}
-        <button onClick={onViewCompare} className="btn-secondary flex-1 sm:flex-none justify-center">
+        <button onClick={onViewCompare} className="flex items-center gap-2 px-4 py-2 bg-white/70 hover:bg-white/90 dark:bg-white/10 dark:hover:bg-white/20 border border-slate-900/15 dark:border-white/20 text-primary font-semibold rounded-xl flex-1 sm:flex-none justify-center transition-colors">
           <ExternalLink size={14} />
           Full Comparison
         </button>
-        <button onClick={onViewAnalysis} className="btn-secondary flex-1 sm:flex-none justify-center">
+        <button onClick={onViewAnalysis} className="flex items-center gap-2 px-4 py-2 bg-white/70 hover:bg-white/90 dark:bg-white/10 dark:hover:bg-white/20 border border-slate-900/15 dark:border-white/20 text-primary font-semibold rounded-xl flex-1 sm:flex-none justify-center transition-colors">
           <BarChart3 size={14} />
           Analysis
         </button>
-        <button onClick={onNewEnhancement} className="btn-secondary flex-1 sm:flex-none justify-center">
+        <button onClick={onNewEnhancement} className="flex items-center gap-2 px-4 py-2 bg-white/70 hover:bg-white/90 dark:bg-white/10 dark:hover:bg-white/20 border border-slate-900/15 dark:border-white/20 text-primary font-semibold rounded-xl flex-1 sm:flex-none justify-center transition-colors">
           <RefreshCcw size={14} />
           New Image
         </button>
@@ -210,13 +224,13 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
         <div className="space-y-4 anim-fade-up">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-[10px] font-bold text-[#1677FF] uppercase tracking-widest font-mono">
+              <div className="text-[10px] font-bold text-accent uppercase tracking-widest font-mono">
                 Primary Model Outputs
               </div>
-              <h3 className="text-lg font-black text-[#10233F]">Super-Resolved Spectral Reconstructions</h3>
+              <h3 className="text-lg font-black text-primary">Super-Resolved Spectral Reconstructions</h3>
             </div>
-            <div className="flex items-center gap-2 text-xs font-mono text-[#526A82]">
-              <span className="px-2 py-0.5 rounded bg-white border border-[#D7E6F4]">
+            <div className="flex items-center gap-2 text-xs font-mono text-secondary">
+              <span className="px-2 py-0.5 rounded glass-panel border border-theme">
                 10m → ~{job.metadata.targetResolution?.toFixed(2) || '3.33'}m GSD
               </span>
             </div>
@@ -226,17 +240,17 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
             {/* 1. RGB Output Card */}
             {revealedCount >= 2 && (
               <div className="glass rounded-2xl border border-cyan-200 overflow-hidden shadow-[0_0_25px_rgba(0,212,255,0.08)] anim-fade-in flex flex-col justify-between">
-                <div className="p-3 border-b border-[#D7E6F4] bg-cyan-950/20 flex items-center justify-between">
+                <div className="p-3 border-b border-theme bg-cyan-950/20 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                    <span className="text-xs font-bold text-[#10233F] tracking-wide">1. RGB OUTPUT</span>
+                    <span className="text-xs font-bold text-primary tracking-wide">1. RGB OUTPUT</span>
                   </div>
-                  <span className="text-[10px] font-mono text-cyan-700 bg-[#1677FF]/20 px-2 py-0.5 rounded border border-cyan-200">
+                  <span className="text-[10px] font-mono text-cyan-700 bg-accent/20 px-2 py-0.5 rounded border border-cyan-200">
                     True Color (B04-B03-B02)
                   </span>
                 </div>
 
-                <div className="relative h-64 sm:h-72 bg-white overflow-hidden group">
+                <div className="relative h-64 sm:h-72 glass-panel overflow-hidden group">
                   <img
                     src={srUrl}
                     alt="Super-Resolved RGB"
@@ -244,18 +258,18 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-srm-surface via-transparent to-transparent pointer-events-none" />
                   <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[11px] font-mono pointer-events-none">
-                    <span className="text-[#10233F] font-bold bg-white px-2 py-0.5 rounded backdrop-blur-sm border border-[#D7E6F4]">
+                    <span className="text-primary font-bold glass-panel px-2 py-0.5 rounded backdrop-blur-sm border border-theme">
                       ~{job.metadata.targetResolution?.toFixed(2) || '3.33'}m Sub-4m GSD
                     </span>
-                    <span className="text-cyan-700 bg-white px-2 py-0.5 rounded backdrop-blur-sm border border-[#D7E6F4]">
+                    <span className="text-cyan-700 glass-panel px-2 py-0.5 rounded backdrop-blur-sm border border-theme">
                       SwinIR Enhanced
                     </span>
                   </div>
                 </div>
 
-                <div className="p-3 bg-white/90 border-t border-[#D7E6F4] text-[11px] text-[#526A82] flex items-center justify-between font-mono">
+                <div className="p-3 bg-surface/90 border-t border-theme text-[11px] text-secondary flex items-center justify-between font-mono">
                   <span>Natural Color Visible Composite</span>
-                  <span className="text-[#6B7F95]">665nm · 560nm · 490nm</span>
+                  <span className="text-muted-foreground">665nm · 560nm · 490nm</span>
                 </div>
               </div>
             )}
@@ -263,17 +277,17 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
             {/* 2. NIR Output Card */}
             {revealedCount >= 3 && (
               <div className="glass rounded-2xl border border-purple-500/30 overflow-hidden shadow-[0_0_25px_rgba(168,85,247,0.08)] anim-fade-in flex flex-col justify-between">
-                <div className="p-3 border-b border-[#D7E6F4] bg-purple-950/20 flex items-center justify-between">
+                <div className="p-3 border-b border-theme bg-purple-950/20 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
-                    <span className="text-xs font-bold text-[#10233F] tracking-wide">2. NIR OUTPUT</span>
+                    <span className="text-xs font-bold text-primary tracking-wide">2. NIR OUTPUT</span>
                   </div>
                   <span className="text-[10px] font-mono text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20">
                     Band 8 (842nm)
                   </span>
                 </div>
 
-                <div className="relative h-64 sm:h-72 bg-white overflow-hidden group">
+                <div className="relative h-64 sm:h-72 glass-panel overflow-hidden group">
                   <img
                     src={b08Url}
                     alt="Super-Resolved Near-Infrared B08"
@@ -281,16 +295,16 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-srm-surface via-transparent to-transparent pointer-events-none" />
                   <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[11px] font-mono pointer-events-none">
-                    <span className="text-[#10233F] font-bold bg-white px-2 py-0.5 rounded backdrop-blur-sm border border-[#D7E6F4]">
+                    <span className="text-primary font-bold glass-panel px-2 py-0.5 rounded backdrop-blur-sm border border-theme">
                       ~{job.metadata.targetResolution?.toFixed(2) || '3.33'}m Sub-4m GSD
                     </span>
-                    <span className="text-purple-300 bg-white px-2 py-0.5 rounded backdrop-blur-sm border border-[#D7E6F4]">
+                    <span className="text-purple-300 glass-panel px-2 py-0.5 rounded backdrop-blur-sm border border-theme">
                       Radiometrically Preserved
                     </span>
                   </div>
                 </div>
 
-                <div className="p-3 bg-white/90 border-t border-[#D7E6F4] text-[11px] text-[#526A82] flex items-center justify-between font-mono">
+                <div className="p-3 bg-surface/90 border-t border-theme text-[11px] text-secondary flex items-center justify-between font-mono">
                   <span>Vegetation & Canopy Reflectance</span>
                   <span className="text-purple-400">842nm NIR</span>
                 </div>
@@ -305,8 +319,8 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
         <div className="space-y-4 anim-fade-up">
           <div className="text-center">
             <div className="section-eyebrow justify-center mb-2">3. Before / After Comparison</div>
-            <h3 className="text-2xl font-black text-[#10233F] mb-1">See the Difference</h3>
-            <p className="text-sm text-[#6B7F95]">
+            <h3 className="text-2xl font-black text-primary mb-1">See the Difference</h3>
+            <p className="text-sm text-muted-foreground">
               Drag the vertical divider, use mouse wheel to zoom, and drag to pan across the imagery
             </p>
           </div>
@@ -357,12 +371,12 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
         <div className="space-y-4 anim-fade-up">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 rounded bg-[#1677FF]/10 border border-blue-500/30 text-[10px] font-mono text-[#1677FF] font-bold">
+              <span className="px-2 py-0.5 rounded bg-accent/10 border border-blue-500/30 text-[10px] font-mono text-accent font-bold">
                 5. METRICS
               </span>
-              <span className="text-xs font-bold text-[#425873]">Scientific Remote Sensing Verification</span>
+              <span className="text-xs font-bold text-secondary">Scientific Remote Sensing Verification</span>
             </div>
-            <span className="text-[11px] font-mono text-[#6B7F95]">Benchmark vs Bicubic</span>
+            <span className="text-[11px] font-mono text-muted-foreground">Benchmark vs Bicubic</span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -398,9 +412,9 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
           </div>
 
           {/* Scientific disclaimer */}
-          <div className="flex items-start gap-2 px-3 py-2.5 bg-[#1677FF]/[0.05] border border-blue-500/15 rounded-xl">
-            <Info size={12} className="text-[#1677FF] flex-shrink-0 mt-0.5" />
-            <p className="text-[11px] text-[#1677FF]/75 leading-relaxed">
+          <div className="flex items-start gap-2 px-3 py-2.5 bg-accent/[0.05] border border-blue-500/15 rounded-xl">
+            <Info size={12} className="text-accent flex-shrink-0 mt-0.5" />
+            <p className="text-[11px] text-accent/75 leading-relaxed">
               Metrics are computed vs. a bicubic baseline. Model-inferred spatial details must be validated 
               against high-resolution reference data for critical applications.
             </p>
@@ -416,7 +430,7 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
               <span className="px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/30 text-[10px] font-mono text-purple-400 font-bold">
                 6. UNCERTAINTY
               </span>
-              <span className="text-xs font-bold text-[#10233F]">Monte Carlo Predictive Variance & Confidence</span>
+              <span className="text-xs font-bold text-primary">Monte Carlo Predictive Variance & Confidence</span>
             </div>
             <span className="text-[11px] font-mono text-purple-300">10 Stochastic Dropout Passes</span>
           </div>
@@ -424,68 +438,93 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
           <div className="glass rounded-2xl border border-purple-500/30 p-4 sm:p-5 shadow-[0_0_30px_rgba(168,85,247,0.08)] space-y-4">
             <div className="grid md:grid-cols-3 gap-4">
               {/* Uncertainty Image Preview */}
-              <div className="relative rounded-xl overflow-hidden border border-[#D7E6F4] bg-white h-52 sm:h-56 group">
+              <div className="relative rounded-xl overflow-hidden border border-theme glass-panel h-52 sm:h-56 group">
+                {/* Heatmap Toggle positioned over the image */}
+                <div className="absolute top-2 right-2 z-10 flex bg-slate-900/50 p-1 rounded-lg border border-white/10 shrink-0 backdrop-blur-md">
+                  <button
+                    onClick={() => setShowHeatmap(false)}
+                    className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+                      !showHeatmap 
+                        ? 'bg-white text-slate-900 shadow-sm' 
+                        : 'text-white/60 hover:text-white'
+                    }`}
+                  >
+                    SR Image
+                  </button>
+                  <button
+                    onClick={() => setShowHeatmap(true)}
+                    className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+                      showHeatmap 
+                        ? 'bg-purple-500 text-white shadow-sm' 
+                        : 'text-white/60 hover:text-white'
+                    }`}
+                  >
+                    Heatmap
+                  </button>
+                </div>
+                
                 <img
-                  src={uncertaintyUrl}
-                  alt="Prediction Uncertainty Map"
+                  src={showHeatmap ? uncertaintyUrl : srUrl}
+                  alt={showHeatmap ? "Prediction Uncertainty Map" : "Super-Resolved"}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-srm-surface via-transparent to-transparent pointer-events-none" />
                 <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-[10px] font-mono pointer-events-none">
-                  <span className="text-purple-300 bg-white px-2 py-0.5 rounded border border-[#D7E6F4]">
-                    Predictive Heatmap
+                  <span className={`${showHeatmap ? 'text-purple-300' : 'text-primary'} glass-panel px-2 py-0.5 rounded border border-theme`}>
+                    {showHeatmap ? 'Predictive Heatmap' : 'Super-Resolved Output'}
                   </span>
-                  <span className="text-[#425873] bg-white px-2 py-0.5 rounded border border-[#D7E6F4]">
-                    Float32 Variance
-                  </span>
+                  {showHeatmap && (
+                    <span className="text-secondary glass-panel px-2 py-0.5 rounded border border-theme">
+                      Float32 Variance
+                    </span>
+                  )}
                 </div>
               </div>
 
               {/* Real Telemetry and Statistics */}
               <div className="md:col-span-2 flex flex-col justify-between space-y-3">
                 <div className="space-y-2">
-                  <h4 className="text-sm font-bold text-[#10233F] flex items-center gap-2">
+                  <h4 className="text-sm font-bold text-primary flex items-center gap-2">
                     <Activity size={15} className="text-purple-400" />
                     <span>Spatial Uncertainty Quantification</span>
                   </h4>
-                  <p className="text-xs text-[#526A82] leading-relaxed">
+                  <p className="text-xs text-secondary leading-relaxed">
                     Evaluates model confidence across edges, high-contrast textures, and boundary transitions 
                     using Monte Carlo Dropout passes. Brighter regions indicate higher predictive variance.
                   </p>
                 </div>
 
-                {/* Variance Quantiles */}
-                <div className="grid grid-cols-3 gap-2.5 text-xs font-mono">
-                  <div className="p-2.5 rounded-xl bg-white border border-[#D7E6F4]">
-                    <span className="text-[10px] text-[#6B7F95] block mb-0.5">Mean Variance (μ)</span>
+                {/* Variance Quantiles & Confidence */}
+                <div className="grid grid-cols-2 gap-2.5 text-xs font-mono">
+                  <div className="p-2.5 rounded-xl glass-panel border border-theme col-span-2 flex items-center justify-between">
+                    <span className="text-sm font-semibold text-primary">Model Confidence</span>
+                    <span className={`text-lg font-bold ${confidenceColor.split(' ')[1]}`}>{confidencePercent.toFixed(1)}% ({confidenceLabel})</span>
+                  </div>
+                  
+                  <div className="p-2.5 rounded-xl glass-panel border border-theme flex flex-col justify-between">
+                    <span className="text-[10px] text-muted-foreground block mb-0.5">Mean Variance (μ)</span>
                     <span className="text-purple-300 font-bold">
                       {metrics?.uncertainty?.mean !== undefined ? metrics.uncertainty.mean.toFixed(4) : '0.0842'}
                     </span>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-white border border-[#D7E6F4]">
-                    <span className="text-[10px] text-[#6B7F95] block mb-0.5">Max Variance (max)</span>
+                  <div className="p-2.5 rounded-xl glass-panel border border-theme flex flex-col justify-between">
+                    <span className="text-[10px] text-muted-foreground block mb-0.5">Max Variance (max)</span>
                     <span className="text-pink-300 font-bold">
                       {metrics?.uncertainty?.max !== undefined ? metrics.uncertainty.max.toFixed(4) : '0.4820'}
-                    </span>
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-white border border-[#D7E6F4]">
-                    <span className="text-[10px] text-[#6B7F95] block mb-0.5">Min Variance (min)</span>
-                    <span className="text-emerald-700 font-bold">
-                      {metrics?.uncertainty?.min !== undefined ? metrics.uncertainty.min.toFixed(4) : '0.0120'}
                     </span>
                   </div>
                 </div>
 
                 {/* Confidence Gradient Legend */}
-                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white/80 border border-[#D7E6F4] text-[10px] text-[#526A82] font-mono">
-                  <span className="text-[#6B7F95]">Variance Scale:</span>
+                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-surface/80 border border-theme text-[10px] text-secondary font-mono">
+                  <span className="text-muted-foreground">Variance Scale:</span>
                   <div className="flex items-center gap-1.5 flex-1">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#1677FF]" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-accent" />
                     <span>High Confidence (&lt;0.10)</span>
-                    <span className="text-[#526A82]">→</span>
+                    <span className="text-secondary">→</span>
                     <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
                     <span>Moderate (0.10 - 0.35)</span>
-                    <span className="text-[#526A82]">→</span>
+                    <span className="text-secondary">→</span>
                     <span className="w-2.5 h-2.5 rounded-full bg-pink-500" />
                     <span className="text-pink-300 font-semibold">Boundary Edge (&gt;0.35)</span>
                   </div>

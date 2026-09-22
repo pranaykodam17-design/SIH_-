@@ -69,19 +69,22 @@ export const UseCasesPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen relative bg-gradient-to-b from-slate-50 via-blue-50/20 to-white dark:from-transparent dark:via-transparent dark:to-transparent dark:bg-transparent">
+      {/* Light Mode top atmospheric glow */}
+      <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-b from-blue-100/30 via-cyan-50/10 to-transparent pointer-events-none dark:hidden" />
+      
       {/* Header */}
-      <div className="border-b border-border bg-white/80 backdrop-blur-sm sticky top-[64px] z-40">
+      <div className="border-b border-slate-200/60 dark:border-border bg-white/80 dark:bg-surface/80 backdrop-blur-md sticky top-[64px] z-40 shadow-sm dark:shadow-none">
         <div className="max-w-[1120px] mx-auto px-4 sm:px-6 py-5 flex items-center gap-4">
           <button
             onClick={() => navigate(-1)}
-            className="w-9 h-9 flex items-center justify-center rounded-xl text-[#6B7F95] hover:text-[#425873] hover:bg-white transition-all"
+            className="w-9 h-9 flex items-center justify-center rounded-xl text-muted-foreground hover:text-secondary hover:glass-panel transition-all"
           >
             <ArrowLeft size={18} />
           </button>
           <div>
-            <h1 className="text-xl font-black text-[#10233F] leading-none">Use Cases</h1>
-            <p className="text-xs text-[#6B7F95] mt-0.5">Real-world applications of SRM</p>
+            <h1 className="text-xl font-black text-primary leading-none">Use Cases</h1>
+            <p className="text-xs text-muted-foreground mt-0.5">Real-world applications of SRM</p>
           </div>
         </div>
       </div>
@@ -92,49 +95,49 @@ export const UseCasesPage: React.FC = () => {
           <div key={uc.id} className={`grid md:grid-cols-2 gap-10 items-center anim-fade-up delay-${(i % 3) + 1}`}>
             
             {/* Image Side */}
-            <div className={`relative rounded-3xl overflow-hidden border border-[#D7E6F4] shadow-glow-${uc.color} h-[400px] ${i % 2 !== 0 ? 'md:order-2' : ''}`}>
-              <img src={uc.image} alt={uc.title} className="absolute inset-0 w-full h-full object-cover opacity-80 mix-blend-screen" />
-              <div className="absolute inset-0 bg-gradient-to-t from-srm-surface via-srm-base to-transparent" />
+            <div className={`relative rounded-2xl overflow-hidden border border-white/40 dark:border-theme shadow-[0_6px_24px_rgb(0,0,0,0.04)] dark:shadow-glow-${uc.color} bg-white/35 backdrop-blur-md dark:bg-transparent h-[400px] ${i % 2 !== 0 ? 'md:order-2' : ''}`}>
+              <img src={uc.image} alt={uc.title} className="absolute inset-0 w-full h-full object-cover opacity-80 mix-blend-normal dark:mix-blend-screen" />
+              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-white/95 via-white/70 to-transparent dark:from-srm-surface dark:via-srm-surface/60" />
               
-              <div className="absolute bottom-6 left-6 flex items-center gap-4">
-                <div className={`w-14 h-14 rounded-2xl bg-${uc.color}-500/20 border border-${uc.color}-500/40 flex items-center justify-center text-${uc.color}-400 backdrop-blur-md`}>
+              <div className="absolute bottom-6 left-6 flex items-center gap-4 bg-white/55 backdrop-blur-md border border-white/40 shadow-none rounded-2xl p-3 pr-6 dark:bg-transparent dark:backdrop-blur-none dark:border-transparent dark:shadow-none dark:p-0 dark:pr-0">
+                <div className={`w-14 h-14 rounded-2xl bg-${uc.color}-500/20 border border-${uc.color}-500/40 flex items-center justify-center text-${uc.color}-600 dark:text-${uc.color}-400 backdrop-blur-md`}>
                   {uc.icon}
                 </div>
-                <h2 className="text-2xl font-black text-[#10233F]">{uc.title}</h2>
+                <h2 className="text-2xl font-black text-primary">{uc.title}</h2>
               </div>
             </div>
 
             {/* Text Side */}
             <div className={`space-y-6 ${i % 2 !== 0 ? 'md:order-1' : ''}`}>
               
-              <div>
-                <h3 className="text-sm font-bold text-[#526A82] uppercase tracking-widest mb-2">The Problem</h3>
-                <p className="text-[#425873] leading-relaxed text-sm bg-white p-4 rounded-xl border border-[#D7E6F4]">
+              <div className="bg-white/35 backdrop-blur-md border border-white/40 shadow-none rounded-2xl p-5 dark:bg-transparent dark:backdrop-blur-none dark:border-transparent dark:shadow-none dark:p-0">
+                <h3 className="text-sm font-bold text-slate-800 dark:text-foreground uppercase tracking-widest mb-2">The Problem</h3>
+                <p className="text-slate-700 dark:text-muted-foreground leading-relaxed text-sm bg-transparent border-transparent shadow-none dark:bg-surface/50 dark:border dark:border-theme dark:p-4 dark:rounded-xl">
                   {uc.problem}
                 </p>
               </div>
 
-              <div>
-                <h3 className="text-sm font-bold text-[#526A82] uppercase tracking-widest mb-2">How SRM Helps</h3>
-                <p className={`text-${uc.color}-300 leading-relaxed text-sm bg-${uc.color}-500/[0.05] p-4 rounded-xl border border-${uc.color}-500/15`}>
+              <div className="bg-white/35 backdrop-blur-md border border-white/40 shadow-none rounded-2xl p-5 dark:bg-transparent dark:backdrop-blur-none dark:border-transparent dark:shadow-none dark:p-0">
+                <h3 className="text-sm font-bold text-slate-800 dark:text-foreground uppercase tracking-widest mb-2">How SRM Helps</h3>
+                <p className={`text-slate-700 dark:text-muted-foreground leading-relaxed text-sm bg-transparent border-transparent shadow-none dark:bg-${uc.color}-500/[0.05] dark:border dark:border-${uc.color}-500/15 dark:p-4 dark:rounded-xl dark:shadow-none`}>
                   {uc.solution}
                 </p>
               </div>
 
-              <div>
-                <h3 className="text-sm font-bold text-[#526A82] uppercase tracking-widest mb-3">Key Benefits</h3>
-                <ul className="space-y-2.5">
+              <div className="bg-white/35 backdrop-blur-md border border-white/40 shadow-none rounded-2xl p-5 dark:bg-transparent dark:backdrop-blur-none dark:border-transparent dark:shadow-none dark:p-0">
+                <h3 className="text-sm font-bold text-slate-800 dark:text-foreground uppercase tracking-widest mb-3">Key Benefits</h3>
+                <ul className="space-y-2.5 bg-transparent border-transparent shadow-none">
                   {uc.benefits.map((b, idx) => (
-                    <li key={idx} className="flex items-start gap-2.5 text-sm text-[#425873]">
-                      <ArrowRight size={16} className={`text-${uc.color}-400 mt-0.5 flex-shrink-0`} />
+                    <li key={idx} className="flex items-start gap-2.5 text-sm text-slate-700 dark:text-muted-foreground">
+                      <ArrowRight size={16} className={`text-${uc.color}-600 dark:text-${uc.color}-400 mt-0.5 flex-shrink-0`} />
                       {b}
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div className="pt-4">
-                <button onClick={() => navigate('/enhance')} className={`text-sm font-bold text-${uc.color}-400 hover:text-${uc.color}-300 flex items-center gap-1.5 transition-colors`}>
+              <div className="pt-2">
+                <button onClick={() => navigate('/enhance')} className={`text-sm font-bold text-${uc.color}-700 dark:text-${uc.color}-400 hover:text-${uc.color}-800 dark:hover:text-${uc.color}-300 flex items-center gap-1.5 transition-colors bg-white/60 backdrop-blur-sm border border-white/60 rounded-xl px-4 py-2.5 dark:bg-transparent dark:backdrop-blur-none dark:border-transparent dark:px-0 dark:py-0`}>
                   Enhance Imagery for {uc.title.split('&')[0].trim()} <ArrowRight size={14} />
                 </button>
               </div>

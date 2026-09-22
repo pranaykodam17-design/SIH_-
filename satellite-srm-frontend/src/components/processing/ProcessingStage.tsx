@@ -19,8 +19,8 @@ export const ProcessingStage: React.FC<ProcessingStageProps> = ({
       status === 'active'
         ? 'border-cyan-400 bg-cyan-950/30 shadow-lg shadow-cyan-500/10'
         : status === 'completed'
-        ? 'border-emerald-500/40 bg-white/90'
-        : 'border-blue-100/60 bg-white/40 opacity-70'
+        ? 'border-emerald-500/40 bg-surface/90'
+        : 'border-blue-100/60 bg-surface/40 opacity-70'
     }`}>
       
       <div className="flex items-center justify-between mb-2">
@@ -30,30 +30,30 @@ export const ProcessingStage: React.FC<ProcessingStageProps> = ({
               <CheckCircle2 className="h-4 w-4" />
             </div>
           ) : status === 'active' ? (
-            <div className="h-6 w-6 rounded-full bg-[#1677FF]/20 text-[#1677FF] flex items-center justify-center animate-spin">
+            <div className="h-6 w-6 rounded-full bg-accent/20 text-accent flex items-center justify-center animate-spin">
               <CircleDashed className="h-4 w-4" />
             </div>
           ) : (
-            <div className="h-6 w-6 rounded-full bg-slate-50 text-[#6B7F95] flex items-center justify-center">
+            <div className="h-6 w-6 rounded-full glass-panel-secondary text-muted-foreground flex items-center justify-center">
               <Clock className="h-3.5 w-3.5" />
             </div>
           )}
-          <span className="font-mono text-xs font-bold text-[#526A82]">
+          <span className="font-mono text-xs font-bold text-secondary">
             STEP {stage.stepNumber}
           </span>
-          <h4 className={`text-sm font-bold ${status === 'active' ? 'text-[#10233F]' : status === 'completed' ? 'text-[#425873]' : 'text-[#526A82]'}`}>
+          <h4 className={`text-sm font-bold ${status === 'active' ? 'text-primary' : status === 'completed' ? 'text-secondary' : 'text-secondary'}`}>
             {stage.name}
           </h4>
         </div>
 
         <span className="font-mono text-xs">
           {status === 'completed' && <span className="text-emerald-600 font-bold">DONE</span>}
-          {status === 'active' && <span className="text-[#1677FF] font-bold">{progress}%</span>}
-          {status === 'pending' && <span className="text-[#6B7F95]">QUEUED</span>}
+          {status === 'active' && <span className="text-accent font-bold">{progress}%</span>}
+          {status === 'pending' && <span className="text-muted-foreground">QUEUED</span>}
         </span>
       </div>
 
-      <p className="text-xs text-[#526A82] mb-3 pl-8">
+      <p className="text-xs text-secondary mb-3 pl-8">
         {stage.description}
       </p>
 
@@ -62,9 +62,9 @@ export const ProcessingStage: React.FC<ProcessingStageProps> = ({
         {stage.subTasks.map((task, idx) => (
           <div key={idx} className="flex items-center gap-2 text-[11px]">
             <span className={`h-1.5 w-1.5 rounded-full ${
-              status === 'completed' ? 'bg-emerald-400' : status === 'active' ? 'bg-cyan-400 animate-pulse' : 'bg-slate-700'
+              status === 'completed' ? 'bg-emerald-400' : status === 'active' ? 'bg-cyan-400 animate-pulse' : 'glass-panel-secondary'
             }`}></span>
-            <span className={status === 'completed' ? 'text-[#425873]' : status === 'active' ? 'text-cyan-800' : 'text-[#6B7F95]'}>
+            <span className={status === 'completed' ? 'text-secondary' : status === 'active' ? 'text-cyan-800' : 'text-muted-foreground'}>
               {task}
             </span>
           </div>

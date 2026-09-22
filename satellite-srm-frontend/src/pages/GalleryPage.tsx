@@ -53,19 +53,19 @@ export const GalleryPage: React.FC = () => {
     : EXAMPLES.filter(e => e.category === activeCategory);
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-blue-50/20 to-white dark:from-transparent dark:via-transparent dark:to-transparent dark:bg-transparent">
       {/* Header */}
-      <div className="border-b border-border bg-white/80 backdrop-blur-sm">
+      <div className="border-b border-border bg-surface/80 backdrop-blur-sm">
         <div className="max-w-[1120px] mx-auto px-4 sm:px-6 py-5 flex items-center gap-4">
           <button
             onClick={() => navigate(-1)}
-            className="w-9 h-9 flex items-center justify-center rounded-xl text-[#6B7F95] hover:text-[#425873] hover:bg-white transition-all"
+            className="w-9 h-9 flex items-center justify-center rounded-xl text-muted-foreground hover:text-secondary hover:glass-panel transition-all"
           >
             <ArrowLeft size={18} />
           </button>
           <div>
-            <h1 className="text-xl font-black text-[#10233F] leading-none">Result Gallery</h1>
-            <p className="text-xs text-[#6B7F95] mt-0.5">See what SRM can reveal across domains</p>
+            <h1 className="text-xl font-black text-primary leading-none">Result Gallery</h1>
+            <p className="text-xs text-muted-foreground mt-0.5">See what SRM can reveal across domains</p>
           </div>
         </div>
       </div>
@@ -80,8 +80,8 @@ export const GalleryPage: React.FC = () => {
               onClick={() => setActiveCategory(cat)}
               className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
                 activeCategory === cat
-                  ? 'bg-[#1677FF]/20 border border-cyan-200 text-[#1677FF] shadow-glow-cyan'
-                  : 'bg-white border border-[#D7E6F4] text-[#526A82] hover:text-[#425873] hover:bg-white'
+                  ? 'bg-accent/10 border border-accent/30 text-accent dark:bg-accent/20 dark:border-cyan-200 dark:shadow-glow-cyan'
+                  : 'glass-panel border border-theme text-secondary hover:text-secondary hover:glass-panel'
               }`}
             >
               {cat}
@@ -90,15 +90,15 @@ export const GalleryPage: React.FC = () => {
         </div>
 
         {/* Gallery Grid */}
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-8">
           {filteredExamples.map((item, i) => (
-            <div key={item.id} className={`glass rounded-3xl overflow-hidden border border-[#D7E6F4] anim-fade-up delay-${i + 1}`}>
+            <div key={item.id} className={`glass rounded-3xl overflow-hidden border border-slate-200/60 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:bg-transparent dark:shadow-none dark:border-theme anim-fade-up delay-${i + 1}`}>
               
               {/* Top Meta */}
-              <div className="p-5 border-b border-[#D7E6F4] flex items-center justify-between">
+              <div className="p-5 border-b border-theme flex items-center justify-between">
                 <div>
-                  <h3 className="text-base font-bold text-[#10233F] leading-tight">{item.title}</h3>
-                  <div className="text-[11px] text-[#6B7F95] font-medium mt-1">{item.location}</div>
+                  <h3 className="text-base font-bold text-primary leading-tight">{item.title}</h3>
+                  <div className="text-[11px] text-muted-foreground font-medium mt-1">{item.location}</div>
                 </div>
                 <div className="tag-cyan text-[10px]">{item.category}</div>
               </div>
@@ -114,14 +114,14 @@ export const GalleryPage: React.FC = () => {
                   showControls={false}
                   className="rounded-none border-x-0"
                 />
-                <button className="absolute bottom-3 right-3 w-8 h-8 rounded-lg bg-[#F5FAFF]/80 border border-[#D7E6F4] flex items-center justify-center text-[#526A82] hover:text-[#1677FF] transition-colors z-30">
+                <button className="absolute bottom-3 right-3 w-8 h-8 rounded-lg bg-background/80 border border-theme flex items-center justify-center text-secondary hover:text-accent transition-colors z-30">
                   <ZoomIn size={14} />
                 </button>
               </div>
 
               {/* Bottom Desc */}
-              <div className="p-5 bg-white">
-                <p className="text-sm text-[#526A82] leading-relaxed">
+              <div className="p-5 glass-panel">
+                <p className="text-sm text-secondary leading-relaxed">
                   {item.desc}
                 </p>
               </div>

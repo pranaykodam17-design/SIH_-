@@ -44,7 +44,7 @@ export const BeforeAfter: React.FC = () => {
   return (
     <section
       id="before-after"
-      className="relative py-24 bg-background border-t border-border/40 overflow-hidden select-none"
+      className="relative py-24 glass-panel border-t border-border/40 overflow-hidden select-none"
     >
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
@@ -63,11 +63,11 @@ export const BeforeAfter: React.FC = () => {
           {/* Metrics Header Bar */}
           <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-4 rounded-t-xl bg-card/60 backdrop-blur-md border-b border-border/50 text-[11px] font-mono text-muted-foreground">
             <div className="flex items-center gap-3">
-              <span className="font-semibold text-foreground/80">Dataset: Sentinel-2 L2A</span>
+              <span className="font-semibold text-foreground opacity-80">Dataset: Sentinel-2 L2A</span>
               <span className="hidden sm:inline opacity-50">•</span>
               <span className="text-primary font-medium tracking-wide">EPSG:32644 (UTM Zone 44N)</span>
             </div>
-            <div className="flex items-center gap-3 text-emerald-400 font-bold tracking-wide">
+            <div className="flex items-center gap-3 text-emerald-600 dark:text-emerald-400 font-bold tracking-wide">
               <span>PSNR: +4.2 dB</span>
               <span className="text-border">•</span>
               <span>SSIM: 0.912</span>
@@ -107,7 +107,7 @@ export const BeforeAfter: React.FC = () => {
               className="absolute top-6 left-6 z-20 pointer-events-none transition-opacity duration-300"
               style={{ opacity: sliderPos < 15 ? 0 : 1 }}
             >
-              <div className="px-4 py-2 rounded-lg bg-background/80 backdrop-blur-md border border-border text-[11px] font-mono shadow-lg">
+              <div className="px-4 py-2 rounded-lg glass-panel bg-background/80 backdrop-blur-md border border-border text-[11px] font-mono shadow-lg">
                 <span className="text-destructive font-bold tracking-widest mr-1.5">LEFT:</span>
                 <span className="text-foreground font-medium">Original (10m)</span>
               </div>
@@ -118,7 +118,7 @@ export const BeforeAfter: React.FC = () => {
               className="absolute top-6 right-6 z-20 pointer-events-none transition-opacity duration-300"
               style={{ opacity: sliderPos > 85 ? 0 : 1 }}
             >
-              <div className="px-4 py-2 rounded-lg bg-background/80 backdrop-blur-md border border-border text-[11px] font-mono shadow-lg">
+              <div className="px-4 py-2 rounded-lg glass-panel bg-background/80 backdrop-blur-md border border-border text-[11px] font-mono shadow-lg">
                 <span className="text-primary font-bold tracking-widest mr-1.5">RIGHT:</span>
                 <span className="text-foreground font-medium">Super-Resolved (3.3m)</span>
               </div>
@@ -133,7 +133,7 @@ export const BeforeAfter: React.FC = () => {
               <div
                 onMouseDown={handlePointerDown}
                 onTouchStart={handlePointerDown}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background border-2 border-primary flex items-center justify-center text-primary shadow-[0_0_15px_hsl(var(--primary)/0.5)] cursor-grab active:cursor-grabbing hover:scale-110 transition-transform pointer-events-auto"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full glass-panel border-2 border-primary flex items-center justify-center text-primary shadow-[0_0_15px_hsl(var(--primary)/0.5)] cursor-grab active:cursor-grabbing hover:scale-110 transition-transform pointer-events-auto"
               >
                 <MoveHorizontal size={18} />
               </div>
@@ -154,7 +154,7 @@ export const BeforeAfter: React.FC = () => {
                 className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all duration-300 font-medium ${
                   Math.abs(sliderPos - btn.val) < 8
                     ? 'bg-primary/20 text-primary border border-primary/40 shadow-[0_0_15px_hsl(var(--primary)/0.2)]'
-                    : 'bg-background text-muted-foreground hover:text-foreground border border-border hover:bg-muted/50'
+                    : 'glass-panel text-muted-foreground hover:text-foreground border border-border hover:bg-muted'
                 }`}
               >
                 {btn.label}

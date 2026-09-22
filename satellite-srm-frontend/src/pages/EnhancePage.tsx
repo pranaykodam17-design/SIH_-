@@ -102,7 +102,8 @@ export const EnhancePage: React.FC = () => {
     setIsValidating(true);
 
     try {
-      const result = await validateBandsApi(fourBands);
+      const isMock = backendAvailable === false;
+      const result = await validateBandsApi(fourBands, isMock);
       if (result.valid) {
         setValidationResult(result);
         if (result.metadata?.common) {
@@ -156,6 +157,7 @@ export const EnhancePage: React.FC = () => {
     setStep('processing');
 
     try {
+      const isMock = backendAvailable === false;
       const resp = await startFourBandSuperResolution(
         {
           b02: fourBands.b02,
@@ -167,7 +169,8 @@ export const EnhancePage: React.FC = () => {
           model: settings.model,
           enableUncertainty: settings.enableUncertainty,
           scaleFactor: settings.scaleFactor,
-        }
+        },
+        isMock
       );
 
       const jobId = resp.job_id;
@@ -182,7 +185,8 @@ export const EnhancePage: React.FC = () => {
         await new Promise((res) => setTimeout(res, 1200));
 
         try {
-          const updatedJob = await getJobStatus(jobId);
+          const isMock = backendAvailable === false;
+          const updatedJob = await getJobStatus(jobId, isMock);
           consecutiveErrors = 0;
           setActiveJob(updatedJob);
           setSelectedJobId(updatedJob.jobId);
@@ -253,18 +257,18 @@ export const EnhancePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen  py-10 px-4 sm:px-6">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-blue-50/20 to-white dark:from-transparent dark:via-transparent dark:to-transparent dark:bg-transparent py-10 px-4 sm:px-6">
       <div className="max-w-[1120px] mx-auto">
         {/* ── Header ── */}
-        <div className="mb-10">
-          <div className="tag-cyan mb-3 w-fit">
+        <div className="mb-10 text-center sm:text-left">
+          <div className="flex items-center gap-1.5 px-3 py-1 text-[11px] uppercase tracking-widest font-bold rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-700 dark:bg-cyan-500/15 dark:text-cyan-400 mb-4 w-fit sm:mx-0 mx-auto">
             <Zap size={11} />
             4-band Sentinel-2 super-resolution
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-ink mb-3">
+          <h1 className="text-3xl sm:text-4xl font-black text-primary tracking-tight mb-3">
             Enhance multispectral imagery
           </h1>
-          <p className="text-slate max-w-xl leading-relaxed">
+          <p className="text-sm sm:text-base text-secondary max-w-xl leading-relaxed sm:mx-0 mx-auto">
             Upload separate 10m Sentinel-2 bands (B02, B03, B04, B08), validate spatial compatibility, and reconstruct sub-4m maps using SwinIR.
           </p>
         </div>
@@ -275,15 +279,15 @@ export const EnhancePage: React.FC = () => {
             <div className="flex items-start gap-3.5">
               <AlertTriangle size={20} className="text-amber-600 shrink-0 mt-0.5" />
               <div className="space-y-2 flex-1">
-                <h4 className="font-bold text-[#10233F] text-sm">TerraSR backend is unavailable</h4>
-                <p className="text-xs text-amber-700/80 leading-relaxed">
+                <h4 className="font-bold text-primary text-sm">TerraSR backend is unavailable</h4>
+                <p className="text-xs text-amber-700 dark:text-amber-400/90 leading-relaxed">
                   Please make sure the TerraSR FastAPI backend is running and try again.<br />
-                  Backend endpoint: <code className="bg-white px-1.5 py-0.5 rounded text-amber-800 font-mono">http://localhost:8000</code>
+                  Backend endpoint: <code className="bg-white/50 dark:bg-slate-900/50 px-1.5 py-0.5 rounded text-amber-800 dark:text-amber-500 font-mono border border-amber-500/20">http://localhost:8000</code>
                 </p>
                 <button
                   onClick={checkHealth}
                   disabled={isCheckingBackend}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-800 text-xs font-semibold transition-all disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-800 dark:text-amber-500 text-xs font-semibold transition-all disabled:opacity-50"
                 >
                   <RefreshCw size={13} className={isCheckingBackend ? 'animate-spin' : ''} />
                   <span>Retry Connection</span>
@@ -294,7 +298,7 @@ export const EnhancePage: React.FC = () => {
         )}
 
         {/* ── 4-Stage Step Indicator ── */}
-        <div className="flex items-center justify-center gap-0 mb-10 max-w-xl mx-auto">
+        <div className="flex items-center justify-between gap-0 mb-10 max-w-3xl mx-auto p-4 sm:px-8 rounded-2xl bg-white/60 dark:bg-slate-950/25 backdrop-blur-md border border-slate-200/60 dark:border-white/10 shadow-sm">
           {STEP_LABELS.map(({ id, label, icon }, i) => {
             const isCurrent = step === id;
             const isCompleted =
@@ -304,33 +308,25 @@ export const EnhancePage: React.FC = () => {
 
             return (
               <React.Fragment key={id}>
-                <div
-                  className={`flex flex-col items-center gap-1.5 ${
-                    isCurrent
-                      ? 'opacity-100'
-                      : isCompleted
-                      ? 'opacity-90'
-                      : 'opacity-40'
-                  }`}
-                >
+                <div className="flex flex-col items-center gap-2 relative z-10">
                   <div
-                    className={`w-9 h-9 rounded-md flex items-center justify-center border transition-all duration-200 ${
+                    className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all duration-200 ${
                       isCurrent
-                        ? 'bg-wash border-band-blue text-band-blue'
+                        ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-600 dark:text-cyan-400 dark:shadow-[0_0_15px_rgba(6,182,212,0.15)]'
                         : isCompleted
-                        ? 'bg-emerald-50 border-emerald-200 text-emerald-600'
-                        : 'bg-white border-border text-slate'
+                        ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400'
+                        : 'bg-white/50 dark:bg-slate-900/40 border-slate-300/50 dark:border-white/10 text-muted-foreground'
                     }`}
                   >
                     {isCompleted ? <CheckCircle2 size={15} /> : icon}
                   </div>
                   <span
-                    className={`text-[11px] font-medium tracking-tight ${
+                    className={`text-[11px] font-semibold tracking-tight ${
                       isCurrent
-                        ? 'text-band-blue'
+                        ? 'text-cyan-700 dark:text-cyan-400'
                         : isCompleted
-                        ? 'text-emerald-600'
-                        : 'text-slate'
+                        ? 'text-emerald-600 dark:text-emerald-400'
+                        : 'text-secondary'
                     }`}
                   >
                     {label}
@@ -338,10 +334,10 @@ export const EnhancePage: React.FC = () => {
                 </div>
                 {i < STEP_LABELS.length - 1 && (
                   <div
-                    className={`flex-1 h-px mx-2 mb-4 transition-colors duration-200 ${
+                    className={`flex-1 h-[2px] mx-1 sm:mx-3 mb-5 rounded-full transition-colors duration-200 ${
                       isCompleted
-                        ? 'bg-emerald-200'
-                        : 'bg-border'
+                        ? 'bg-emerald-500/30 dark:bg-emerald-500/40'
+                        : 'bg-slate-300 dark:bg-white/10'
                     }`}
                   />
                 )}
@@ -364,12 +360,12 @@ export const EnhancePage: React.FC = () => {
 
             {/* Model Settings sidebar */}
             <div className="lg:col-span-2">
-              <div className="glass rounded-2xl p-6 h-full space-y-5">
-                <div className="flex items-center gap-2 border-b border-[#D7E6F4] pb-4">
-                  <div className="w-7 h-7 rounded-lg bg-[#1677FF]/10 border border-blue-500/20 flex items-center justify-center">
-                    <Settings2 size={13} className="text-[#1677FF]" />
+              <div className="bg-white/75 dark:bg-slate-950/65 backdrop-blur-xl border border-slate-900/10 dark:border-white/15 shadow-sm rounded-2xl p-6 h-full space-y-5">
+                <div className="flex items-center gap-2 border-b border-slate-900/10 dark:border-white/15 pb-4">
+                  <div className="w-7 h-7 rounded-lg bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center">
+                    <Settings2 size={13} className="text-cyan-700 dark:text-cyan-400" />
                   </div>
-                  <h2 className="text-base font-bold text-[#10233F]">Super-Resolution Settings</h2>
+                  <h2 className="text-base font-bold text-primary">Super-Resolution Settings</h2>
                 </div>
 
                 <ModelSettings
@@ -405,21 +401,21 @@ export const EnhancePage: React.FC = () => {
                     <h3 className="text-base font-bold text-red-600">
                       Super-resolution processing failed
                     </h3>
-                    <p className="text-xs text-[#425873] mt-1 leading-relaxed">
+                    <p className="text-xs text-secondary mt-1 leading-relaxed">
                       The backend returned an error while processing the imagery.
                       Please check the input files and backend logs, then try again.
                     </p>
-                    <div className="mt-3 p-3 rounded-lg bg-white border border-red-500/20 font-mono text-xs text-red-700">
+                    <div className="mt-3 p-3 rounded-lg glass-panel border border-red-500/20 font-mono text-xs text-red-700">
                       {inferenceError}
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 pt-2 border-t border-[#D7E6F4]">
+                <div className="flex items-center gap-3 pt-2 border-t border-theme">
                   <button
                     type="button"
                     onClick={handleRunFourBandSR}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1677FF]/20 hover:bg-[#1677FF]/30 border border-cyan-200 text-cyan-700 text-xs font-semibold transition-all"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-accent/20 hover:bg-accent/30 border border-cyan-200 text-cyan-700 text-xs font-semibold transition-all"
                   >
                     <RotateCcw size={13} />
                     <span>Try Again</span>
@@ -427,7 +423,7 @@ export const EnhancePage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setStep('upload')}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white hover:bg-white border border-[#D7E6F4] text-[#425873] text-xs font-semibold transition-all"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl glass-panel hover:glass-panel border border-theme text-secondary text-xs font-semibold transition-all"
                   >
                     <ArrowLeft size={13} />
                     <span>Back to Upload</span>
@@ -435,20 +431,20 @@ export const EnhancePage: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="glass rounded-2xl p-6 space-y-5">
-                <div className="flex items-center justify-between border-b border-[#D7E6F4] pb-4">
+              <div className="glass rounded-2xl p-6 space-y-5 bg-white border border-slate-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:bg-transparent dark:shadow-none dark:border-theme">
+                <div className="flex items-center justify-between border-b border-theme pb-4">
                   <div className="flex items-center gap-2.5">
-                    <RefreshCw size={16} className="text-[#1677FF] animate-spin" />
+                    <RefreshCw size={16} className="text-accent animate-spin" />
                     <div>
-                      <h3 className="text-sm font-bold text-[#10233F]">
+                      <h3 className="text-sm font-bold text-primary">
                         Processing Multispectral Imagery
                       </h3>
-                      <p className="text-[11px] text-[#526A82] font-mono">
+                      <p className="text-[11px] text-secondary font-mono">
                         Preparing B02 / B03 / B04 / B08 · 4-Channel SwinIR
                       </p>
                     </div>
                   </div>
-                  <span className="text-xs font-mono px-2.5 py-1 rounded-full bg-[#1677FF]/20 border border-cyan-200 text-cyan-700 font-semibold">
+                  <span className="text-xs font-mono px-2.5 py-1 rounded-full bg-accent/20 border border-cyan-200 text-cyan-700 font-semibold">
                     {settings.model}
                   </span>
                 </div>
@@ -456,21 +452,21 @@ export const EnhancePage: React.FC = () => {
                 {activeJob ? (
                   <ProcessingProgress job={activeJob} />
                 ) : (
-                  <div className="py-12 text-center text-[#526A82] text-xs font-mono">
+                  <div className="py-12 text-center text-secondary text-xs font-mono">
                     Initializing SwinIR inference pipeline...
                   </div>
                 )}
 
-                <div className="pt-3 border-t border-[#D7E6F4] flex items-center justify-between text-xs">
+                <div className="pt-3 border-t border-theme flex items-center justify-between text-xs">
                   <button
                     type="button"
                     onClick={() => setStep('metadata')}
-                    className="inline-flex items-center gap-1.5 text-[#526A82] hover:text-[#10233F] transition-colors"
+                    className="inline-flex items-center gap-1.5 text-secondary hover:text-primary transition-colors"
                   >
                     <ArrowLeft size={13} />
                     <span>Back to Metadata</span>
                   </button>
-                  <span className="text-[#6B7F95] font-mono text-[11px]">
+                  <span className="text-muted-foreground font-mono text-[11px]">
                     Non-destructive · Process runs in background
                   </span>
                 </div>
@@ -483,18 +479,18 @@ export const EnhancePage: React.FC = () => {
         {step === 'results' && activeJob && (
           <div className="anim-fade-in space-y-6">
             {/* Top Navigation Strip */}
-            <div className="glass rounded-2xl p-4 flex items-center justify-between gap-4 border border-[#D7E6F4]">
+            <div className="glass rounded-2xl p-4 flex items-center justify-between gap-4 border border-slate-200/60 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:bg-transparent dark:shadow-none dark:border-theme">
               <div className="flex items-center gap-3">
                 <button
                   type="button"
                   onClick={() => setStep('metadata')}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-white border border-[#D7E6F4] text-xs text-[#425873] transition-all"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg glass-panel hover:glass-panel border border-theme text-xs text-secondary transition-all"
                 >
                   <ArrowLeft size={13} />
                   <span>Back to Metadata</span>
                 </button>
-                <span className="text-xs font-mono text-[#6B7F95]">
-                  Mission: <span className="text-[#425873] font-bold">{activeJob.jobId}</span>
+                <span className="text-xs font-mono text-muted-foreground">
+                  Mission: <span className="text-secondary font-bold">{activeJob.jobId}</span>
                 </span>
               </div>
 
@@ -502,7 +498,7 @@ export const EnhancePage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => requestConfirmation(executeNewAnalysis)}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1677FF]/20 hover:bg-[#1677FF]/25 border border-cyan-400/30 text-cyan-700 text-xs font-bold transition-all shadow-[0_0_15px_rgba(0,212,255,0.15)]"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-accent/20 hover:bg-accent/25 border border-cyan-400/30 text-cyan-700 text-xs font-bold transition-all shadow-[0_0_15px_rgba(0,212,255,0.15)]"
                 >
                   <Upload size={13} />
                   <span>New Analysis</span>
@@ -522,18 +518,18 @@ export const EnhancePage: React.FC = () => {
 
         {/* ── Accidental Loss Confirmation Modal ── */}
         {isConfirmModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white backdrop-blur-sm anim-fade-in">
-            <div className="glass rounded-2xl p-6 max-w-md w-full border border-amber-500/30 shadow-sm space-y-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 glass-panel backdrop-blur-sm anim-fade-in">
+            <div className="glass rounded-2xl p-6 max-w-md w-full border border-slate-200/60 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:bg-transparent dark:border-amber-500/30 dark:shadow-sm space-y-4">
               <div className="flex items-center gap-3 text-amber-600">
                 <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center shrink-0">
                   <AlertCircle size={20} />
                 </div>
-                <h3 className="text-base font-bold text-[#10233F]">
+                <h3 className="text-base font-bold text-primary">
                   Active Analysis in Progress
                 </h3>
               </div>
 
-              <p className="text-xs text-[#425873] leading-relaxed">
+              <p className="text-xs text-secondary leading-relaxed">
                 You have an active analysis and generated results. Starting a new analysis will clear the current analysis state.
               </p>
 
@@ -541,7 +537,7 @@ export const EnhancePage: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleCancelConfirm}
-                  className="px-4 py-2 rounded-xl bg-white hover:bg-white border border-[#D7E6F4] text-xs font-semibold text-[#425873] transition-all"
+                  className="px-4 py-2 rounded-xl glass-panel hover:glass-panel border border-theme text-xs font-semibold text-secondary transition-all"
                 >
                   Cancel
                 </button>

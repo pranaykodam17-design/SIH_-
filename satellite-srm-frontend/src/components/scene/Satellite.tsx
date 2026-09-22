@@ -6,9 +6,9 @@ import { SatelliteOrbit } from './SatelliteOrbit';
 import { ScanBeam } from './ScanBeam';
 
 // ── CONFIGURABLE ORBIT PARAMETERS ──
-export const SATELLITE_ORBIT_RADIUS = 1.75;
-export const SATELLITE_ORBIT_SPEED = 0.32;
-export const SATELLITE_ORBIT_INCLINATION = 45; // degrees tilt relative to equatorial plane
+export const SATELLITE_ORBIT_RADIUS = 1.82;
+export const SATELLITE_ORBIT_SPEED = 0.18;   // slower = more visible
+export const SATELLITE_ORBIT_INCLINATION = 35; // degrees tilt
 
 export interface SatelliteProps {
   orbitRadius?: number;
@@ -45,9 +45,8 @@ export const Satellite: React.FC<SatelliteProps> = ({
   }, [orbitInclination, rotationYDeg]);
 
   useFrame(({ clock }) => {
-    // Add an initial offset of ~2.5 radians to start the satellite in the top-left area
-    // from the camera's perspective, avoiding initial overlap with the Earth.
-    const timeOffset = 2.5; 
+    // Start satellite in upper-right quadrant (matching reference image composition)
+    const timeOffset = 0.8;
     const t = (clock.getElapsedTime() * orbitSpeed) + timeOffset;
 
     // 1. Calculate smooth elliptical position
@@ -62,8 +61,8 @@ export const Satellite: React.FC<SatelliteProps> = ({
       // Spacecraft optical observation sensor continuously faces Earth center (0, 0, 0)
       satelliteGroupRef.current.lookAt(0, 0, 0);
 
-      // Subtle, realistic gyroscope stabilization adjustment
-      const gyroWobble = Math.sin(clock.getElapsedTime() * 0.5) * 0.03;
+      // Very subtle gyroscope stabilization (much reduced for professional look)
+      const gyroWobble = Math.sin(clock.getElapsedTime() * 0.3) * 0.012;
       satelliteGroupRef.current.rotateZ(gyroWobble);
     }
 

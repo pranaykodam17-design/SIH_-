@@ -21,11 +21,11 @@ const SEQUENCE_STEPS = [
 // 2D Fallback if WebGL is unavailable
 const SwinIR2DFallback: React.FC<{ scaleFactor: number }> = ({ scaleFactor }) => (
   <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center select-none bg-gradient-to-r from-srm-surface via-srm-base to-srm-elevated">
-    <div className="flex items-center gap-2 mb-3 text-xs font-mono text-[#1677FF]">
+    <div className="flex items-center gap-2 mb-3 text-xs font-mono text-accent">
       <Cpu size={16} className="animate-spin" />
       <span>SwinIR Deep Residual Transformer (2D Fallback)</span>
     </div>
-    <div className="flex items-center gap-2 text-xs font-mono text-[#425873]">
+    <div className="flex items-center gap-2 text-xs font-mono text-secondary">
       <span className="text-amber-600">10m GSD</span>
       <span>→</span>
       <span className="text-purple-400">Deep Transformer Attention</span>
@@ -67,7 +67,7 @@ export const SwinIRResolutionViewer: React.FC<SwinIRResolutionViewerProps> = ({
 
   return (
     <div
-      className={`relative w-full rounded-2xl border border-[#D7E6F4] bg-white shadow-[0_0_35px_rgba(139,92,246,0.08)] overflow-hidden ${className}`}
+      className={`relative w-full rounded-2xl border border-theme glass-panel shadow-[0_0_35px_rgba(139,92,246,0.08)] overflow-hidden ${className}`}
     >
       {/* 3D Visualizer Canvas */}
       <div className="relative h-[220px] sm:h-[250px] w-full">
@@ -94,12 +94,12 @@ export const SwinIRResolutionViewer: React.FC<SwinIRResolutionViewerProps> = ({
         )}
 
         {/* Top Left Header Badge */}
-        <div className="absolute top-3 left-3 pointer-events-none z-10 flex items-center gap-2 bg-white backdrop-blur-md px-3 py-1.5 rounded-xl border border-[#D7E6F4]">
+        <div className="absolute top-3 left-3 pointer-events-none z-10 flex items-center gap-2 glass-panel backdrop-blur-md px-3 py-1.5 rounded-xl border border-theme">
           <div className="w-5 h-5 rounded-lg bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-300">
             <Cpu size={12} className="animate-spin-slow" />
           </div>
           <div>
-            <div className="text-[11px] font-bold text-[#10233F] leading-none">
+            <div className="text-[11px] font-bold text-primary leading-none">
               Running SwinIR
             </div>
             <div className="text-[9px] text-purple-300 font-mono mt-0.5">
@@ -109,7 +109,7 @@ export const SwinIRResolutionViewer: React.FC<SwinIRResolutionViewerProps> = ({
         </div>
 
         {/* Top Right Resolution Scale Badge */}
-        <div className="absolute top-3 right-3 pointer-events-none z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-purple-500/30 text-[10px] font-mono text-purple-300">
+        <div className="absolute top-3 right-3 pointer-events-none z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg glass-panel border border-purple-500/30 text-[10px] font-mono text-purple-300">
           <Zap size={11} className="text-purple-400 animate-pulse" />
           <span>10.0m → ~3.3m GSD</span>
         </div>
@@ -118,7 +118,7 @@ export const SwinIRResolutionViewer: React.FC<SwinIRResolutionViewerProps> = ({
         <div className="absolute bottom-3 left-3 right-3 pointer-events-none z-10 flex items-center justify-center">
           <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-500/25 via-cyan-500/25 to-purple-500/25 border border-purple-400/50 shadow-[0_0_20px_rgba(168,85,247,0.25)] anim-fade-in">
             <Sparkles size={13} className="text-purple-300 animate-pulse" />
-            <span className="text-xs font-black text-[#10233F] tracking-wider uppercase">
+            <span className="text-xs font-black text-primary tracking-wider uppercase">
               {scaleFactor}× SPATIAL RECONSTRUCTION ACTIVE
             </span>
           </div>
@@ -126,7 +126,7 @@ export const SwinIRResolutionViewer: React.FC<SwinIRResolutionViewerProps> = ({
       </div>
 
       {/* Sequential Neural Processing Steps Strip */}
-      <div className="px-4 py-3 border-t border-[#D7E6F4] bg-white/90 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+      <div className="px-4 py-3 border-t border-theme bg-surface/90 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
         <div className="flex items-center gap-1.5 sm:gap-2">
           {SEQUENCE_STEPS.map((step, idx) => {
             const isActive = activeStepIdx === idx;
@@ -137,10 +137,10 @@ export const SwinIRResolutionViewer: React.FC<SwinIRResolutionViewerProps> = ({
                 <div
                   className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border transition-all duration-300 ${
                     isActive
-                      ? 'border-purple-500/50 bg-purple-500/20 text-[#10233F] shadow-[0_0_15px_rgba(168,85,247,0.3)] ring-1 ring-purple-400/40'
+                      ? 'border-purple-500/50 bg-purple-500/20 text-primary shadow-[0_0_15px_rgba(168,85,247,0.3)] ring-1 ring-purple-400/40'
                       : isCompleted
-                      ? 'border-cyan-200 bg-[#1677FF]/20 text-cyan-700'
-                      : 'border-[#D7E6F4] bg-white text-[#6B7F95] opacity-60'
+                      ? 'border-cyan-200 bg-accent/20 text-cyan-700'
+                      : 'border-theme glass-panel text-muted-foreground opacity-60'
                   }`}
                 >
                   <span
@@ -149,14 +149,14 @@ export const SwinIRResolutionViewer: React.FC<SwinIRResolutionViewerProps> = ({
                         ? 'bg-purple-400 animate-pulse'
                         : isCompleted
                         ? 'bg-cyan-400'
-                        : 'bg-slate-600'
+                        : 'glass-panel-secondary'
                     }`}
                   />
                   <span className="font-bold">{step.label}</span>
                 </div>
 
                 {idx < SEQUENCE_STEPS.length - 1 && (
-                  <span className="text-[#526A82] text-[10px]">↓</span>
+                  <span className="text-secondary text-[10px]">↓</span>
                 )}
               </React.Fragment>
             );
@@ -164,7 +164,7 @@ export const SwinIRResolutionViewer: React.FC<SwinIRResolutionViewerProps> = ({
         </div>
 
         {/* Disclaimer / Note */}
-        <div className="text-[10px] text-[#6B7F95] flex items-center gap-1">
+        <div className="text-[10px] text-muted-foreground flex items-center gap-1">
           <span>* Visual explanation of SwinIR spatial reconstruction · Inference executed on backend</span>
         </div>
       </div>

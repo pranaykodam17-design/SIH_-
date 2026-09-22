@@ -8,7 +8,7 @@ export const Visualization: React.FC = () => {
   return (
     <section
       id="visualization"
-      className="relative py-24 bg-background border-t border-border/40 overflow-hidden"
+      className="relative py-24 glass-panel border-t border-border/40 overflow-hidden"
     >
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.03),transparent)] pointer-events-none" />
 
@@ -52,7 +52,7 @@ export const Visualization: React.FC = () => {
               </div>
 
               {/* EarthScene wrapped in ErrorBoundary */}
-              <div className="w-full h-[400px] sm:h-[500px] relative bg-background">
+              <div className="w-full h-[400px] sm:h-[500px] relative glass-panel">
                 {/* Subtle Grid behind 3D Canvas */}
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.3)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.3)_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
                 
@@ -80,7 +80,7 @@ export const Visualization: React.FC = () => {
             <Card className="bg-card/30 hover:bg-card/60 border-border/40 hover:border-border transition-all duration-300">
               <CardContent className="p-6">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 shadow-inner">
+                  <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-500 shadow-inner">
                     <Box size={22} />
                   </div>
                   <div>
@@ -116,7 +116,7 @@ export const Visualization: React.FC = () => {
             <Card className="bg-card/30 hover:bg-card/60 border-border/40 hover:border-border transition-all duration-300">
               <CardContent className="p-6">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shadow-inner">
+                  <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 shadow-inner">
                     <Code2 size={22} />
                   </div>
                   <div>

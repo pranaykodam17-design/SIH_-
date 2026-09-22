@@ -28,17 +28,17 @@ export const WhySRMSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-20 border-t border-blue-100/60 bg-white relative">
+    <section className="py-20 border-t border-blue-100/60 glass-panel relative">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         <div className="text-center max-w-3xl mx-auto mb-16">
           <Badge variant="cyan" className="mb-3 uppercase tracking-wider">
             Core Advantages
           </Badge>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#10233F]">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-primary">
             Why Super Resolution Mapping for Earth Observation?
           </h2>
-          <p className="mt-4 text-[#425873] leading-relaxed text-sm sm:text-base">
+          <p className="mt-4 text-secondary leading-relaxed text-sm sm:text-base">
             Engineered from first principles for mission-critical satellite remote sensing, not generic computer vision photography upscaling.
           </p>
         </div>
@@ -47,14 +47,14 @@ export const WhySRMSection: React.FC = () => {
           {features.map((item, idx) => {
             const Icon = item.icon;
             return (
-              <Card key={idx} className="border-blue-100 hover:border-cyan-200 bg-white p-6 transition-all">
-                <div className="h-10 w-10 rounded-lg bg-cyan-950/60 border border-cyan-200 flex items-center justify-center text-[#1677FF] mb-4">
+              <Card key={idx} className="border-blue-100 hover:border-cyan-200 glass-panel p-6 transition-all">
+                <div className="h-10 w-10 rounded-lg bg-cyan-950/60 border border-cyan-200 flex items-center justify-center text-accent mb-4">
                   <Icon className="h-5 w-5" />
                 </div>
-                <h3 className="text-base font-bold text-[#10233F] mb-2">
+                <h3 className="text-base font-bold text-primary mb-2">
                   {item.title}
                 </h3>
-                <p className="text-xs text-[#526A82] leading-relaxed">
+                <p className="text-xs text-secondary leading-relaxed">
                   {item.description}
                 </p>
               </Card>

@@ -6,30 +6,30 @@ export const InteractiveTransformVisual: React.FC = () => {
   const [showGrid, setShowGrid] = useState(false);
 
   return (
-    <div className="relative mx-auto w-full max-w-5xl rounded-2xl border border-blue-100 bg-white/90 p-3 sm:p-6 shadow-sm backdrop-blur-md overflow-hidden">
+    <div className="relative mx-auto w-full max-w-5xl rounded-2xl border border-blue-100 bg-surface/90 p-3 sm:p-6 shadow-sm backdrop-blur-md overflow-hidden">
       
       {/* Top Console Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-blue-100/80 text-xs font-mono">
         <div className="flex items-center gap-3">
           <span className="flex h-2.5 w-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
-          <span className="text-[#425873] font-semibold">INTERACTIVE SPATIAL TRANSFORMATION SENSOR</span>
+          <span className="text-secondary font-semibold">INTERACTIVE SPATIAL TRANSFORMATION SENSOR</span>
         </div>
         <div className="flex items-center gap-4">
           <button
             onClick={() => setShowGrid(!showGrid)}
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded border transition-colors ${
-              showGrid ? 'bg-[#1677FF]/20 border-cyan-400 text-cyan-700' : 'bg-white border-blue-100 text-[#526A82]'
+              showGrid ? 'bg-accent/20 border-cyan-400 text-cyan-700' : 'glass-panel border-blue-100 text-secondary'
             }`}
           >
             <Grid className="h-3.5 w-3.5" />
             <span>10m Pixel Grid</span>
           </button>
-          <span className="text-[#526A82]">Scale: <strong className="text-cyan-700 font-bold">x3.0 (Sub-4m)</strong></span>
+          <span className="text-secondary">Scale: <strong className="text-cyan-700 font-bold">x3.0 (Sub-4m)</strong></span>
         </div>
       </div>
 
       {/* Main Dual-View Container */}
-      <div className="relative mt-4 h-72 sm:h-96 md:h-[420px] w-full select-none overflow-hidden rounded-xl border border-blue-100 bg-[#F5FAFF]">
+      <div className="relative mt-4 h-72 sm:h-96 md:h-[420px] w-full select-none overflow-hidden rounded-xl border border-blue-100 glass-panel">
         
         {/* Right side: High Resolution (Sub-4m SR) */}
         <div className="absolute inset-0">
@@ -38,7 +38,7 @@ export const InteractiveTransformVisual: React.FC = () => {
             alt="Sub-4m Super Resolved Satellite Product"
             className="h-full w-full object-cover"
           />
-          <div className="absolute top-4 right-4 z-10 rounded-md bg-white/80 px-3 py-1.5 text-xs font-mono font-bold text-cyan-700 border border-cyan-200 backdrop-blur-md shadow-lg">
+          <div className="absolute top-4 right-4 z-10 rounded-md bg-surface/80 px-3 py-1.5 text-xs font-mono font-bold text-cyan-700 border border-cyan-200 backdrop-blur-md shadow-lg">
             SUB-4m RECONSTRUCTION (SwinIR)
           </div>
         </div>
@@ -60,7 +60,7 @@ export const InteractiveTransformVisual: React.FC = () => {
             <div className="absolute inset-0 pixel-grid-overlay pointer-events-none opacity-60" />
           )}
 
-          <div className="absolute top-4 left-4 z-10 rounded-md bg-white/80 px-3 py-1.5 text-xs font-mono font-bold text-amber-700 border border-amber-500/40 backdrop-blur-md shadow-lg">
+          <div className="absolute top-4 left-4 z-10 rounded-md bg-surface/80 px-3 py-1.5 text-xs font-mono font-bold text-amber-700 border border-amber-500/40 backdrop-blur-md shadow-lg">
             10m NATIVE INPUT (Sentinel-2 L2A)
           </div>
         </div>
@@ -70,7 +70,7 @@ export const InteractiveTransformVisual: React.FC = () => {
           className="absolute top-0 bottom-0 z-20 w-1 bg-cyan-400 shadow-[0_0_15px_rgba(0,240,255,0.8)] cursor-ew-resize flex items-center justify-center"
           style={{ left: `${sliderPos}%` }}
         >
-          <div className="flex h-10 w-10 -ml-5 items-center justify-center rounded-full border-2 border-cyan-300 bg-white shadow-sm text-cyan-700">
+          <div className="flex h-10 w-10 -ml-5 items-center justify-center rounded-full border-2 border-cyan-300 glass-panel shadow-sm text-cyan-700">
             <Sliders className="h-4 w-4 rotate-90" />
           </div>
         </div>
@@ -91,15 +91,15 @@ export const InteractiveTransformVisual: React.FC = () => {
       </div>
 
       {/* Bottom Information Pill */}
-      <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-[#526A82]">
+      <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-secondary">
         <div className="flex items-center gap-2">
           <span className="text-amber-600">← Drag left to reveal Sub-4m</span>
           <span>|</span>
-          <span className="text-[#1677FF]">Drag right to inspect 10m Input →</span>
+          <span className="text-accent">Drag right to inspect 10m Input →</span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-[#425873]">Target Resolution: <strong className="text-[#10233F]">3.33 m GSD</strong></span>
-          <span className="text-[#425873]">Preserved Bands: <strong className="text-[#10233F]">B02 · B03 · B04 · B08</strong></span>
+          <span className="text-secondary">Target Resolution: <strong className="text-primary">3.33 m GSD</strong></span>
+          <span className="text-secondary">Preserved Bands: <strong className="text-primary">B02 · B03 · B04 · B08</strong></span>
         </div>
       </div>
     </div>

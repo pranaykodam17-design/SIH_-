@@ -33,9 +33,9 @@ const BAND_CONFIGS: BandConfig[] = [
     colorName: 'Blue',
     wavelength: '490 nm',
     gsd: '10m GSD',
-    badgeColor: 'bg-[#1677FF]/10 text-[#1677FF] border-blue-500/30',
+    badgeColor: 'bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/30',
     borderColor: 'hover:border-blue-500/50',
-    dotColor: 'bg-blue-400',
+    dotColor: 'bg-blue-500 dark:bg-blue-400',
     description: 'Atmospheric aerosols, water body penetration, soil/vegetation discrimination'
   },
   {
@@ -44,9 +44,9 @@ const BAND_CONFIGS: BandConfig[] = [
     colorName: 'Green',
     wavelength: '560 nm',
     gsd: '10m GSD',
-    badgeColor: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30',
+    badgeColor: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30',
     borderColor: 'hover:border-emerald-500/50',
-    dotColor: 'bg-emerald-400',
+    dotColor: 'bg-emerald-500 dark:bg-emerald-400',
     description: 'Vegetation peak reflectance, canopy health, chlorophyll concentration'
   },
   {
@@ -55,9 +55,9 @@ const BAND_CONFIGS: BandConfig[] = [
     colorName: 'Red',
     wavelength: '665 nm',
     gsd: '10m GSD',
-    badgeColor: 'bg-red-500/10 text-red-600 border-red-500/30',
+    badgeColor: 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/30',
     borderColor: 'hover:border-red-500/50',
-    dotColor: 'bg-red-400',
+    dotColor: 'bg-red-500 dark:bg-red-400',
     description: 'Chlorophyll absorption maximum, vegetation index lower anchor'
   },
   {
@@ -66,9 +66,9 @@ const BAND_CONFIGS: BandConfig[] = [
     colorName: 'NIR (Near-Infrared)',
     wavelength: '842 nm',
     gsd: '10m GSD',
-    badgeColor: 'bg-violet-500/10 text-violet-400 border-violet-500/30',
-    borderColor: 'hover:border-violet-500/50',
-    dotColor: 'bg-violet-400',
+    badgeColor: 'bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/30',
+    borderColor: 'hover:border-purple-500/50',
+    dotColor: 'bg-purple-500 dark:bg-purple-400',
     description: 'High cellular leaf scattering, biomass evaluation, water boundary edge detection'
   },
 ];
@@ -211,8 +211,8 @@ export const FourBandUploader: React.FC<FourBandUploaderProps> = ({
     <div
       className={`space-y-6 rounded-2xl border transition-all duration-300 p-6 ${
         isDragOverAll
-          ? 'border-cyan-400 bg-[#1677FF]/20 shadow-[0_0_30px_rgba(0,212,255,0.2)]'
-          : 'border-[#D7E6F4] bg-white/80'
+          ? 'border-cyan-400 bg-cyan-500/10 shadow-[0_0_30px_rgba(0,212,255,0.2)]'
+          : 'bg-white/75 dark:bg-slate-950/60 backdrop-blur-xl border-slate-900/10 dark:border-white/15 shadow-sm'
       }`}
       onDragEnter={(e) => { e.preventDefault(); if (!disabled) setIsDragOverAll(true); }}
       onDragOver={(e) => { e.preventDefault(); if (!disabled) setIsDragOverAll(true); }}
@@ -220,16 +220,16 @@ export const FourBandUploader: React.FC<FourBandUploaderProps> = ({
       onDrop={handleContainerDrop}
     >
       {/* ── Top Header Strip ── */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#D7E6F4] pb-5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-900/10 dark:border-white/10 pb-5">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1677FF]/20 border border-cyan-400/30 text-cyan-700 font-mono text-xs font-semibold uppercase tracking-wider mb-2">
-            <Layers size={13} className="text-[#1677FF]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-700 dark:bg-cyan-500/15 dark:text-cyan-400 font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-2">
+            <Layers size={13} className="text-cyan-600 dark:text-cyan-400" />
             Option A · 4-Band Sentinel-2 Ingestion
           </div>
-          <h3 className="text-xl font-bold text-[#10233F] tracking-tight">
+          <h3 className="text-xl font-bold text-primary tracking-tight">
             Sentinel-2 Multispectral Input
           </h3>
-          <p className="text-xs text-[#526A82] mt-1 max-w-xl leading-relaxed">
+          <p className="text-xs text-secondary mt-1 max-w-xl leading-relaxed">
             Upload the four required 10m Sentinel-2 band files individually or select all 4 at once.
             Filenames will be automatically matched to their respective spectral channels.
           </p>
@@ -252,7 +252,7 @@ export const FourBandUploader: React.FC<FourBandUploaderProps> = ({
             type="button"
             onClick={() => multiFileInputRef.current?.click()}
             disabled={disabled}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-white border border-[#D7E6F4] text-[#425873] text-xs font-semibold transition-all"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-cyan-50 hover:bg-cyan-100 dark:bg-cyan-900/40 dark:hover:bg-cyan-900/60 border border-cyan-200 dark:border-cyan-800/50 text-cyan-800 dark:text-cyan-100 text-xs font-bold transition-all shadow-sm"
           >
             <FileUp size={14} />
             <span>Select 4 Files</span>
@@ -283,22 +283,22 @@ export const FourBandUploader: React.FC<FourBandUploaderProps> = ({
               onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); setDragOverSlot(config.key); }}
               onDragLeave={(e) => { e.preventDefault(); e.stopPropagation(); setDragOverSlot(null); }}
               onDrop={(e) => handleSlotDrop(config.key, e)}
-              className={`relative rounded-xl border p-4 transition-all duration-200 ${
+              className={`relative rounded-xl p-4 transition-all duration-200 backdrop-blur-xl border ${
                 isSlotActive
-                  ? 'border-cyan-400 bg-[#1677FF]/20 shadow-[0_0_20px_rgba(0,212,255,0.25)]'
+                  ? 'border-cyan-400 bg-cyan-500/10 shadow-[0_0_20px_rgba(0,212,255,0.25)]'
                   : file
-                  ? 'border-emerald-500/30 bg-emerald-500/[0.03] hover:border-emerald-500/50'
-                  : `border-[#D7E6F4] bg-white/60 ${config.borderColor}`
+                  ? 'border-emerald-500/30 bg-emerald-500/10 dark:bg-emerald-500/20 hover:border-emerald-500/50'
+                  : 'bg-white/80 border-slate-900/15 dark:bg-slate-950/65 dark:border-white/20 hover:border-slate-900/25 dark:hover:border-white/30'
               }`}
             >
               {/* Slot Header */}
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <span className={`w-2.5 h-2.5 rounded-full ${config.dotColor}`} />
-                  <span className="font-mono text-sm font-bold text-[#10233F] tracking-wide">
+                  <span className="font-mono text-sm font-bold text-primary tracking-wide">
                     {config.name}
                   </span>
-                  <span className="text-xs text-[#425873] font-medium">
+                  <span className="text-xs text-secondary font-medium">
                     — {config.colorName}
                   </span>
                   <span className={`px-2 py-0.5 rounded text-[10px] font-mono border ${config.badgeColor}`}>
@@ -307,28 +307,28 @@ export const FourBandUploader: React.FC<FourBandUploaderProps> = ({
                 </div>
 
                 {file && (
-                  <span className="inline-flex items-center gap-1 text-[11px] font-mono text-emerald-600 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                  <span className="inline-flex items-center gap-1 text-[11px] font-mono text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
                     <CheckCircle2 size={12} /> Ready
                   </span>
                 )}
               </div>
 
-              <p className="text-[11px] text-[#526A82] mb-3 leading-relaxed">
+              <p className="text-[11px] text-secondary mb-3 leading-relaxed">
                 {config.description}
               </p>
 
               {/* Slot Content: File Assigned vs Empty */}
               {file ? (
-                <div className="flex items-center justify-between gap-3 p-3 rounded-lg bg-white border border-[#D7E6F4]">
+                <div className="flex items-center justify-between gap-3 p-3 rounded-lg bg-white/60 dark:bg-slate-950/60 border border-slate-900/10 dark:border-white/15 backdrop-blur-md">
                   <div className="flex items-center gap-2.5 min-w-0 flex-1">
                     <div className="w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0">
-                      <CheckCircle2 size={15} className="text-emerald-600" />
+                      <CheckCircle2 size={15} className="text-emerald-600 dark:text-emerald-400" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="text-xs font-mono font-medium text-[#10233F] truncate" title={file.name}>
+                      <div className="text-xs font-mono font-medium text-primary truncate" title={file.name}>
                         {file.name}
                       </div>
-                      <div className="text-[10px] text-[#526A82] font-mono">
+                      <div className="text-[10px] text-muted-foreground font-mono">
                         {(file.size / 1024).toFixed(1)} KB • {config.gsd}
                       </div>
                     </div>
@@ -350,13 +350,13 @@ export const FourBandUploader: React.FC<FourBandUploaderProps> = ({
                             });
                           }
                         }}
-                        className="text-[10px] font-mono bg-white hover:bg-white border border-[#D7E6F4] rounded px-2 py-1 text-[#425873] focus:outline-none focus:border-cyan-400 cursor-pointer"
+                        className="text-[10px] font-mono bg-white/50 dark:bg-slate-900/50 hover:bg-white/80 dark:hover:bg-slate-900/80 border border-slate-900/10 dark:border-white/20 rounded px-2 py-1 text-secondary focus:outline-none focus:border-cyan-400 cursor-pointer"
                         title="Change assigned band"
                       >
-                        <option value="b02" className="bg-[#EEF7FF]">B02 Blue</option>
-                        <option value="b03" className="bg-[#EEF7FF]">B03 Green</option>
-                        <option value="b04" className="bg-[#EEF7FF]">B04 Red</option>
-                        <option value="b08" className="bg-[#EEF7FF]">B08 NIR</option>
+                        <option value="b02" className="bg-white dark:bg-slate-800">B02 Blue</option>
+                        <option value="b03" className="bg-white dark:bg-slate-800">B03 Green</option>
+                        <option value="b04" className="bg-white dark:bg-slate-800">B04 Red</option>
+                        <option value="b08" className="bg-white dark:bg-slate-800">B08 NIR</option>
                       </select>
                     </div>
 
@@ -364,7 +364,7 @@ export const FourBandUploader: React.FC<FourBandUploaderProps> = ({
                     <button
                       type="button"
                       onClick={() => setFourBand(config.key, null)}
-                      className="p-1 rounded text-[#6B7F95] hover:text-red-600 hover:bg-red-500/10 transition-colors"
+                      className="p-1 rounded text-muted-foreground hover:text-red-600 dark:hover:text-red-400 hover:bg-red-500/10 transition-colors"
                       title="Remove file"
                     >
                       <X size={14} />
@@ -374,13 +374,13 @@ export const FourBandUploader: React.FC<FourBandUploaderProps> = ({
               ) : (
                 <div
                   onClick={() => slotInputRefs[config.key].current?.click()}
-                  className="flex flex-col items-center justify-center p-5 rounded-lg border border-dashed border-[#D7E6F4] hover:border-cyan-400/50 bg-white hover:bg-[#1677FF]/[0.04] cursor-pointer transition-all text-center group"
+                  className="flex flex-col items-center justify-center p-5 rounded-lg border border-dashed border-slate-300 dark:border-white/20 bg-white/60 dark:bg-slate-950/60 hover:bg-white/80 dark:hover:bg-slate-950/80 cursor-pointer transition-all text-center group backdrop-blur-md"
                 >
-                  <Upload size={18} className="text-[#6B7F95] group-hover:text-[#1677FF] transition-colors mb-1.5" />
-                  <span className="text-xs font-semibold text-[#425873] group-hover:text-cyan-700 transition-colors">
+                  <Upload size={18} className="text-secondary group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors mb-1.5" />
+                  <span className="text-xs font-semibold text-primary group-hover:text-cyan-700 dark:group-hover:text-cyan-400 transition-colors">
                     Upload {config.name} ({config.colorName})
                   </span>
-                  <span className="text-[10px] text-[#6B7F95] font-mono mt-0.5">
+                  <span className="text-[10px] text-muted-foreground font-mono mt-0.5">
                     Click to browse or drop .tif
                   </span>
                 </div>
@@ -407,22 +407,22 @@ export const FourBandUploader: React.FC<FourBandUploaderProps> = ({
             <ShieldAlert size={16} className="text-red-600 shrink-0" />
             <span>{sampleError ? 'Demo Error' : 'Validation Error'}</span>
           </div>
-          <p className="text-[#425873] pl-6 leading-relaxed">
+          <p className="text-secondary pl-6 leading-relaxed">
             {sampleError || validationError}
           </p>
         </div>
       )}
 
       {/* ── Bottom Action Strip ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-[#D7E6F4]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-slate-900/10 dark:border-white/10">
         <div className="flex items-center gap-2 text-xs font-mono">
-          <span className="text-[#526A82]">Bands Loaded:</span>
-          <span className={`font-bold ${loadedCount === 4 ? 'text-emerald-600' : 'text-amber-600'}`}>
+          <span className="text-secondary">Bands Loaded:</span>
+          <span className={`font-bold ${loadedCount === 4 ? 'text-emerald-700 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-500'}`}>
             {loadedCount} / 4
           </span>
-          <span className="text-[#526A82]">|</span>
-          <span className="text-[#526A82]">Order:</span>
-          <span className="text-[#425873]">B02 → B03 → B04 → B08</span>
+          <span className="text-muted-foreground">|</span>
+          <span className="text-secondary">Order:</span>
+          <span className="text-primary font-medium">B02 → B03 → B04 → B08</span>
         </div>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
@@ -432,16 +432,16 @@ export const FourBandUploader: React.FC<FourBandUploaderProps> = ({
             id="multispectral-demo-btn"
             onClick={handleLoadSampleBands}
             disabled={disabled || isLoadingSample}
-            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all duration-300 bg-white hover:bg-white border border-[#D7E6F4] hover:border-cyan-200 text-[#425873] hover:text-[#10233F] cursor-pointer shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all duration-300 bg-white/70 dark:bg-slate-900/70 hover:bg-white/90 dark:hover:bg-slate-900/90 border border-slate-300 dark:border-white/20 text-primary cursor-pointer shadow-sm disabled:opacity-50 disabled:cursor-not-allowed backdrop-blur-md"
           >
             {isLoadingSample ? (
               <>
-                <RefreshCw size={15} className="animate-spin text-[#1677FF]" />
+                <RefreshCw size={15} className="animate-spin text-cyan-600 dark:text-cyan-400" />
                 <span>Loading Demo...</span>
               </>
             ) : (
               <>
-                <Sparkles size={15} className="text-[#1677FF]" />
+                <Sparkles size={15} className="text-cyan-600 dark:text-cyan-400" />
                 <span>Demo</span>
               </>
             )}
@@ -453,15 +453,15 @@ export const FourBandUploader: React.FC<FourBandUploaderProps> = ({
             id="multispectral-validate-btn"
             onClick={onValidate}
             disabled={!allBandsLoaded || isValidating || disabled}
-            className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-bold text-sm transition-all duration-200 ${
+            className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-all duration-200 shadow-md ${
               allBandsLoaded && !isValidating && !disabled
-                ? 'btn-primary'
-                : 'bg-wash border border-border text-slate cursor-not-allowed'
+                ? 'bg-blue-600 hover:bg-blue-700 text-white border border-blue-700/50 shadow-[0_0_15px_rgba(37,99,235,0.3)]'
+                : 'bg-slate-200 dark:bg-slate-800/80 border border-slate-300 dark:border-white/10 text-muted-foreground cursor-not-allowed'
             }`}
           >
             {isValidating ? (
               <>
-                <RefreshCw size={16} className="animate-spin text-[#10233F]" />
+                <RefreshCw size={16} className="animate-spin" />
                 <span>Validating Satellite Imagery...</span>
               </>
             ) : (

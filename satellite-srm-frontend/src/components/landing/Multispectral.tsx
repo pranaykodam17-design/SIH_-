@@ -30,10 +30,10 @@ export const Multispectral: React.FC = () => {
       wavelength: '490 nm',
       range: '458 – 523 nm',
       icon: <Droplets size={24} />,
-      themeColor: 'text-cyan-500',
+      themeColor: 'text-cyan-600 dark:text-cyan-400',
       accentBg: 'from-cyan-500/20 to-cyan-500/5',
       borderGlow: 'hover:border-cyan-500/50 hover:shadow-[0_0_30px_rgba(6,182,212,0.2)]',
-      badgeColor: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
+      badgeColor: 'bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 border-cyan-500/30',
       summary:
         'Maximum penetration through shallow aquatic environments and critical for aerosol scattering correction.',
       primaryUses: [
@@ -51,10 +51,10 @@ export const Multispectral: React.FC = () => {
       wavelength: '560 nm',
       range: '543 – 578 nm',
       icon: <Leaf size={24} />,
-      themeColor: 'text-emerald-500',
+      themeColor: 'text-emerald-600 dark:text-emerald-400',
       accentBg: 'from-emerald-500/20 to-emerald-500/5',
       borderGlow: 'hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)]',
-      badgeColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+      badgeColor: 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
       summary:
         'Captures peak reflectance from healthy green vegetation canopies and sediment dynamics in inland water bodies.',
       primaryUses: [
@@ -72,10 +72,10 @@ export const Multispectral: React.FC = () => {
       wavelength: '665 nm',
       range: '650 – 680 nm',
       icon: <Sun size={24} />,
-      themeColor: 'text-red-500',
+      themeColor: 'text-red-600 dark:text-red-400',
       accentBg: 'from-red-500/20 to-red-500/5',
       borderGlow: 'hover:border-red-500/50 hover:shadow-[0_0_30px_rgba(239,68,68,0.2)]',
-      badgeColor: 'bg-red-500/20 text-red-400 border-red-500/30',
+      badgeColor: 'bg-red-500/20 text-red-600 dark:text-red-400 border-red-500/30',
       summary:
         'Strongest chlorophyll-a absorption band. Essential baseline for determining photosynthetic activity and urban materials.',
       primaryUses: [
@@ -93,10 +93,10 @@ export const Multispectral: React.FC = () => {
       wavelength: '842 nm',
       range: '785 – 900 nm',
       icon: <Sparkles size={24} />,
-      themeColor: 'text-violet-400',
+      themeColor: 'text-violet-600 dark:text-violet-400',
       accentBg: 'from-violet-500/20 to-violet-500/5',
       borderGlow: 'hover:border-violet-500/50 hover:shadow-[0_0_30px_rgba(139,92,246,0.2)]',
-      badgeColor: 'bg-violet-500/20 text-violet-300 border-violet-500/30',
+      badgeColor: 'bg-violet-500/20 text-violet-600 dark:text-violet-400 border-violet-500/30',
       summary:
         'Invisible to human eyes, NIR radiation reflects powerfully off spongy plant mesophyll cells and absorbs completely in pure water.',
       primaryUses: [
@@ -110,7 +110,7 @@ export const Multispectral: React.FC = () => {
   ];
 
   return (
-    <section id="multispectral" className="relative py-24 bg-background border-t border-border/40 overflow-hidden">
+    <section id="multispectral" className="relative py-24 glass-panel border-t border-border/40 overflow-hidden scroll-mt-[var(--nav-height)]">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.03),transparent)] pointer-events-none" />
 
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -134,7 +134,7 @@ export const Multispectral: React.FC = () => {
                 onClick={() => setSelectedBand(band.id)}
                 className={`cursor-pointer overflow-hidden transition-all duration-300 group flex flex-col justify-between ${
                   isSelected
-                    ? `bg-card border-border/80 shadow-lg -translate-y-1.5 ${band.borderGlow}`
+                    ? `glass-panel border-border/80 shadow-lg -translate-y-1.5 ${band.borderGlow}`
                     : 'bg-card/40 border-border/40 hover:bg-card/60 hover:border-border/60'
                 }`}
               >
@@ -144,10 +144,10 @@ export const Multispectral: React.FC = () => {
                   <div>
                     {/* Top Bar: Icon + Band Code */}
                     <div className="flex items-center justify-between mb-6">
-                      <div className={`w-12 h-12 rounded-xl bg-background border border-border/50 flex items-center justify-center transition-transform ${isSelected ? 'scale-110 shadow-md ' + band.themeColor : 'text-muted-foreground'}`}>
+                      <div className={`w-12 h-12 rounded-xl glass-panel border border-border/50 flex items-center justify-center transition-transform ${isSelected ? 'scale-110 shadow-md ' + band.themeColor : 'text-muted-foreground'}`}>
                         {band.icon}
                       </div>
-                      <span className="px-2.5 py-1 rounded bg-background border border-border/50 text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground">
+                      <span className="px-2.5 py-1 rounded glass-panel border border-border/50 text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground">
                         {band.bandCode}
                       </span>
                     </div>
@@ -174,7 +174,7 @@ export const Multispectral: React.FC = () => {
 
                   {/* Primary Applications List */}
                   <div className="pt-5 border-t border-border/50 space-y-3 mt-auto">
-                    <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground/70 mb-3">
+                    <div className="text-[10px] font-mono font-bold uppercase tracking-widest text-muted-foreground opacity-70 mb-3">
                       Key Indicators
                     </div>
                     {band.primaryUses.map((use, idx) => (
@@ -209,11 +209,11 @@ export const Multispectral: React.FC = () => {
                     <span className={`text-xl font-bold font-mono ${current.themeColor} flex items-center gap-2`}>
                       <Info size={20} /> {current.name} Channel
                     </span>
-                    <span className="px-2.5 py-1 rounded bg-background border border-border/50 font-mono text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                    <span className="px-2.5 py-1 rounded glass-panel border border-border/50 font-mono text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
                       Sentinel-2 MSI
                     </span>
                   </div>
-                  <div className="font-mono text-[11px] text-muted-foreground tracking-wide font-medium bg-background px-3 py-1.5 rounded border border-border/50">
+                  <div className="font-mono text-[11px] text-muted-foreground tracking-wide font-medium glass-panel px-3 py-1.5 rounded border border-border/50">
                     GSD: 10m Native <span className="mx-2 text-border">|</span> <span className="text-primary font-bold">TerraSR: 3.3m</span>
                   </div>
                 </div>

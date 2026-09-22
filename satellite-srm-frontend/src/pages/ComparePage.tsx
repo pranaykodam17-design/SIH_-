@@ -132,9 +132,9 @@ export const ComparePage: React.FC = () => {
                     SRM Enhanced · &lt;{meta?.targetResolution?.toFixed(1) || '3.3'}m
                   </div>
                 </div>
-                <div className="relative rounded-xl overflow-hidden border border-border/50 bg-card">
+                <div className="relative rounded-xl overflow-hidden border border-border/50 glass-panel">
                   <img src={lrUrl} alt="Original" className="w-full object-cover" style={{ height: '600px' }} />
-                  <div className="absolute top-4 left-4 px-3 py-1.5 rounded-lg bg-background/80 backdrop-blur-md border border-border/50 text-[11px] font-mono text-muted-foreground shadow-lg">
+                  <div className="absolute top-4 left-4 px-3 py-1.5 rounded-lg glass-panel border border-border/50 text-[11px] font-mono text-muted-foreground shadow-lg">
                     Sentinel-2 · {meta?.nativeResolution?.toFixed(0) || '10'}m
                   </div>
                 </div>
@@ -166,7 +166,7 @@ export const ComparePage: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <div className="absolute top-4 left-4 px-3 py-1.5 rounded-lg bg-background/80 backdrop-blur-md border border-border/50 text-[11px] font-mono text-foreground shadow-lg">Opacity Mode</div>
+                <div className="absolute top-4 left-4 px-3 py-1.5 rounded-lg glass-panel border border-border/50 text-[11px] font-mono text-foreground shadow-lg">Opacity Mode</div>
               </div>
             )}
 
@@ -197,8 +197,8 @@ export const ComparePage: React.FC = () => {
           {/* Right panel — Metadata */}
           <div className="lg:col-span-1 space-y-4">
             {/* Input info */}
-            <div className="bg-card/60 backdrop-blur-xl rounded-2xl p-6 border border-border/50 shadow-lg">
-              <div className="text-[11px] font-mono font-bold text-muted-foreground uppercase tracking-widest mb-5">Image Metadata</div>
+            <div className="bg-white/75 dark:bg-slate-950/65 backdrop-blur-xl rounded-2xl p-6 border border-slate-900/10 dark:border-white/15 shadow-lg">
+              <div className="text-[11px] font-mono font-bold text-primary uppercase tracking-widest mb-5">Image Metadata</div>
               <div className="space-y-3">
                 <InlineMetric label="Input Resolution" value="10m" color="default" />
                 <InlineMetric label="Output Resolution" value={`<${meta?.targetResolution?.toFixed(1) || '3.3'}m`} color="cyan" />
@@ -212,8 +212,8 @@ export const ComparePage: React.FC = () => {
             </div>
 
             {/* Model info */}
-            <div className="bg-card/60 backdrop-blur-xl rounded-2xl p-6 border border-border/50 shadow-lg">
-              <div className="text-[11px] font-mono font-bold text-muted-foreground uppercase tracking-widest mb-5">Processing Info</div>
+            <div className="bg-white/75 dark:bg-slate-950/65 backdrop-blur-xl rounded-2xl p-6 border border-slate-900/10 dark:border-white/15 shadow-lg">
+              <div className="text-[11px] font-mono font-bold text-primary uppercase tracking-widest mb-5">Processing Info</div>
               <div className="space-y-3">
                 <InlineMetric label="Model" value={job.telemetry.model.split(' ')[0]} color="cyan" />
                 <InlineMetric label="Device" value={job.telemetry.device.split('/')[0].trim()} />
@@ -225,23 +225,23 @@ export const ComparePage: React.FC = () => {
             </div>
 
             {/* Location */}
-            <div className="bg-card/60 backdrop-blur-xl rounded-2xl p-6 border border-border/50 shadow-lg">
-              <div className="flex items-center gap-2 text-[11px] font-mono font-bold text-muted-foreground uppercase tracking-widest mb-4">
+            <div className="bg-white/75 dark:bg-slate-950/65 backdrop-blur-xl rounded-2xl p-6 border border-slate-900/10 dark:border-white/15 shadow-lg">
+              <div className="flex items-center gap-2 text-[11px] font-mono font-bold text-primary uppercase tracking-widest mb-4">
                 <MapPin size={14} />
                 Location
               </div>
               <div className="space-y-2 text-sm font-mono">
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground/70">Lat</span>
-                  <span className="text-foreground">{meta?.center?.[0]?.toFixed(4) ?? '17.4106'}°N</span>
+                  <span className="text-secondary">Lat</span>
+                  <span className="text-primary font-bold">{meta?.center?.[0]?.toFixed(4) ?? '17.4106'}°N</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground/70">Lon</span>
-                  <span className="text-foreground">{meta?.center?.[1]?.toFixed(4) ?? '78.4776'}°E</span>
+                  <span className="text-secondary">Lon</span>
+                  <span className="text-primary font-bold">{meta?.center?.[1]?.toFixed(4) ?? '78.4776'}°E</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground/70">Acquired</span>
-                  <span className="text-foreground">{meta?.acquisitionDate ?? '2026-05-15'}</span>
+                  <span className="text-secondary">Acquired</span>
+                  <span className="text-primary font-bold">{meta?.acquisitionDate ?? '2026-05-15'}</span>
                 </div>
               </div>
             </div>

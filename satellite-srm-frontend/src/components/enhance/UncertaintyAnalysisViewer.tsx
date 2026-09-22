@@ -75,7 +75,7 @@ export const UncertaintyAnalysisViewer: React.FC<UncertaintyAnalysisViewerProps>
 
   return (
     <div
-      className={`relative w-full rounded-2xl border border-[#D7E6F4] bg-white shadow-[0_0_35px_rgba(168,85,247,0.08)] overflow-hidden ${className}`}
+      className={`relative w-full rounded-2xl border border-theme glass-panel shadow-[0_0_35px_rgba(168,85,247,0.08)] overflow-hidden ${className}`}
     >
       {/* 3D Visualizer Canvas */}
       <div className="relative h-[230px] sm:h-[260px] w-full">
@@ -114,12 +114,12 @@ export const UncertaintyAnalysisViewer: React.FC<UncertaintyAnalysisViewerProps>
         )}
 
         {/* Top Left Header Badge */}
-        <div className="absolute top-3 left-3 pointer-events-none z-10 flex items-center gap-2 bg-white backdrop-blur-md px-3 py-1.5 rounded-xl border border-[#D7E6F4]">
+        <div className="absolute top-3 left-3 pointer-events-none z-10 flex items-center gap-2 glass-panel backdrop-blur-md px-3 py-1.5 rounded-xl border border-theme">
           <div className="w-5 h-5 rounded-lg bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-300">
             <Activity size={12} className="animate-pulse" />
           </div>
           <div>
-            <div className="text-[11px] font-bold text-[#10233F] leading-none">
+            <div className="text-[11px] font-bold text-primary leading-none">
               Analyzing prediction uncertainty
             </div>
             <div className="text-[9px] text-purple-300 font-mono mt-0.5">
@@ -129,7 +129,7 @@ export const UncertaintyAnalysisViewer: React.FC<UncertaintyAnalysisViewerProps>
         </div>
 
         {/* Top Right Status Badge */}
-        <div className="absolute top-3 right-3 pointer-events-none z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-purple-500/30 text-[10px] font-mono text-purple-300">
+        <div className="absolute top-3 right-3 pointer-events-none z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg glass-panel border border-purple-500/30 text-[10px] font-mono text-purple-300">
           <Sparkles size={11} className="text-purple-400 animate-pulse" />
           <span>{isUncertaintyAvailable ? '10 Stochastic Passes' : 'Skipped'}</span>
         </div>
@@ -139,7 +139,7 @@ export const UncertaintyAnalysisViewer: React.FC<UncertaintyAnalysisViewerProps>
           {isUncertaintyAvailable ? (
             <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-500/25 via-pink-500/25 to-purple-500/25 border border-purple-400/50 shadow-[0_0_20px_rgba(168,85,247,0.25)] anim-fade-in">
               <Activity size={13} className="text-purple-300 animate-pulse" />
-              <span className="text-xs font-black text-[#10233F] tracking-wider uppercase">
+              <span className="text-xs font-black text-primary tracking-wider uppercase">
                 ANALYZING PREDICTION UNCERTAINTY
               </span>
             </div>
@@ -153,13 +153,13 @@ export const UncertaintyAnalysisViewer: React.FC<UncertaintyAnalysisViewerProps>
       </div>
 
       {/* Real Uncertainty Telemetry / Analysis Strip */}
-      <div className="px-4 py-3 border-t border-[#D7E6F4] bg-white/95">
+      <div className="px-4 py-3 border-t border-theme bg-surface/95">
         {isUncertaintyAvailable ? (
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono">
             {/* Real Variance Quantiles */}
             <div className="flex items-center gap-3 sm:gap-4">
               <div className="flex items-center gap-1.5">
-                <span className="text-[#6B7F95] text-[10px]">Mean Variance (μ):</span>
+                <span className="text-muted-foreground text-[10px]">Mean Variance (μ):</span>
                 <span className="text-purple-300 font-bold">
                   {uncertaintyMetrics?.mean !== undefined
                     ? uncertaintyMetrics.mean.toFixed(4)
@@ -168,7 +168,7 @@ export const UncertaintyAnalysisViewer: React.FC<UncertaintyAnalysisViewerProps>
               </div>
 
               <div className="flex items-center gap-1.5">
-                <span className="text-[#6B7F95] text-[10px]">Peak Variance (max):</span>
+                <span className="text-muted-foreground text-[10px]">Peak Variance (max):</span>
                 <span className="text-pink-300 font-bold">
                   {uncertaintyMetrics?.max !== undefined
                     ? uncertaintyMetrics.max.toFixed(4)
@@ -178,7 +178,7 @@ export const UncertaintyAnalysisViewer: React.FC<UncertaintyAnalysisViewerProps>
 
               {uncertaintyMetrics?.min !== undefined && (
                 <div className="flex items-center gap-1.5 hidden md:flex">
-                  <span className="text-[#6B7F95] text-[10px]">Min (min):</span>
+                  <span className="text-muted-foreground text-[10px]">Min (min):</span>
                   <span className="text-emerald-700 font-bold">
                     {uncertaintyMetrics.min.toFixed(4)}
                   </span>
@@ -187,15 +187,15 @@ export const UncertaintyAnalysisViewer: React.FC<UncertaintyAnalysisViewerProps>
             </div>
 
             {/* Heatmap Legend */}
-            <div className="flex items-center gap-2 text-[10px] text-[#526A82]">
-              <span className="text-[#6B7F95]">Confidence Field:</span>
+            <div className="flex items-center gap-2 text-[10px] text-secondary">
+              <span className="text-muted-foreground">Confidence Field:</span>
               <div className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-[#1677FF]" title="Low Variance / High Confidence" />
-                <span className="text-[#526A82]">Low</span>
-                <span className="text-[#526A82]">→</span>
+                <span className="w-2 h-2 rounded-full bg-accent" title="Low Variance / High Confidence" />
+                <span className="text-secondary">Low</span>
+                <span className="text-secondary">→</span>
                 <span className="w-2 h-2 rounded-full bg-amber-400" title="Medium Variance" />
-                <span className="text-[#526A82]">Mid</span>
-                <span className="text-[#526A82]">→</span>
+                <span className="text-secondary">Mid</span>
+                <span className="text-secondary">→</span>
                 <span className="w-2 h-2 rounded-full bg-pink-500" title="Edge Variance" />
                 <span className="text-pink-300 font-semibold">High Variance</span>
               </div>
@@ -207,7 +207,7 @@ export const UncertaintyAnalysisViewer: React.FC<UncertaintyAnalysisViewerProps>
               <Info size={14} className="text-amber-600 shrink-0" />
               <span>Uncertainty analysis unavailable for this run.</span>
             </div>
-            <span className="text-[10px] text-[#6B7F95]">
+            <span className="text-[10px] text-muted-foreground">
               * Monte Carlo Dropout was not requested or is unsupported for this configuration.
             </span>
           </div>

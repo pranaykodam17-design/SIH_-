@@ -83,12 +83,12 @@ export const UploadPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-blue-100">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Satellite className="h-6 w-6 text-[#1677FF]" />
-            <h1 className="text-2xl font-bold font-mono text-[#10233F]">
+            <Satellite className="h-6 w-6 text-accent" />
+            <h1 className="text-2xl font-bold font-mono text-primary">
               INITIALIZE RECONSTRUCTION MISSION
             </h1>
           </div>
-          <p className="text-sm font-mono text-[#526A82]">
+          <p className="text-sm font-mono text-secondary">
             Upload Sentinel-2 multispectral GeoTIFF (B02, B03, B04, B08) to begin super-resolution mapping.
           </p>
         </div>
@@ -120,12 +120,12 @@ export const UploadPage: React.FC = () => {
       )}
 
       {/* Technical Ingestion Guidelines */}
-      <div className="rounded-xl border border-blue-100 bg-white/60 p-5 font-mono text-xs text-[#526A82] space-y-2">
-        <h4 className="text-[#10233F] font-bold flex items-center gap-2 text-xs">
-          <Compass className="h-4 w-4 text-[#1677FF]" />
+      <div className="rounded-xl border border-blue-100 bg-surface/60 p-5 font-mono text-xs text-secondary space-y-2">
+        <h4 className="text-primary font-bold flex items-center gap-2 text-xs">
+          <Compass className="h-4 w-4 text-accent" />
           <span>Multispectral Ingestion Requirements</span>
         </h4>
-        <ul className="list-disc list-inside space-y-1 text-[#526A82]">
+        <ul className="list-disc list-inside space-y-1 text-secondary">
           <li>Must contain 4 spectral channels: Blue (B02), Green (B03), Red (B04), and NIR (B08).</li>
           <li>Target native resolution should be 10m GSD (Sentinel-2 Level-2A surface reflectance).</li>
           <li>Output product preserves spatial coordinates in standard UTM or geographic projections.</li>

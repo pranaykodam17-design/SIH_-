@@ -13,7 +13,7 @@ interface PreprocessingEarthViewerProps {
 // 2D Fallback for environments lacking WebGL
 const Preprocessing2DFallback: React.FC<{ isInputReady: boolean }> = ({ isInputReady }) => (
   <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center select-none bg-gradient-to-r from-srm-surface via-srm-base to-srm-elevated">
-    <div className="flex items-center gap-2 mb-3 text-xs font-mono text-[#1677FF]">
+    <div className="flex items-center gap-2 mb-3 text-xs font-mono text-accent">
       <Grid size={16} className="animate-pulse" />
       <span>Radiometric Normalization & Tiling (2D Fallback)</span>
     </div>
@@ -23,7 +23,7 @@ const Preprocessing2DFallback: React.FC<{ isInputReady: boolean }> = ({ isInputR
         <span>4-CHANNEL INPUT READY</span>
       </div>
     ) : (
-      <div className="text-[11px] text-[#526A82] font-mono">
+      <div className="text-[11px] text-secondary font-mono">
         Extracting 64×64 overlapping patches across B02, B03, B04, and B08...
       </div>
     )}
@@ -55,7 +55,7 @@ export const PreprocessingEarthViewer: React.FC<PreprocessingEarthViewerProps> =
     (currentStageId !== 'preprocessing' || progress >= 65);
 
   const bands = [
-    { name: 'B02', label: 'Blue', color: 'text-[#1677FF]', border: 'border-blue-500/30' },
+    { name: 'B02', label: 'Blue', color: 'text-accent', border: 'border-blue-500/30' },
     { name: 'B03', label: 'Green', color: 'text-emerald-600', border: 'border-emerald-500/30' },
     { name: 'B04', label: 'Red', color: 'text-red-600', border: 'border-red-500/30' },
     { name: 'B08', label: 'NIR', color: 'text-purple-400', border: 'border-purple-500/30' },
@@ -63,7 +63,7 @@ export const PreprocessingEarthViewer: React.FC<PreprocessingEarthViewerProps> =
 
   return (
     <div
-      className={`relative w-full rounded-2xl border border-[#D7E6F4] bg-white shadow-[0_0_35px_rgba(0,212,255,0.05)] overflow-hidden ${className}`}
+      className={`relative w-full rounded-2xl border border-theme glass-panel shadow-[0_0_35px_rgba(0,212,255,0.05)] overflow-hidden ${className}`}
     >
       {/* 3D Preprocessing Scene Canvas */}
       <div className="relative h-[220px] sm:h-[250px] w-full">
@@ -89,22 +89,22 @@ export const PreprocessingEarthViewer: React.FC<PreprocessingEarthViewerProps> =
         )}
 
         {/* Top Left Status Badge */}
-        <div className="absolute top-3 left-3 pointer-events-none z-10 flex items-center gap-2 bg-white backdrop-blur-md px-3 py-1.5 rounded-xl border border-[#D7E6F4]">
-          <div className="w-5 h-5 rounded-lg bg-[#1677FF]/20 border border-cyan-200 flex items-center justify-center text-cyan-700">
+        <div className="absolute top-3 left-3 pointer-events-none z-10 flex items-center gap-2 glass-panel backdrop-blur-md px-3 py-1.5 rounded-xl border border-theme">
+          <div className="w-5 h-5 rounded-lg bg-accent/20 border border-cyan-200 flex items-center justify-center text-cyan-700">
             <Radio size={12} className="animate-pulse" />
           </div>
           <div>
-            <div className="text-[11px] font-bold text-[#10233F] leading-none">
+            <div className="text-[11px] font-bold text-primary leading-none">
               Satellite Image Preprocessing
             </div>
-            <div className="text-[9px] text-[#526A82] font-mono mt-0.5">
+            <div className="text-[9px] text-secondary font-mono mt-0.5">
               Radiometric Normalization & 64×64 Patch Tiling
             </div>
           </div>
         </div>
 
         {/* Top Right Cloud Metaphor Indicator */}
-        <div className="absolute top-3 right-3 pointer-events-none z-10 hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-[#D7E6F4] text-[10px] font-mono text-[#425873]">
+        <div className="absolute top-3 right-3 pointer-events-none z-10 hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg glass-panel border border-theme text-[10px] font-mono text-secondary">
           <Cloud size={11} className="text-cyan-700" />
           <span>Noise Attenuation: {Math.min(85, Math.round(progress))}%</span>
         </div>
@@ -114,7 +114,7 @@ export const PreprocessingEarthViewer: React.FC<PreprocessingEarthViewerProps> =
           <div className="absolute bottom-3 left-3 right-3 pointer-events-none z-10 flex items-center justify-center">
             <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-cyan-500/25 via-emerald-500/25 to-blue-500/25 border border-emerald-400/50 shadow-[0_0_20px_rgba(16,185,129,0.3)] anim-fade-in">
               <Sparkles size={14} className="text-emerald-700 animate-pulse" />
-              <span className="text-xs font-black text-[#10233F] tracking-wider uppercase">
+              <span className="text-xs font-black text-primary tracking-wider uppercase">
                 4-CHANNEL INPUT READY
               </span>
               <CheckCircle2 size={14} className="text-emerald-600" />
@@ -124,23 +124,23 @@ export const PreprocessingEarthViewer: React.FC<PreprocessingEarthViewerProps> =
       </div>
 
       {/* 4-Band Alignment Bar with Scientific Note */}
-      <div className="px-4 py-3 border-t border-[#D7E6F4] bg-white/90 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+      <div className="px-4 py-3 border-t border-theme bg-surface/90 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
         <div className="flex items-center gap-2">
-          <span className="text-[#526A82] text-[11px]">Spatially Aligned:</span>
+          <span className="text-secondary text-[11px]">Spatially Aligned:</span>
           {bands.map((band) => (
             <div
               key={band.name}
-              className={`flex items-center gap-1 px-2 py-0.5 rounded border bg-white ${band.border}`}
+              className={`flex items-center gap-1 px-2 py-0.5 rounded border glass-panel ${band.border}`}
             >
               <CheckCircle2 size={11} className="text-emerald-600" />
               <span className={`font-bold ${band.color}`}>{band.name}</span>
-              <span className="text-[9px] text-[#526A82] hidden sm:inline">{band.label}</span>
+              <span className="text-[9px] text-secondary hidden sm:inline">{band.label}</span>
             </div>
           ))}
         </div>
 
         {/* Explicit Disclaimer / Context */}
-        <div className="text-[10px] text-[#6B7F95] flex items-center gap-1">
+        <div className="text-[10px] text-muted-foreground flex items-center gap-1">
           <span>* Visual representation of radiometric preparation · Model does not perform cloud removal</span>
         </div>
       </div>

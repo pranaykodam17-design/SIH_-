@@ -256,3 +256,25 @@ export async function mockGetJobStatus(jobId: string): Promise<ProcessingJob> {
   }
   throw new Error(`Job ${jobId} not found in mock state`);
 }
+
+export async function mockValidateBandsApi(bands: any): Promise<import('../types/satellite').FourBandValidationResult> {
+  // Simulate network delay
+  await new Promise(res => setTimeout(res, 800));
+  
+  return {
+    valid: true,
+    mode: "four_bands",
+    message: "All 4 Sentinel-2 bands (B02, B03, B04, B08) validated and spatially aligned.",
+    metadata: {
+      common: {
+        width: 1024, height: 1024,
+        crs: "EPSG:32644 (UTM Zone 44N)",
+        nativeResolution: 10.0,
+        targetResolution: 3.33,
+        bounds: DEMO_METADATA.bounds,
+        bands: ["B02 (Blue)", "B03 (Green)", "B04 (Red)", "B08 (NIR)"],
+        sensor: "Sentinel-2 MSI Level-2A"
+      }
+    }
+  };
+}

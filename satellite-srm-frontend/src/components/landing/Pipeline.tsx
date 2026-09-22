@@ -52,7 +52,7 @@ export const Pipeline: React.FC = () => {
       subtitle: 'Radiometric Calibration',
       tag: 'Step 02',
       icon: <Sliders size={20} />,
-      color: 'bg-emerald-500/10 text-emerald-400',
+      color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
       borderColor: 'border-emerald-500/30',
       glowColor: 'shadow-[0_0_20px_rgba(16,185,129,0.2)]',
       description:
@@ -69,7 +69,7 @@ export const Pipeline: React.FC = () => {
       subtitle: 'Cross-Spectral Attention',
       tag: 'Step 03',
       icon: <Cpu size={20} />,
-      color: 'bg-purple-500/10 text-purple-400',
+      color: 'bg-purple-500/10 text-purple-600 dark:text-purple-400',
       borderColor: 'border-purple-500/30',
       glowColor: 'shadow-[0_0_20px_rgba(168,85,247,0.2)]',
       description:
@@ -86,7 +86,7 @@ export const Pipeline: React.FC = () => {
       subtitle: 'Shifted Window Transformer',
       tag: 'Step 04',
       icon: <Sparkles size={20} />,
-      color: 'bg-cyan-500/10 text-cyan-400',
+      color: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400',
       borderColor: 'border-cyan-500/30',
       glowColor: 'shadow-[0_0_25px_rgba(34,211,238,0.25)]',
       description:
@@ -103,7 +103,7 @@ export const Pipeline: React.FC = () => {
       subtitle: 'Analysis-Ready Intelligence',
       tag: 'Step 05',
       icon: <CheckCircle2 size={20} />,
-      color: 'bg-amber-500/10 text-amber-400',
+      color: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
       borderColor: 'border-amber-500/30',
       glowColor: 'shadow-[0_0_20px_rgba(245,158,11,0.2)]',
       description:
@@ -117,13 +117,13 @@ export const Pipeline: React.FC = () => {
   ];
 
   return (
-    <section id="approach" className="relative py-24 bg-background border-t border-border/40 overflow-hidden">
+    <section id="approach" className="relative py-24 glass-panel border-t border-border/40 overflow-hidden scroll-mt-[var(--nav-height)]">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.03),transparent)] pointer-events-none" />
 
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center mb-16">
-          <Badge variant="outline" className="mb-6 px-3 py-1 bg-background">Deep Learning Architecture</Badge>
+          <Badge variant="outline" className="mb-6 px-3 py-1 glass-panel">Deep Learning Architecture</Badge>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-6">
             End-to-end super-resolution pipeline
           </h2>
@@ -147,7 +147,7 @@ export const Pipeline: React.FC = () => {
                   onClick={() => setActiveStage(stage.id)}
                   className={`cursor-pointer rounded-xl p-5 transition-all duration-300 border backdrop-blur-sm ${
                     isSelected
-                      ? `bg-card border-primary shadow-[0_0_25px_hsl(var(--primary)/0.15)] -translate-y-1.5`
+                      ? `glass-panel border-primary shadow-[0_0_25px_hsl(var(--primary)/0.15)] -translate-y-1.5`
                       : `bg-card/40 border-border/50 hover:bg-card/80 hover:border-border`
                   }`}
                 >
@@ -155,12 +155,12 @@ export const Pipeline: React.FC = () => {
                   <div className="flex items-center justify-between mb-4">
                     <div
                       className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                        isSelected ? `${stage.color} ring-1 ring-current/20 scale-110 shadow-lg` : 'bg-muted/50 text-muted-foreground'
+                        isSelected ? `${stage.color} ring-1 ring-current/20 scale-110 shadow-lg` : 'bg-muted opacity-50 text-muted-foreground'
                       }`}
                     >
                       {stage.icon}
                     </div>
-                    <span className={`font-mono text-xs font-bold uppercase tracking-wider ${isSelected ? 'text-primary' : 'text-muted-foreground/60'}`}>
+                    <span className={`font-mono text-xs font-bold uppercase tracking-wider ${isSelected ? 'text-primary' : 'text-muted-foreground opacity-60'}`}>
                       {stage.tag}
                     </span>
                   </div>
@@ -168,11 +168,11 @@ export const Pipeline: React.FC = () => {
                   <h3 className={`text-base font-bold mb-1 leading-snug ${isSelected ? 'text-foreground' : 'text-muted-foreground'}`}>
                     {stage.title}
                   </h3>
-                  <p className="text-xs text-muted-foreground/70 font-mono mb-4">
+                  <p className="text-xs text-muted-foreground opacity-70 font-mono mb-4">
                     {stage.subtitle}
                   </p>
 
-                  <div className={`flex items-center gap-1 text-[11px] font-medium transition-colors ${isSelected ? 'text-primary' : 'text-muted-foreground/40'}`}>
+                  <div className={`flex items-center gap-1 text-[11px] font-medium transition-colors ${isSelected ? 'text-primary' : 'text-muted-foreground opacity-40'}`}>
                     <span>Inspect</span>
                     <ChevronRight size={12} />
                   </div>
@@ -193,13 +193,13 @@ export const Pipeline: React.FC = () => {
                 onClick={() => setActiveStage(stage.id)}
                 className={`relative z-10 flex items-start gap-5 rounded-2xl p-5 border backdrop-blur-md cursor-pointer transition-all duration-300 ${
                   isSelected
-                    ? `bg-card ${stage.borderColor} ${stage.glowColor}`
+                    ? `glass-panel ${stage.borderColor} ${stage.glowColor}`
                     : 'bg-card/40 border-border/50 hover:bg-card/80'
                 }`}
               >
                 <div
                   className={`w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center ${
-                    isSelected ? `${stage.color} ring-1 ring-current/20 shadow-md` : 'bg-muted/50 text-muted-foreground'
+                    isSelected ? `${stage.color} ring-1 ring-current/20 shadow-md` : 'bg-muted opacity-50 text-muted-foreground'
                   }`}
                 >
                   {stage.icon}
@@ -207,9 +207,9 @@ export const Pipeline: React.FC = () => {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1">
                     <h3 className={`text-base font-bold truncate ${isSelected ? 'text-foreground' : 'text-muted-foreground'}`}>{stage.title}</h3>
-                    <span className="font-mono text-[10px] text-muted-foreground/60">{stage.tag}</span>
+                    <span className="font-mono text-[10px] text-muted-foreground opacity-60">{stage.tag}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground/80">{stage.subtitle}</p>
+                  <p className="text-xs text-muted-foreground opacity-80">{stage.subtitle}</p>
                 </div>
               </div>
             );
@@ -235,7 +235,7 @@ export const Pipeline: React.FC = () => {
                     <div className="grid lg:grid-cols-12 gap-10 items-center">
                       {/* Left: Stage summary & details (7 cols) */}
                       <div className="lg:col-span-7">
-                        <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-mono font-semibold mb-6 ${current.color.replace('text-', 'text-').replace('bg-', 'bg-').split(' ')[0]} ${current.color.split(' ')[1]} ${current.borderColor}`}>
+                        <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-mono font-semibold mb-6 ${current.color} ${current.borderColor}`}>
                           <Activity size={14} className="animate-pulse" /> {current.tag} Active Focus
                         </div>
                         
@@ -272,16 +272,16 @@ export const Pipeline: React.FC = () => {
 
                         <div className="space-y-4 font-mono text-sm text-muted-foreground">
                           <div className="flex items-center justify-between">
-                            <span className="text-muted-foreground/70">Pipeline Flow:</span>
-                            <span className="text-cyan-400 font-medium">GeoTIFF → Tensors → SR Raster</span>
+                            <span className="text-muted-foreground opacity-70">Pipeline Flow:</span>
+                            <span className="text-cyan-600 dark:text-cyan-400 font-medium">GeoTIFF → Tensors → SR Raster</span>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-muted-foreground/70">Inference Core:</span>
+                            <span className="text-muted-foreground opacity-70">Inference Core:</span>
                             <span className="text-foreground font-medium">PyTorch + CUDA</span>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-muted-foreground/70">Coordinate Sync:</span>
-                            <span className="text-emerald-400 font-medium">EPSG:32644 (UTM)</span>
+                            <span className="text-muted-foreground opacity-70">Coordinate Sync:</span>
+                            <span className="text-emerald-600 dark:text-emerald-400 font-medium">EPSG:32644 (UTM)</span>
                           </div>
                         </div>
 

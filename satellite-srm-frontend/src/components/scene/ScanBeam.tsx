@@ -6,217 +6,196 @@ interface ScanBeamProps {
   satellitePosition?: THREE.Vector3;
 }
 
+// ─────────────────────────────────────────────────────────────
+// IMAGING SCAN CONE + FOOTPRINT
+// Renders:
+//  1. A narrow transparent cone from the optical sensor toward Earth.
+//  2. A rectangular scan-footprint quad projected on the Earth surface.
+//  3. Expanding concentric rings at the footprint center.
+// ─────────────────────────────────────────────────────────────
 export const ScanBeam: React.FC<ScanBeamProps> = ({ satellitePosition }) => {
-  const beamGroupRef = useRef<THREE.Group>(null);
-  const mainBeamRef = useRef<THREE.Mesh>(null);
-  const pulseBeamRef = useRef<THREE.Mesh>(null);
-  
-  const targetGroupRef = useRef<THREE.Group>(null);
+  const coneRef = useRef<THREE.Mesh>(null);
+  const coneGroupRef = useRef<THREE.Group>(null);
+
+  const footprintRef = useRef<THREE.Mesh>(null);
+  const footprintGroupRef = useRef<THREE.Group>(null);
+
   const ring1Ref = useRef<THREE.Mesh>(null);
   const ring2Ref = useRef<THREE.Mesh>(null);
-  const groundGlowRef = useRef<THREE.Mesh>(null);
 
-  // Particles for data flow
-  const particleCount = 8;
-  const particlesRef = useRef<THREE.InstancedMesh>(null);
-  
-  // Initialize random offsets for particles to stagger them
-  const particleOffsets = useMemo(() => {
-    return Array.from({ length: particleCount }, () => Math.random());
-  }, []);
+  // Reusable objects
+  const _up = useMemo(() => new THREE.Vector3(0, 1, 0), []);
+  const _groundNorm = useMemo(() => new THREE.Vector3(), []);
+  const _quat = useMemo(() => new THREE.Quaternion(), []);
 
-  const dummy = useMemo(() => new THREE.Object3D(), []);
-
-  useFrame(({ clock }, delta) => {
+  useFrame(({ clock }) => {
     if (!satellitePosition) return;
 
     const time = clock.getElapsedTime();
-    const groundPoint = satellitePosition.clone().normalize().multiplyScalar(1.003);
-    const distance = satellitePosition.distanceTo(groundPoint);
-    const midPoint = satellitePosition.clone().add(groundPoint).multiplyScalar(0.5);
+    const satPos = satellitePosition;
 
-    // ── 1. BEAM POSITIONING ──
-    if (beamGroupRef.current) {
-      beamGroupRef.current.position.copy(midPoint);
-      beamGroupRef.current.lookAt(satellitePosition);
-      beamGroupRef.current.rotateX(Math.PI / 2);
+    // Ground point directly under the satellite (nadir)
+    const groundPoint = satPos.clone().normalize().multiplyScalar(1.001);
+    const distance = satPos.distanceTo(groundPoint);
+
+    // ── CONE (from satellite down to Earth) ─────────────────
+    if (coneGroupRef.current && coneRef.current) {
+      // Midpoint between satellite and ground
+      const mid = satPos.clone().add(groundPoint).multiplyScalar(0.5);
+      coneGroupRef.current.position.copy(mid);
+
+      // Orient so cone tip points toward satellite (+Y of cylinder = satellite)
+      _groundNorm.copy(satPos).normalize();
+      _quat.setFromUnitVectors(_up, _groundNorm);
+      coneGroupRef.current.quaternion.copy(_quat);
+
+      // Scale height to span the gap
+      coneRef.current.scale.y = distance;
+
+      // Gentle opacity pulse
+      const mat = coneRef.current.material as THREE.MeshBasicMaterial;
+      mat.opacity = 0.08 + Math.sin(time * 1.2) * 0.03;
     }
 
-    if (mainBeamRef.current) {
-      mainBeamRef.current.scale.set(1, distance, 1);
-      const mat = mainBeamRef.current.material as THREE.MeshBasicMaterial;
-      mat.opacity = 0.08 + Math.sin(time * 2.0) * 0.02;
+    // ── FOOTPRINT QUAD (on Earth surface) ───────────────────
+    if (footprintGroupRef.current) {
+      footprintGroupRef.current.position.copy(groundPoint);
+
+      // Orient the plane so it lies tangent to Earth's surface at groundPoint
+      _groundNorm.copy(groundPoint).normalize();
+      _quat.setFromUnitVectors(_up, _groundNorm);
+      footprintGroupRef.current.quaternion.copy(_quat);
+
+      // Subtle slow rotation to simulate swath scanning
+      footprintGroupRef.current.rotateY(time * 0.04);
     }
 
-    // ── 2. PULSE ANIMATION (4-second cycle) ──
-    const cycle = 4.0;
-    const cycleTime = time % cycle;
-    const travelDuration = 1.5;
-    
-    // Traveling pulse down the beam
-    if (pulseBeamRef.current) {
-      if (cycleTime < travelDuration) {
-        // Pulse traveling from satellite (top of cylinder) to ground (bottom)
-        const progress = cycleTime / travelDuration;
-        // Cylinder is centered at 0, top is +distance/2, bottom is -distance/2
-        const yPos = (distance / 2) - (progress * distance);
-        pulseBeamRef.current.position.set(0, yPos, 0);
-        pulseBeamRef.current.scale.set(1.2, distance * 0.15, 1.2);
-        pulseBeamRef.current.visible = true;
-        
-        const mat = pulseBeamRef.current.material as THREE.MeshBasicMaterial;
-        // Fade out slightly as it reaches the ground
-        mat.opacity = 0.4 * (1.0 - Math.pow(progress, 3));
-      } else {
-        pulseBeamRef.current.visible = false;
-      }
+    if (footprintRef.current) {
+      // Pulsing footprint
+      const mat = footprintRef.current.material as THREE.MeshBasicMaterial;
+      mat.opacity = 0.12 + Math.sin(time * 0.8) * 0.04;
     }
 
-    // ── 3. DATA FLOW PARTICLES ──
-    if (particlesRef.current) {
-      for (let i = 0; i < particleCount; i++) {
-        // Continuous movement down the beam
-        let p = (time * 0.4 + particleOffsets[i]) % 1.0;
-        
-        // Position from satellite to ground
-        const currentPos = new THREE.Vector3().lerpVectors(satellitePosition, groundPoint, p);
-        dummy.position.copy(currentPos);
-        
-        // Scale pulses slightly
-        const s = 0.5 + Math.sin(time * 5 + i) * 0.5;
-        dummy.scale.set(s, s, s);
-        
-        // Orient particle to point down beam (if it were non-spherical)
-        dummy.lookAt(groundPoint);
-        dummy.updateMatrix();
-        particlesRef.current.setMatrixAt(i, dummy.matrix);
-      }
-      particlesRef.current.instanceMatrix.needsUpdate = true;
-    }
+    // ── CONCENTRIC RINGS ─────────────────────────────────────
+    if (ring1Ref.current && ring2Ref.current) {
+      const p1 = (time % 2.0) / 2.0;
+      const p2 = ((time + 1.0) % 2.0) / 2.0;
 
-    // ── 4. EARTH ENHANCEMENT EFFECT (Ground Target) ──
-    if (targetGroupRef.current) {
-      targetGroupRef.current.position.copy(groundPoint);
-      targetGroupRef.current.lookAt(satellitePosition);
-    }
+      ring1Ref.current.scale.setScalar(1.0 + p1 * 3.5);
+      (ring1Ref.current.material as THREE.MeshBasicMaterial).opacity = 0.18 * (1 - p1);
 
-    // Enhancement triggers right after travelDuration
-    const impactTime = cycleTime - travelDuration;
-    const impactDuration = 2.0;
-
-    if (impactTime > 0 && impactTime < impactDuration) {
-      const progress = impactTime / impactDuration;
-      // Easing out
-      const easeOut = 1 - Math.pow(1 - progress, 3);
-      
-      if (ring1Ref.current && ring2Ref.current && groundGlowRef.current) {
-        // Expanding concentric rings
-        ring1Ref.current.scale.setScalar(1.0 + easeOut * 2.0);
-        (ring1Ref.current.material as THREE.Material).opacity = 0.4 * (1 - progress);
-
-        ring2Ref.current.scale.setScalar(1.0 + easeOut * 3.5);
-        (ring2Ref.current.material as THREE.Material).opacity = 0.2 * (1 - progress);
-
-        // Ground glow bloom
-        groundGlowRef.current.scale.setScalar(1.0 + easeOut * 1.5);
-        (groundGlowRef.current.material as THREE.Material).opacity = 0.3 * (1 - progress);
-      }
-    } else {
-      // Resting state
-      if (ring1Ref.current && ring2Ref.current && groundGlowRef.current) {
-        ring1Ref.current.scale.setScalar(1.0);
-        (ring1Ref.current.material as THREE.Material).opacity = 0.05;
-        
-        ring2Ref.current.scale.setScalar(1.0);
-        (ring2Ref.current.material as THREE.Material).opacity = 0.02;
-
-        groundGlowRef.current.scale.setScalar(1.0);
-        (groundGlowRef.current.material as THREE.Material).opacity = 0.05;
-      }
+      ring2Ref.current.scale.setScalar(1.0 + p2 * 3.5);
+      (ring2Ref.current.material as THREE.MeshBasicMaterial).opacity = 0.12 * (1 - p2);
     }
   });
 
   return (
     <group>
-      {/* ── BEAM GROUP ── */}
-      <group ref={beamGroupRef}>
-        {/* Main subtle observation swath */}
-        <mesh ref={mainBeamRef}>
-          <cylinderGeometry args={[0.015, 0.06, 1.0, 24, 1, true]} />
+      {/* ── SCAN CONE (satellite → Earth) ───────────────────── */}
+      <group ref={coneGroupRef}>
+        {/* Main cone: small tip at satellite, wide base at Earth */}
+        <mesh ref={coneRef}>
+          {/* args: topRadius, bottomRadius, height, segments, open */}
+          <cylinderGeometry args={[0.006, 0.11, 1.0, 32, 1, true]} />
           <meshBasicMaterial
-            color="#19B5FE" // Cyan
+            color="#22d3ee"
             transparent
-            opacity={0.08}
-            blending={THREE.NormalBlending}
+            opacity={0.1}
+            blending={THREE.AdditiveBlending}
             depthWrite={false}
             side={THREE.DoubleSide}
           />
         </mesh>
 
-        {/* Traveling Enhancement Pulse */}
-        <mesh ref={pulseBeamRef} visible={false}>
-          <cylinderGeometry args={[0.02, 0.03, 1.0, 24, 1, true]} />
+        {/* Edge lines of the cone — gives a precise angular look */}
+        <mesh>
+          <cylinderGeometry args={[0.006, 0.11, 1.0, 4, 1, true]} />
           <meshBasicMaterial
-            color="#67E8F9" // Light cyan
+            color="#67e8f9"
             transparent
-            opacity={0.4}
+            opacity={0.35}
             blending={THREE.AdditiveBlending}
             depthWrite={false}
-            side={THREE.DoubleSide}
+            wireframe
           />
         </mesh>
       </group>
 
-      {/* ── CONTINUOUS DATA FLOW PARTICLES ── */}
-      <instancedMesh ref={particlesRef} args={[undefined, undefined, particleCount]}>
-        <sphereGeometry args={[0.003, 8, 8]} />
-        <meshBasicMaterial
-          color="#67E8F9"
-          transparent
-          opacity={0.6}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
-      </instancedMesh>
+      {/* ── FOOTPRINT (rectangular scanning quad on Earth) ───── */}
+      <group ref={footprintGroupRef}>
+        {/* Outer footprint rectangle */}
+        <mesh ref={footprintRef} position={[0, 0.001, 0]}>
+          <planeGeometry args={[0.20, 0.14]} />
+          <meshBasicMaterial
+            color="#0ea5e9"
+            transparent
+            opacity={0.14}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
 
-      {/* ── EARTH ENHANCEMENT GROUND EFFECT ── */}
-      <group ref={targetGroupRef}>
-        {/* Inner Data Ring */}
+        {/* Footprint border lines */}
+        <mesh position={[0, 0.002, 0]}>
+          <planeGeometry args={[0.20, 0.14]} />
+          <meshBasicMaterial
+            color="#38bdf8"
+            transparent
+            opacity={0.5}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+            wireframe
+          />
+        </mesh>
+
+        {/* Inner scan-line grid (simulates pushbroom sensor rows) */}
+        {[-0.04, 0, 0.04].map((x, i) => (
+          <mesh key={i} position={[x, 0.002, 0]}>
+            <planeGeometry args={[0.002, 0.14]} />
+            <meshBasicMaterial
+              color="#67e8f9"
+              transparent
+              opacity={0.3}
+              blending={THREE.AdditiveBlending}
+              depthWrite={false}
+            />
+          </mesh>
+        ))}
+
+        {/* Concentric expanding rings at footprint center */}
         <mesh ref={ring1Ref}>
-          <ringGeometry args={[0.035, 0.045, 32]} />
+          <ringGeometry args={[0.03, 0.036, 32]} />
           <meshBasicMaterial
-            color="#1677FF" // Primary blue
+            color="#22d3ee"
             transparent
-            opacity={0.05}
+            opacity={0.18}
             blending={THREE.AdditiveBlending}
             depthWrite={false}
             side={THREE.DoubleSide}
           />
         </mesh>
-
-        {/* Outer Data Ring */}
         <mesh ref={ring2Ref}>
-          <ringGeometry args={[0.05, 0.055, 32]} />
+          <ringGeometry args={[0.05, 0.056, 32]} />
           <meshBasicMaterial
-            color="#19B5FE" // Cyan
+            color="#0ea5e9"
             transparent
-            opacity={0.02}
+            opacity={0.12}
             blending={THREE.AdditiveBlending}
             depthWrite={false}
             side={THREE.DoubleSide}
           />
         </mesh>
 
-        {/* Soft Radial Enhancement Glow on Earth Surface */}
-        <mesh ref={groundGlowRef} position={[0, 0, -0.001]}>
-          <circleGeometry args={[0.06, 32]} />
+        {/* Center crosshair dot */}
+        <mesh position={[0, 0.003, 0]}>
+          <circleGeometry args={[0.012, 16]} />
           <meshBasicMaterial
-            color="#19B5FE"
+            color="#38bdf8"
             transparent
-            opacity={0.05}
-            blending={THREE.NormalBlending}
+            opacity={0.4}
+            blending={THREE.AdditiveBlending}
             depthWrite={false}
-            side={THREE.DoubleSide}
           />
         </mesh>
       </group>

@@ -4,7 +4,7 @@ import { Satellite, Github, ExternalLink, Mail, Award, Globe, ArrowUpRight } fro
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="relative bg-background border-t border-border/40 text-muted-foreground overflow-hidden">
+    <footer className="relative glass-panel border-t border-border/40 text-muted-foreground overflow-hidden">
       {/* Top primary gradient highlight line */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
@@ -129,7 +129,7 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-border/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground/80">
+        <div className="pt-8 border-t border-border/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground opacity-80">
           <div>
             © 2026 <strong className="text-foreground">TerraSR</strong>. AI-Powered Multispectral Super Resolution.
           </div>

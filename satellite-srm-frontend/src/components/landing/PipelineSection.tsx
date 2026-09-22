@@ -10,7 +10,7 @@ export const PipelineSection: React.FC = () => {
   const selectedStage = PIPELINE_STAGES[selectedStageIndex];
 
   return (
-    <section id="pipeline" className="py-24 border-t border-border/40 bg-background relative overflow-hidden">
+    <section id="pipeline" className="py-24 border-t border-border/40 glass-panel relative overflow-hidden">
       {/* Background Glow */}
       <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
 
@@ -57,7 +57,7 @@ export const PipelineSection: React.FC = () => {
         </div>
 
         {/* Detailed stage view card */}
-        <Card className="border-border/50 bg-card/40 backdrop-blur-md overflow-hidden relative group">
+        <Card className="border-border/50 glass-panel overflow-hidden relative group">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
           
           <div className="p-6 sm:p-10 grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -84,7 +84,7 @@ export const PipelineSection: React.FC = () => {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Standard:</span>
-                  <span className="text-emerald-400 font-medium">NTRO Ready</span>
+                  <span className="text-emerald-600 dark:text-emerald-400 font-medium">NTRO Ready</span>
                 </div>
               </div>
             </div>

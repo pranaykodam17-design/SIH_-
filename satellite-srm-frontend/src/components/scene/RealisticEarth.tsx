@@ -1,5 +1,5 @@
 import React, { useRef, Suspense, useState, useEffect } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { useTexture, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { Atmosphere } from './Atmosphere';
@@ -8,6 +8,7 @@ import { Atmosphere } from './Atmosphere';
 const PhotorealisticGlobe: React.FC = () => {
   const earthRef = useRef<THREE.Mesh>(null);
   const cloudsRef = useRef<THREE.Mesh>(null);
+  const { gl } = useThree();
 
   // Load new authentic, vibrant Blue Marble daylight textures
   const [dayMap, cloudsMap, specularMap] = useTexture([
@@ -17,9 +18,19 @@ const PhotorealisticGlobe: React.FC = () => {
   ]);
 
   useEffect(() => {
+    const maxAnisotropy = gl.capabilities.getMaxAnisotropy();
+    
     dayMap.colorSpace = THREE.SRGBColorSpace;
+    dayMap.anisotropy = maxAnisotropy;
+    dayMap.minFilter = THREE.LinearMipmapLinearFilter;
     dayMap.needsUpdate = true;
-  }, [dayMap]);
+    
+    cloudsMap.anisotropy = maxAnisotropy;
+    cloudsMap.needsUpdate = true;
+    
+    specularMap.anisotropy = maxAnisotropy;
+    specularMap.needsUpdate = true;
+  }, [dayMap, cloudsMap, specularMap, gl]);
 
   useFrame((_, delta) => {
     // Smooth planetary rotation
@@ -39,20 +50,20 @@ const PhotorealisticGlobe: React.FC = () => {
         <sphereGeometry args={[1.0, 64, 64]} />
         <meshStandardMaterial
           map={dayMap}
-          // Removed roughnessMap to ensure raw bright texture colors pass through purely
-          roughness={0.8} // Diffuse reflection
-          metalness={0.05} // Very subtle to prevent dark specular angles
+          metalnessMap={specularMap}
+          roughness={0.65} // Balanced diffuse reflection for land
+          metalness={0.4} // Water reflects ambient/directional light realistically
           color="#ffffff"
         />
       </mesh>
 
       {/* 2. Real NASA Cloud Layer (Crisp, defined white cloud patterns) */}
       <mesh ref={cloudsRef} rotation={[0, Math.PI * 1.15, 0]}>
-        <sphereGeometry args={[1.012, 64, 64]} />
+        <sphereGeometry args={[1.008, 64, 64]} />
         <meshStandardMaterial
           map={cloudsMap}
           transparent={true}
-          opacity={0.4} // Subtle, transparent clouds that don't obscure continents
+          opacity={0.48} // Slightly increased visibility for crispness
           blending={THREE.AdditiveBlending} // Ensures clouds are bright white and never cast dark artifacts
           depthWrite={false}
           roughness={1.0}
@@ -60,7 +71,7 @@ const PhotorealisticGlobe: React.FC = () => {
       </mesh>
 
       {/* 3. Soft Natural Blue Atmospheric Rim */}
-      <Atmosphere radius={1.034} color="#3b8eed" intensity={1.2} />
+      <Atmosphere radius={1.03} color="#3ba4ff" intensity={1.15} />
     </group>
   );
 };

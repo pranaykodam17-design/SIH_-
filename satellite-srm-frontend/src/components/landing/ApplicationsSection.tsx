@@ -36,25 +36,25 @@ export const ApplicationsSection: React.FC = () => {
   ];
 
   return (
-    <section id="applications" className="py-20 border-t border-blue-100/60 bg-white/70">
+    <section id="applications" className="py-20 border-t border-blue-100/60 bg-surface/70">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         <div className="text-center max-w-3xl mx-auto mb-16">
           <Badge variant="purple" className="mb-3 uppercase tracking-wider">
             Operational Applications
           </Badge>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#10233F]">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-primary">
             Where Sub-4m Spatial Intelligence Delivers Critical Impact
           </h2>
-          <p className="mt-4 text-[#425873] leading-relaxed text-sm sm:text-base">
+          <p className="mt-4 text-secondary leading-relaxed text-sm sm:text-base">
             Enabling high-impact geospatial decisions across environmental, civil, and defense domains where 10m pixels are too coarse and commercial imagery is cost-prohibitive.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {useCases.map((app) => (
-            <Card key={app.id} className="overflow-hidden border-blue-100 bg-white/90 flex flex-col group hover:border-cyan-200 transition-all">
-              <div className="relative h-48 w-full overflow-hidden bg-[#EEF7FF]">
+            <Card key={app.id} className="overflow-hidden border-blue-100 bg-surface/90 flex flex-col group hover:border-cyan-200 transition-all">
+              <div className="relative h-48 w-full overflow-hidden glass-panel-secondary">
                 <img
                   src={app.image}
                   alt={app.title}
@@ -70,24 +70,24 @@ export const ApplicationsSection: React.FC = () => {
 
               <div className="p-6 flex-1 flex flex-col justify-between">
                 <div>
-                  <span className="font-mono text-[10px] text-[#1677FF] font-bold uppercase tracking-wider">
+                  <span className="font-mono text-[10px] text-accent font-bold uppercase tracking-wider">
                     {app.category}
                   </span>
-                  <h3 className="text-xl font-bold text-[#10233F] mt-1 mb-2">
+                  <h3 className="text-xl font-bold text-primary mt-1 mb-2">
                     {app.title}
                   </h3>
-                  <p className="text-sm text-[#526A82] leading-relaxed mb-4">
+                  <p className="text-sm text-secondary leading-relaxed mb-4">
                     {app.description}
                   </p>
                 </div>
 
                 <div className="pt-4 border-t border-blue-100/60">
-                  <span className="text-[11px] font-mono text-[#526A82] block mb-2">
+                  <span className="text-[11px] font-mono text-secondary block mb-2">
                     Critical Spectral Components:
                   </span>
                   <div className="flex flex-wrap gap-1.5">
                     {app.keyBands.map((band, idx) => (
-                      <span key={idx} className="px-2 py-0.5 rounded bg-white text-[10px] font-mono text-[#425873] border border-blue-100">
+                      <span key={idx} className="px-2 py-0.5 rounded glass-panel text-[10px] font-mono text-secondary border border-blue-100">
                         {band}
                       </span>
                     ))}

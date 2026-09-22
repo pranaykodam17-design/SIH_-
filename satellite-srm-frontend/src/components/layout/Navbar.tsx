@@ -38,8 +38,8 @@ export const Navbar: React.FC = () => {
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
           scrolled || menuOpen
-            ? 'bg-background/95 backdrop-blur-md border-b border-border/50 shadow-sm'
-            : 'bg-background/50 backdrop-blur-sm border-b border-border/50'
+            ? 'glass-nav shadow-sm'
+            : 'bg-transparent border-b border-border/10'
         }`}
         style={{ height: 'var(--nav-height)' }}
       >
@@ -51,7 +51,7 @@ export const Navbar: React.FC = () => {
             </div>
             <div className="hidden sm:block">
               <div className="text-[15px] font-bold text-foreground leading-none">TerraSR</div>
-              <div className="text-[11px] text-slate leading-none mt-0.5">
+              <div className="text-[11px] text-muted-foreground leading-none mt-0.5">
                 Satellite Super-Resolution
               </div>
             </div>
@@ -128,7 +128,7 @@ export const Navbar: React.FC = () => {
 
         {/* Mobile Menu */}
         {menuOpen && (
-          <div className="lg:hidden bg-background border-t border-border px-4 py-3 space-y-0.5 anim-fade-in shadow-xl">
+          <div className="lg:hidden glass-panel border-t border-border px-4 py-3 space-y-0.5 anim-fade-in shadow-xl">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.to}
@@ -147,8 +147,7 @@ export const Navbar: React.FC = () => {
         )}
       </nav>
 
-      {/* Spacer */}
-      <div style={{ height: 'var(--nav-height)' }} />
+      {/* Spacer removed because parent layout uses pt-[var(--nav-height)] */}
     </>
   );
 };

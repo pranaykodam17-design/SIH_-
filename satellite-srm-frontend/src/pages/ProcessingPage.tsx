@@ -53,10 +53,10 @@ export const ProcessingPage: React.FC = () => {
                   <CheckCircle2 className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold font-mono text-[#10233F]">
+                  <h3 className="text-base font-bold font-mono text-primary">
                     RECONSTRUCTION MISSION COMPLETE
                   </h3>
-                  <p className="text-xs font-mono text-[#425873]">
+                  <p className="text-xs font-mono text-secondary">
                     Sub-4m GeoTIFF, uncertainty map, and NDVI spectral analysis compiled.
                   </p>
                 </div>
@@ -66,7 +66,7 @@ export const ProcessingPage: React.FC = () => {
                 size="lg"
                 variant="primary"
                 onClick={() => navigate(`/app/results/${activeJob.jobId}`)}
-                className="w-full sm:w-auto font-mono font-bold text-sm bg-emerald-400 hover:bg-emerald-300 text-black shadow-lg shadow-emerald-500/20"
+                className="w-full sm:w-auto font-mono font-bold text-sm bg-emerald-400 hover:bg-emerald-300 text-foreground shadow-lg shadow-emerald-500/20"
               >
                 Inspect Results & Compare
                 <ArrowRight className="h-4 w-4 ml-2" />
@@ -75,10 +75,10 @@ export const ProcessingPage: React.FC = () => {
           )}
         </>
       ) : (
-        <div className="p-12 text-center rounded-2xl border border-blue-100 bg-white font-mono">
-          <RefreshCw className="h-8 w-8 text-[#1677FF] animate-spin mx-auto mb-4" />
-          <h3 className="text-lg font-bold text-[#10233F] mb-2">Connecting to Telemetry Stream...</h3>
-          <p className="text-xs text-[#526A82]">Fetching processing stage for Job {currentJobId}</p>
+        <div className="p-12 text-center rounded-2xl border border-blue-100 glass-panel font-mono">
+          <RefreshCw className="h-8 w-8 text-accent animate-spin mx-auto mb-4" />
+          <h3 className="text-lg font-bold text-primary mb-2">Connecting to Telemetry Stream...</h3>
+          <p className="text-xs text-secondary">Fetching processing stage for Job {currentJobId}</p>
         </div>
       )}
 

@@ -16,12 +16,12 @@ interface MetricCardProps {
 }
 
 const COLOR_MAP = {
-  cyan:    { border: 'border-cyan-200',   bg: 'bg-[#1677FF]/5',   text: 'text-[#1677FF]',   glow: 'shadow-[0_0_20px_rgba(0,212,255,0.08)]' },
-  blue:    { border: 'border-blue-500/20',   bg: 'bg-[#1677FF]/5',   text: 'text-[#1677FF]',   glow: 'shadow-[0_0_20px_rgba(59,130,246,0.08)]' },
-  emerald: { border: 'border-emerald-500/20',bg: 'bg-emerald-500/5',text: 'text-emerald-600', glow: 'shadow-[0_0_20px_rgba(16,185,129,0.08)]' },
-  amber:   { border: 'border-amber-500/20',  bg: 'bg-amber-500/5',  text: 'text-amber-600',  glow: 'shadow-[0_0_20px_rgba(245,158,11,0.08)]' },
-  violet:  { border: 'border-violet-500/20', bg: 'bg-violet-500/5', text: 'text-violet-400', glow: 'shadow-[0_0_20px_rgba(139,92,246,0.08)]' },
-  default: { border: 'border-[#D7E6F4]',  bg: 'bg-white', text: 'text-[#425873]',  glow: '' },
+  cyan:    { border: 'border-cyan-200 dark:border-cyan-800',   bg: 'bg-accent/5',   text: 'text-accent',   glow: 'shadow-[0_0_20px_rgba(0,212,255,0.08)]' },
+  blue:    { border: 'border-blue-500/20',   bg: 'bg-accent/5',   text: 'text-accent',   glow: 'shadow-[0_0_20px_rgba(59,130,246,0.08)]' },
+  emerald: { border: 'border-emerald-500/20',bg: 'bg-emerald-500/5',text: 'text-emerald-600 dark:text-emerald-400', glow: 'shadow-[0_0_20px_rgba(16,185,129,0.08)]' },
+  amber:   { border: 'border-amber-500/20',  bg: 'bg-amber-500/5',  text: 'text-amber-600 dark:text-amber-400',  glow: 'shadow-[0_0_20px_rgba(245,158,11,0.08)]' },
+  violet:  { border: 'border-violet-500/20', bg: 'bg-violet-500/5', text: 'text-violet-600 dark:text-violet-400', glow: 'shadow-[0_0_20px_rgba(139,92,246,0.08)]' },
+  default: { border: 'border-theme',  bg: 'glass-panel', text: 'text-secondary',  glow: '' },
 };
 
 const SIZE_MAP = {
@@ -51,9 +51,9 @@ export const MetricCard: React.FC<MetricCardProps> = ({
     trend === 'down' ? TrendingDown : Minus;
 
   const trendColor =
-    trend === 'up'   ? 'text-emerald-600' :
-    trend === 'down' ? 'text-red-600' :
-    'text-[#6B7F95]';
+    trend === 'up'   ? 'text-emerald-600 dark:text-emerald-400' :
+    trend === 'down' ? 'text-red-600 dark:text-red-400' :
+    'text-muted-foreground';
 
   return (
     <div
@@ -80,21 +80,21 @@ export const MetricCard: React.FC<MetricCardProps> = ({
           {value}
         </span>
         {unit && (
-          <span className={`${s.unit} font-medium text-[#6B7F95] mb-0.5 leading-none`}>{unit}</span>
+          <span className={`${s.unit} font-medium text-muted-foreground mb-0.5 leading-none`}>{unit}</span>
         )}
       </div>
 
       {/* Label */}
-      <div className={`${s.label} font-semibold text-[#526A82] leading-snug`}>{label}</div>
+      <div className={`${s.label} font-semibold text-secondary leading-snug`}>{label}</div>
 
       {/* Sub-label */}
       {subLabel && (
-        <div className="text-[11px] text-[#526A82] mt-1 leading-snug">{subLabel}</div>
+        <div className="text-[11px] text-secondary mt-1 leading-snug">{subLabel}</div>
       )}
 
       {/* Description tooltip on hover */}
       {description && (
-        <div className="absolute bottom-full left-0 right-0 mb-2 px-3 py-2 bg-[#EEF7FF] border border-[#D7E6F4] rounded-xl text-[11px] text-[#526A82] leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-20 shadow-lg">
+        <div className="absolute bottom-full left-0 right-0 mb-2 px-3 py-2 glass-panel-secondary border border-theme rounded-xl text-[11px] text-secondary leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-20 shadow-lg">
           {description}
         </div>
       )}
@@ -112,17 +112,17 @@ interface InlineMetricProps {
 
 export const InlineMetric: React.FC<InlineMetricProps> = ({ label, value, unit, color = 'default' }) => {
   const textColor =
-    color === 'cyan'    ? 'text-[#1677FF]' :
-    color === 'emerald' ? 'text-emerald-600' :
-    color === 'amber'   ? 'text-amber-600' :
-    color === 'red'     ? 'text-red-600' :
-    'text-[#425873]';
+    color === 'cyan'    ? 'text-accent' :
+    color === 'emerald' ? 'text-emerald-600 dark:text-emerald-400' :
+    color === 'amber'   ? 'text-amber-600 dark:text-amber-400' :
+    color === 'red'     ? 'text-red-600 dark:text-red-400' :
+    'text-primary';
 
   return (
-    <div className="flex items-center justify-between py-2.5 border-b border-[#D7E6F4] last:border-0">
-      <span className="text-xs text-[#6B7F95]">{label}</span>
+    <div className="flex items-center justify-between py-3 border-b border-slate-900/10 dark:border-white/10 last:border-0">
+      <span className="text-xs text-secondary font-semibold">{label}</span>
       <span className={`text-sm font-bold font-mono ${textColor}`}>
-        {value}{unit && <span className="text-[#526A82] font-normal ml-0.5 text-xs">{unit}</span>}
+        {value}{unit && <span className="text-muted-foreground font-normal ml-1 text-xs">{unit}</span>}
       </span>
     </div>
   );

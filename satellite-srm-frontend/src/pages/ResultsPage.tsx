@@ -31,11 +31,11 @@ export const ResultsPage: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="flex h-3 w-3 rounded-full bg-emerald-400"></span>
-            <h1 className="text-2xl font-bold font-mono text-[#10233F]">
+            <h1 className="text-2xl font-bold font-mono text-primary">
               RECONSTRUCTION COMPLETED: {currentJob.jobId}
             </h1>
           </div>
-          <p className="text-xs font-mono text-[#526A82]">
+          <p className="text-xs font-mono text-secondary">
             Spatial magnification: 10m Sentinel-2 → Sub-4m (3.33m GSD) • Strict EPSG:32644 preservation
           </p>
         </div>
@@ -46,7 +46,7 @@ export const ResultsPage: React.FC = () => {
           </Badge>
           <Link
             to={`/app/validation/${currentJob.jobId}`}
-            className="px-3 py-1.5 rounded-lg border border-cyan-200 bg-white hover:bg-space-border text-cyan-700 text-xs font-mono font-bold transition-colors"
+            className="px-3 py-1.5 rounded-lg border border-cyan-200 glass-panel hover:bg-space-border text-cyan-700 text-xs font-mono font-bold transition-colors"
           >
             Validation Suite →
           </Link>
@@ -68,8 +68,8 @@ export const ResultsPage: React.FC = () => {
             onClick={() => setActiveTab('slider')}
             className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-mono font-bold transition-all ${
               activeTab === 'slider'
-                ? 'bg-[#1677FF]/20 text-cyan-700 border border-cyan-200 shadow-sm'
-                : 'text-[#526A82] hover:text-blue-700 hover:bg-white'
+                ? 'bg-accent/20 text-cyan-700 border border-cyan-200 shadow-sm'
+                : 'text-secondary hover:text-blue-700 hover:glass-panel'
             }`}
           >
             <Sliders className="h-3.5 w-3.5" />
@@ -80,8 +80,8 @@ export const ResultsPage: React.FC = () => {
             onClick={() => setActiveTab('split')}
             className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-mono font-bold transition-all ${
               activeTab === 'split'
-                ? 'bg-[#1677FF]/20 text-cyan-700 border border-cyan-200 shadow-sm'
-                : 'text-[#526A82] hover:text-blue-700 hover:bg-white'
+                ? 'bg-accent/20 text-cyan-700 border border-cyan-200 shadow-sm'
+                : 'text-secondary hover:text-blue-700 hover:glass-panel'
             }`}
           >
             <SplitSquareVertical className="h-3.5 w-3.5" />
@@ -93,7 +93,7 @@ export const ResultsPage: React.FC = () => {
             className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-mono font-bold transition-all ${
               activeTab === 'uncertainty'
                 ? 'bg-indigo-500/20 text-indigo-700 border border-indigo-500/40 shadow-sm'
-                : 'text-[#526A82] hover:text-[#10233F] hover:bg-white'
+                : 'text-secondary hover:text-primary hover:glass-panel'
             }`}
           >
             <ShieldAlert className="h-3.5 w-3.5" />
@@ -105,7 +105,7 @@ export const ResultsPage: React.FC = () => {
             className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-mono font-bold transition-all ${
               activeTab === 'ndvi'
                 ? 'bg-emerald-500/20 text-emerald-700 border border-emerald-500/40 shadow-sm'
-                : 'text-[#526A82] hover:text-[#10233F] hover:bg-white'
+                : 'text-secondary hover:text-primary hover:glass-panel'
             }`}
           >
             <Sprout className="h-3.5 w-3.5" />
@@ -113,7 +113,7 @@ export const ResultsPage: React.FC = () => {
           </button>
         </div>
 
-        <div className="text-xs font-mono text-[#6B7F95] hidden sm:block">
+        <div className="text-xs font-mono text-muted-foreground hidden sm:block">
           Sensor: {metadata.sensor}
         </div>
       </div>

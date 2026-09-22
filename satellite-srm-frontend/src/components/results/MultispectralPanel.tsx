@@ -30,10 +30,10 @@ const BAND_CONFIGS: Record<BandSelection, BandConfig> = {
     fullName: 'Natural Color Composite',
     channelMapping: 'B04 → Red • B03 → Green • B02 → Blue',
     description: 'True-color synthesis approximating human photoreceptor vision across the visible spectrum.',
-    accentColor: 'text-[#1677FF]',
-    badgeBg: 'bg-[#1677FF]/20',
+    accentColor: 'text-accent',
+    badgeBg: 'bg-accent/20',
     badgeBorder: 'border-cyan-200',
-    icon: <Eye size={13} className="text-[#1677FF]" />
+    icon: <Eye size={13} className="text-accent" />
   },
   blue: {
     id: 'blue',
@@ -44,7 +44,7 @@ const BAND_CONFIGS: Record<BandSelection, BandConfig> = {
     spectralRange: '458 – 523 nm',
     description: 'Shortest visible wavelength; essential for shallow bathymetry, aerosol scattering correction, and water-soil discrimination.',
     accentColor: 'text-cyan-700',
-    badgeBg: 'bg-[#1677FF]/20',
+    badgeBg: 'bg-accent/20',
     badgeBorder: 'border-cyan-400/30',
     icon: <Droplets size={13} className="text-cyan-700" />
   },
@@ -294,28 +294,28 @@ export const MultispectralPanel: React.FC<MultispectralPanelProps> = ({
   }, [isSingleBand, singleBandMode, selectedBand]);
 
   return (
-    <div className="glass rounded-2xl p-5 border border-[#D7E6F4] shadow-[0_0_30px_rgba(0,0,0,0.5)] space-y-4">
+    <div className="glass rounded-2xl p-5 border border-theme shadow-[0_0_30px_rgba(0,0,0,0.5)] space-y-4">
       {/* ── Header: Title & Band Selector ── */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-[#D7E6F4] pb-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-theme pb-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-6 h-6 rounded-lg bg-[#1677FF]/20 border border-cyan-500/25 flex items-center justify-center">
-              <Layers size={13} className="text-[#1677FF]" />
+            <div className="w-6 h-6 rounded-lg bg-accent/20 border border-cyan-500/25 flex items-center justify-center">
+              <Layers size={13} className="text-accent" />
             </div>
-            <span className="text-xs font-mono font-bold tracking-wider text-[#1677FF] uppercase">
+            <span className="text-xs font-mono font-bold tracking-wider text-accent uppercase">
               Multispectral Radiometry
             </span>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-white text-[#526A82] border border-[#D7E6F4]">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono glass-panel text-secondary border border-theme">
               Sentinel-2 4-Band
             </span>
           </div>
-          <h3 className="text-lg font-bold text-[#10233F] tracking-tight">
+          <h3 className="text-lg font-bold text-primary tracking-tight">
             Spectral Band Analysis & Composites
           </h3>
         </div>
 
         {/* ── Band Selector Buttons ── */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1 bg-white rounded-xl border border-[#D7E6F4]">
+        <div className="flex flex-wrap items-center gap-1.5 p-1 glass-panel rounded-xl border border-theme">
           {(['rgb', 'blue', 'green', 'red', 'nir', 'false_color'] as BandSelection[]).map((key) => {
             const conf = BAND_CONFIGS[key];
             const isSelected = selectedBand === key;
@@ -325,8 +325,8 @@ export const MultispectralPanel: React.FC<MultispectralPanelProps> = ({
                 onClick={() => setSelectedBand(key)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all duration-200 flex items-center gap-1.5 ${
                   isSelected
-                    ? 'bg-[#1677FF]/20 text-cyan-700 border border-cyan-200 shadow-[0_0_15px_rgba(6,182,212,0.25)]'
-                    : 'text-[#526A82] hover:text-[#425873] hover:bg-white border border-transparent'
+                    ? 'bg-accent/20 text-cyan-700 border border-cyan-200 shadow-[0_0_15px_rgba(6,182,212,0.25)]'
+                    : 'text-secondary hover:text-secondary hover:glass-panel border border-transparent'
                 }`}
               >
                 {conf.icon}
@@ -338,24 +338,24 @@ export const MultispectralPanel: React.FC<MultispectralPanelProps> = ({
       </div>
 
       {/* ── Selected Band Metadata Banner ── */}
-      <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 bg-white border border-[#D7E6F4] rounded-xl">
+      <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 glass-panel border border-theme rounded-xl">
         <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs">
           <span className={`px-2.5 py-0.5 rounded-md font-mono font-bold ${activeConfig.badgeBg} ${activeConfig.badgeBorder} border ${activeConfig.accentColor}`}>
             {activeConfig.fullName}
           </span>
 
           {activeConfig.wavelength && (
-            <div className="flex items-center gap-1 font-mono text-[#425873]">
-              <span className="text-[#6B7F95]">λ:</span>
-              <span className="font-bold text-[#10233F]">{activeConfig.wavelength}</span>
+            <div className="flex items-center gap-1 font-mono text-secondary">
+              <span className="text-muted-foreground">λ:</span>
+              <span className="font-bold text-primary">{activeConfig.wavelength}</span>
               {activeConfig.spectralRange && (
-                <span className="text-[#6B7F95] text-[11px]">({activeConfig.spectralRange})</span>
+                <span className="text-muted-foreground text-[11px]">({activeConfig.spectralRange})</span>
               )}
             </div>
           )}
 
           {activeConfig.channelMapping && (
-            <span className="text-[#526A82] font-mono text-[11px] hidden sm:inline">
+            <span className="text-secondary font-mono text-[11px] hidden sm:inline">
               {activeConfig.channelMapping}
             </span>
           )}
@@ -364,13 +364,13 @@ export const MultispectralPanel: React.FC<MultispectralPanelProps> = ({
         {/* View Controls & Single Band Mode Toggle */}
         <div className="flex items-center gap-2">
           {isSingleBand && (
-            <div className="flex items-center gap-1 p-0.5 bg-white rounded-lg border border-[#D7E6F4] text-[11px] font-mono">
+            <div className="flex items-center gap-1 p-0.5 glass-panel rounded-lg border border-theme text-[11px] font-mono">
               <button
                 onClick={() => setSingleBandMode('grayscale')}
                 className={`px-2 py-0.5 rounded-md transition-colors ${
                   singleBandMode === 'grayscale'
-                    ? 'bg-white text-[#10233F] font-bold'
-                    : 'text-[#526A82] hover:text-[#425873]'
+                    ? 'glass-panel text-primary font-bold'
+                    : 'text-secondary hover:text-secondary'
                 }`}
                 title="Scientific raw radiance grayscale"
               >
@@ -380,8 +380,8 @@ export const MultispectralPanel: React.FC<MultispectralPanelProps> = ({
                 onClick={() => setSingleBandMode('spectral')}
                 className={`px-2 py-0.5 rounded-md flex items-center gap-1 transition-colors ${
                   singleBandMode === 'spectral'
-                    ? 'bg-[#1677FF]/20 text-cyan-700 font-bold border border-cyan-200'
-                    : 'text-[#526A82] hover:text-[#425873]'
+                    ? 'bg-accent/20 text-cyan-700 font-bold border border-cyan-200'
+                    : 'text-secondary hover:text-secondary'
                 }`}
                 title="Channel spectral colorization"
               >
@@ -391,7 +391,7 @@ export const MultispectralPanel: React.FC<MultispectralPanelProps> = ({
             </div>
           )}
 
-          <span className="text-xs font-mono text-[#1677FF]/80 bg-[#1677FF]/20 px-2 py-0.5 rounded border border-cyan-200">
+          <span className="text-xs font-mono text-accent/80 bg-accent/20 px-2 py-0.5 rounded border border-cyan-200">
             {resolution}
           </span>
         </div>
@@ -405,40 +405,40 @@ export const MultispectralPanel: React.FC<MultispectralPanelProps> = ({
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         onWheel={handleWheel}
-        className={`relative w-full h-[460px] sm:h-[500px] bg-white rounded-xl overflow-hidden border border-[#D7E6F4] select-none ${
+        className={`relative w-full h-[460px] sm:h-[500px] glass-panel rounded-xl overflow-hidden border border-theme select-none ${
           isPanning ? 'cursor-grabbing' : 'cursor-grab'
         } ${isFullscreen ? 'fixed inset-0 z-50 h-screen rounded-none' : ''}`}
       >
         {/* Floating Top-Right Toolbar */}
-        <div className="absolute top-3 right-3 z-30 flex items-center gap-1 p-1 bg-white backdrop-blur-md rounded-lg border border-[#D7E6F4] shadow-xl">
+        <div className="absolute top-3 right-3 z-30 flex items-center gap-1 p-1 glass-panel backdrop-blur-md rounded-lg border border-theme shadow-xl">
           <button
             onClick={() => handleZoom(0.25)}
-            className="w-7 h-7 flex items-center justify-center rounded text-[#425873] hover:text-[#10233F] hover:bg-white transition-colors"
+            className="w-7 h-7 flex items-center justify-center rounded text-secondary hover:text-primary hover:glass-panel transition-colors"
             title="Zoom In"
           >
             <ZoomIn size={14} />
           </button>
-          <span className="px-1.5 text-[11px] font-mono font-bold text-[#1677FF] min-w-[42px] text-center">
+          <span className="px-1.5 text-[11px] font-mono font-bold text-accent min-w-[42px] text-center">
             {Math.round(zoom * 100)}%
           </span>
           <button
             onClick={() => handleZoom(-0.25)}
-            className="w-7 h-7 flex items-center justify-center rounded text-[#425873] hover:text-[#10233F] hover:bg-white transition-colors"
+            className="w-7 h-7 flex items-center justify-center rounded text-secondary hover:text-primary hover:glass-panel transition-colors"
             title="Zoom Out"
           >
             <ZoomOut size={14} />
           </button>
           <button
             onClick={handleResetView}
-            className="w-7 h-7 flex items-center justify-center rounded text-[#526A82] hover:text-[#10233F] hover:bg-white transition-colors"
+            className="w-7 h-7 flex items-center justify-center rounded text-secondary hover:text-primary hover:glass-panel transition-colors"
             title="Reset View (100%)"
           >
             <RotateCcw size={13} />
           </button>
-          <div className="w-px h-4 bg-white mx-0.5" />
+          <div className="w-px h-4 glass-panel mx-0.5" />
           <button
             onClick={toggleFullscreen}
-            className="w-7 h-7 flex items-center justify-center rounded text-[#425873] hover:text-[#10233F] hover:bg-white transition-colors"
+            className="w-7 h-7 flex items-center justify-center rounded text-secondary hover:text-primary hover:glass-panel transition-colors"
             title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
           >
             {isFullscreen ? <Minimize2 size={13} /> : <Maximize2 size={13} />}
@@ -447,9 +447,9 @@ export const MultispectralPanel: React.FC<MultispectralPanelProps> = ({
 
         {/* Floating Top-Left Band Badge */}
         <div className="absolute top-3 left-3 z-30 pointer-events-none">
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-white backdrop-blur-md rounded-lg border border-[#D7E6F4]">
+          <div className="flex items-center gap-2 px-3 py-1.5 glass-panel backdrop-blur-md rounded-lg border border-theme">
             <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
-            <span className="text-xs font-mono font-bold text-[#10233F] uppercase tracking-wider">
+            <span className="text-xs font-mono font-bold text-primary uppercase tracking-wider">
               {activeConfig.label}
             </span>
             {activeConfig.wavelength && (
@@ -483,29 +483,29 @@ export const MultispectralPanel: React.FC<MultispectralPanelProps> = ({
         {/* Floating Bottom Telemetry & Pixel Value Inspector */}
         <div className="absolute bottom-3 left-3 right-3 z-30 pointer-events-none flex flex-wrap items-center justify-between gap-2">
           {/* Live Geographic Coordinates */}
-          <div className="px-3 py-1.5 bg-white backdrop-blur-md rounded-lg border border-[#D7E6F4] text-[11px] font-mono text-[#425873] flex items-center gap-2">
-            <Compass size={12} className="text-[#1677FF]" />
+          <div className="px-3 py-1.5 glass-panel backdrop-blur-md rounded-lg border border-theme text-[11px] font-mono text-secondary flex items-center gap-2">
+            <Compass size={12} className="text-accent" />
             {liveCoordinates ? (
               <span>
                 {liveCoordinates.latStr} • {liveCoordinates.lonStr}
               </span>
             ) : (
-              <span className="text-[#6B7F95]">Hover across raster for coordinates</span>
+              <span className="text-muted-foreground">Hover across raster for coordinates</span>
             )}
-            <span className="text-[#526A82]">|</span>
-            <span className="text-[#526A82] text-[10px]">{crs}</span>
+            <span className="text-secondary">|</span>
+            <span className="text-secondary text-[10px]">{crs}</span>
           </div>
 
           {/* Live Pixel Radiance Readout (Real pixel data, zero simulated numbers) */}
           {sampledPixel && (
-            <div className="px-3 py-1.5 bg-white backdrop-blur-md rounded-lg border border-cyan-200 text-[11px] font-mono flex items-center gap-2 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
-              <Crosshair size={12} className="text-[#1677FF]" />
+            <div className="px-3 py-1.5 glass-panel backdrop-blur-md rounded-lg border border-cyan-200 text-[11px] font-mono flex items-center gap-2 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
+              <Crosshair size={12} className="text-accent" />
               {isSingleBand ? (
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[#526A82]">{activeConfig.bandDesignation || activeConfig.label} Radiance:</span>
-                  <span className="text-[#10233F] font-bold">{sampledPixel.r}</span>
-                  <span className="text-[#6B7F95]">/ 255</span>
-                  <span className="text-[#1677FF] font-bold">
+                  <span className="text-secondary">{activeConfig.bandDesignation || activeConfig.label} Radiance:</span>
+                  <span className="text-primary font-bold">{sampledPixel.r}</span>
+                  <span className="text-muted-foreground">/ 255</span>
+                  <span className="text-accent font-bold">
                     ({((sampledPixel.r / 255) * 100).toFixed(1)}% Reflectance)
                   </span>
                 </div>
@@ -513,7 +513,7 @@ export const MultispectralPanel: React.FC<MultispectralPanelProps> = ({
                 <div className="flex items-center gap-2">
                   <span className="text-rose-400 font-bold">R:{sampledPixel.r}</span>
                   <span className="text-emerald-600 font-bold">G:{sampledPixel.g}</span>
-                  <span className="text-[#1677FF] font-bold">B:{sampledPixel.b}</span>
+                  <span className="text-accent font-bold">B:{sampledPixel.b}</span>
                 </div>
               )}
             </div>
@@ -522,14 +522,14 @@ export const MultispectralPanel: React.FC<MultispectralPanelProps> = ({
       </div>
 
       {/* ── Compact Contextual Legend ── */}
-      <div className="p-3.5 bg-white border border-[#D7E6F4] rounded-xl space-y-2">
+      <div className="p-3.5 glass-panel border border-theme rounded-xl space-y-2">
         <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center gap-1.5 font-mono text-[#526A82]">
-            <Info size={13} className="text-[#1677FF]" />
-            <span className="font-semibold text-[#10233F]">Spectral Interpretation:</span>
+          <div className="flex items-center gap-1.5 font-mono text-secondary">
+            <Info size={13} className="text-accent" />
+            <span className="font-semibold text-primary">Spectral Interpretation:</span>
             <span>{activeConfig.description}</span>
           </div>
-          <span className="text-[11px] font-mono text-[#6B7F95] hidden sm:inline">
+          <span className="text-[11px] font-mono text-muted-foreground hidden sm:inline">
             Radiometric Depth: 8-bit / 256 Levels
           </span>
         </div>
@@ -538,13 +538,13 @@ export const MultispectralPanel: React.FC<MultispectralPanelProps> = ({
         {isSingleBand ? (
           /* Single Band Radiometric Reflectance Ramp */
           <div className="pt-1">
-            <div className="flex items-center justify-between text-[10px] font-mono text-[#526A82] mb-1">
+            <div className="flex items-center justify-between text-[10px] font-mono text-secondary mb-1">
               <span>0 (Low Reflectance / Absorption)</span>
               <span>128 (Moderate Reflectance)</span>
               <span>255 (High Reflectance / Albedo)</span>
             </div>
             <div
-              className="h-3 rounded-full w-full border border-[#D7E6F4]"
+              className="h-3 rounded-full w-full border border-theme"
               style={{
                 background:
                   singleBandMode === 'grayscale'
@@ -566,11 +566,11 @@ export const MultispectralPanel: React.FC<MultispectralPanelProps> = ({
               <span className="w-2.5 h-2.5 rounded-sm bg-rose-500 flex-shrink-0" />
               <span className="truncate">Dense Vegetation / Canopy</span>
             </div>
-            <div className="flex items-center gap-2 p-1.5 rounded-lg bg-[#1677FF]/10 border border-blue-500/20 text-blue-700">
-              <span className="w-2.5 h-2.5 rounded-sm bg-[#EEF7FF] border border-blue-400 flex-shrink-0" />
+            <div className="flex items-center gap-2 p-1.5 rounded-lg bg-accent/10 border border-blue-500/20 text-blue-700">
+              <span className="w-2.5 h-2.5 rounded-sm glass-panel-secondary border border-blue-400 flex-shrink-0" />
               <span className="truncate">Water / Moisture (Absorbed)</span>
             </div>
-            <div className="flex items-center gap-2 p-1.5 rounded-lg bg-[#1677FF]/20 border border-cyan-200 text-cyan-700">
+            <div className="flex items-center gap-2 p-1.5 rounded-lg bg-accent/20 border border-cyan-200 text-cyan-700">
               <span className="w-2.5 h-2.5 rounded-sm bg-cyan-400 flex-shrink-0" />
               <span className="truncate">Urban Built-up / Impervious</span>
             </div>
@@ -581,7 +581,7 @@ export const MultispectralPanel: React.FC<MultispectralPanelProps> = ({
           </div>
         ) : (
           /* True Color RGB Reference */
-          <div className="pt-1 flex items-center justify-between text-[11px] font-mono text-[#526A82]">
+          <div className="pt-1 flex items-center justify-between text-[11px] font-mono text-secondary">
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-blue-400" /> B02 Blue (490 nm)
             </span>
@@ -591,7 +591,7 @@ export const MultispectralPanel: React.FC<MultispectralPanelProps> = ({
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-rose-400" /> B04 Red (665 nm)
             </span>
-            <span className="text-[#6B7F95] hidden sm:inline">Natural Surface Reflectance</span>
+            <span className="text-muted-foreground hidden sm:inline">Natural Surface Reflectance</span>
           </div>
         )}
       </div>

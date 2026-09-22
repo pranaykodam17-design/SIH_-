@@ -220,16 +220,16 @@ export const InteractiveComparisonViewer: React.FC<InteractiveComparisonViewerPr
 
   return (
     <div
-      className={`relative flex flex-col rounded-2xl border border-[#D7E6F4] bg-white overflow-hidden shadow-sm select-none ${
+      className={`relative flex flex-col rounded-2xl border border-theme glass-panel overflow-hidden shadow-sm select-none ${
         fullscreen ? 'fixed inset-0 z-[100] rounded-none border-none' : className
       }`}
     >
       {/* ── Top Bar: Mode & Layer Controls ── */}
-      <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 bg-white/95 border-b border-[#D7E6F4] backdrop-blur-md z-30">
+      <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 bg-surface/95 border-b border-theme backdrop-blur-md z-30">
         {/* Left: Band Selector Pills */}
-        <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-[#D7E6F4]">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-[#526A82] px-2 flex items-center gap-1">
-            <Layers size={11} className="text-[#1677FF]" /> Output:
+        <div className="flex items-center gap-1.5 glass-panel p-1 rounded-xl border border-theme">
+          <span className="text-[10px] font-mono uppercase tracking-wider text-secondary px-2 flex items-center gap-1">
+            <Layers size={11} className="text-accent" /> Output:
           </span>
 
           <button
@@ -237,8 +237,8 @@ export const InteractiveComparisonViewer: React.FC<InteractiveComparisonViewerPr
             onClick={() => setActiveLayer('rgb')}
             className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
               activeLayer === 'rgb'
-                ? 'bg-[#1677FF]/20 text-cyan-700 border border-cyan-200 shadow-[0_0_12px_rgba(0,212,255,0.25)]'
-                : 'text-[#526A82] hover:text-[#425873]'
+                ? 'bg-accent/20 text-cyan-700 border border-cyan-200 shadow-[0_0_12px_rgba(0,212,255,0.25)]'
+                : 'text-secondary hover:text-secondary'
             }`}
           >
             True Color (RGB)
@@ -251,7 +251,7 @@ export const InteractiveComparisonViewer: React.FC<InteractiveComparisonViewerPr
               className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
                 activeLayer === 'ndvi'
                   ? 'bg-emerald-500/20 text-emerald-700 border border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.25)]'
-                  : 'text-[#526A82] hover:text-[#425873]'
+                  : 'text-secondary hover:text-secondary'
               }`}
             >
               NDVI Vegetation
@@ -265,7 +265,7 @@ export const InteractiveComparisonViewer: React.FC<InteractiveComparisonViewerPr
               className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
                 activeLayer === 'uncertainty'
                   ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40 shadow-[0_0_12px_rgba(168,85,247,0.25)]'
-                  : 'text-[#526A82] hover:text-[#425873]'
+                  : 'text-secondary hover:text-secondary'
               }`}
             >
               Uncertainty Map
@@ -281,8 +281,8 @@ export const InteractiveComparisonViewer: React.FC<InteractiveComparisonViewerPr
             onClick={() => setShowPixelGrid(!showPixelGrid)}
             className={`px-2.5 py-1.5 rounded-lg text-xs font-mono flex items-center gap-1.5 transition-all border ${
               showPixelGrid
-                ? 'bg-[#1677FF]/20 text-cyan-700 border-cyan-200 shadow-[0_0_10px_rgba(0,212,255,0.2)]'
-                : 'bg-white text-[#526A82] border-[#D7E6F4] hover:bg-white'
+                ? 'bg-accent/20 text-cyan-700 border-cyan-200 shadow-[0_0_10px_rgba(0,212,255,0.2)]'
+                : 'glass-panel text-secondary border-theme hover:glass-panel'
             }`}
             title="Toggle macro vs sub-pixel grid"
           >
@@ -296,8 +296,8 @@ export const InteractiveComparisonViewer: React.FC<InteractiveComparisonViewerPr
             onClick={() => setShowCoordinates(!showCoordinates)}
             className={`px-2.5 py-1.5 rounded-lg text-xs font-mono flex items-center gap-1.5 transition-all border ${
               showCoordinates
-                ? 'bg-[#1677FF]/20 text-cyan-700 border-cyan-200'
-                : 'bg-white text-[#526A82] border-[#D7E6F4] hover:bg-white'
+                ? 'bg-accent/20 text-cyan-700 border-cyan-200'
+                : 'glass-panel text-secondary border-theme hover:glass-panel'
             }`}
             title="Toggle cursor coordinates bar"
           >
@@ -305,13 +305,13 @@ export const InteractiveComparisonViewer: React.FC<InteractiveComparisonViewerPr
             <span className="hidden sm:inline">Telemetry</span>
           </button>
 
-          <div className="h-4 w-px bg-white mx-1" />
+          <div className="h-4 w-px glass-panel mx-1" />
 
           {/* Fullscreen Button */}
           <button
             type="button"
             onClick={() => setFullscreen(!fullscreen)}
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-white hover:bg-white text-[#425873] hover:text-[#10233F] border border-[#D7E6F4] transition-all"
+            className="w-8 h-8 flex items-center justify-center rounded-lg glass-panel hover:glass-panel text-secondary hover:text-primary border border-theme transition-all"
             title={fullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
           >
             {fullscreen ? <Minimize2 size={15} /> : <Maximize2 size={15} />}
@@ -408,7 +408,7 @@ export const InteractiveComparisonViewer: React.FC<InteractiveComparisonViewerPr
 
           {/* Draggable Circular Knob */}
           <div
-            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 left-[1px] w-10 h-10 rounded-full bg-white border-2 border-cyan-400 shadow-[0_0_24px_rgba(0,212,255,0.7)] flex items-center justify-center cursor-col-resize pointer-events-auto transform hover:scale-110 active:scale-95 transition-transform"
+            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 left-[1px] w-10 h-10 rounded-full glass-panel border-2 border-cyan-400 shadow-[0_0_24px_rgba(0,212,255,0.7)] flex items-center justify-center cursor-col-resize pointer-events-auto transform hover:scale-110 active:scale-95 transition-transform"
             onMouseDown={(e) => {
               e.stopPropagation();
               setIsDraggingHandle(true);
@@ -421,11 +421,11 @@ export const InteractiveComparisonViewer: React.FC<InteractiveComparisonViewerPr
         {/* ── Metadata Overlay Badges (Top Left & Top Right) ── */}
         {/* Left Side: ORIGINAL */}
         <div className="absolute top-4 left-4 z-10 pointer-events-none">
-          <div className="rounded-xl bg-white/85 backdrop-blur-md border border-[#D7E6F4] p-2.5 shadow-xl">
-            <div className="text-[10px] font-mono uppercase tracking-widest text-[#526A82] font-bold">
+          <div className="rounded-xl bg-surface/85 backdrop-blur-md border border-theme p-2.5 shadow-xl">
+            <div className="text-[10px] font-mono uppercase tracking-widest text-secondary font-bold">
               {originalLabel}
             </div>
-            <div className="text-xs font-black text-[#10233F] font-mono mt-0.5">
+            <div className="text-xs font-black text-primary font-mono mt-0.5">
               {originalResolution}
             </div>
           </div>
@@ -433,9 +433,9 @@ export const InteractiveComparisonViewer: React.FC<InteractiveComparisonViewerPr
 
         {/* Right Side: SUPER-RESOLVED */}
         <div className="absolute top-4 right-4 z-10 pointer-events-none">
-          <div className="rounded-xl bg-white/85 backdrop-blur-md border border-cyan-200 p-2.5 shadow-[0_0_20px_rgba(0,212,255,0.15)] text-right">
+          <div className="rounded-xl bg-surface/85 backdrop-blur-md border border-cyan-200 p-2.5 shadow-[0_0_20px_rgba(0,212,255,0.15)] text-right">
             <div className="text-[10px] font-mono uppercase tracking-widest text-cyan-700 font-bold flex items-center justify-end gap-1">
-              <Sparkles size={11} className="text-[#1677FF]" />
+              <Sparkles size={11} className="text-accent" />
               <span>{currentSuperResolvedLabel}</span>
             </div>
             <div className="text-xs font-black text-cyan-800 font-mono mt-0.5">
@@ -447,8 +447,8 @@ export const InteractiveComparisonViewer: React.FC<InteractiveComparisonViewerPr
         {/* First-time Interaction Hint */}
         {position === initialPosition && !isDraggingHandle && zoom === 1 && (
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 pointer-events-none animate-bounce">
-            <div className="px-3.5 py-1.5 rounded-full bg-white backdrop-blur-md border border-cyan-200 text-[#425873] text-xs font-medium flex items-center gap-2 shadow-lg">
-              <ChevronsLeftRight size={13} className="text-[#1677FF]" />
+            <div className="px-3.5 py-1.5 rounded-full glass-panel backdrop-blur-md border border-cyan-200 text-secondary text-xs font-medium flex items-center gap-2 shadow-lg">
+              <ChevronsLeftRight size={13} className="text-accent" />
               <span>Drag handle left or right to compare · Scroll to zoom</span>
             </div>
           </div>
@@ -456,14 +456,14 @@ export const InteractiveComparisonViewer: React.FC<InteractiveComparisonViewerPr
       </div>
 
       {/* ── Bottom Floating Action Bar & Telemetry ── */}
-      <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 bg-white/95 border-t border-[#D7E6F4] text-xs font-mono z-30">
+      <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 bg-surface/95 border-t border-theme text-xs font-mono z-30">
         {/* Left: Zoom Controls */}
-        <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-[#D7E6F4]">
+        <div className="flex items-center gap-1 glass-panel p-1 rounded-xl border border-theme">
           <button
             type="button"
             onClick={handleZoomOut}
             disabled={zoom <= 0.6}
-            className="w-7 h-7 flex items-center justify-center rounded-lg text-[#526A82] hover:text-[#10233F] hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="w-7 h-7 flex items-center justify-center rounded-lg text-secondary hover:text-primary hover:glass-panel disabled:opacity-30 disabled:cursor-not-allowed transition-all"
             title="Zoom Out"
           >
             <ZoomOut size={13} />
@@ -477,19 +477,19 @@ export const InteractiveComparisonViewer: React.FC<InteractiveComparisonViewerPr
             type="button"
             onClick={handleZoomIn}
             disabled={zoom >= 5.0}
-            className="w-7 h-7 flex items-center justify-center rounded-lg text-[#526A82] hover:text-[#10233F] hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="w-7 h-7 flex items-center justify-center rounded-lg text-secondary hover:text-primary hover:glass-panel disabled:opacity-30 disabled:cursor-not-allowed transition-all"
             title="Zoom In"
           >
             <ZoomIn size={13} />
           </button>
 
-          <div className="h-4 w-px bg-white mx-1" />
+          <div className="h-4 w-px glass-panel mx-1" />
 
           {/* Reset Button */}
           <button
             type="button"
             onClick={handleReset}
-            className="px-2.5 py-1 flex items-center gap-1 rounded-lg text-[#526A82] hover:text-cyan-700 hover:bg-white transition-all"
+            className="px-2.5 py-1 flex items-center gap-1 rounded-lg text-secondary hover:text-cyan-700 hover:glass-panel transition-all"
             title="Reset Zoom, Pan & Slider"
           >
             <RotateCcw size={12} />
@@ -499,20 +499,20 @@ export const InteractiveComparisonViewer: React.FC<InteractiveComparisonViewerPr
 
         {/* Middle/Right: Live Coordinates & Telemetry */}
         {showCoordinates && (
-          <div className="flex items-center gap-4 text-[11px] text-[#526A82]">
+          <div className="flex items-center gap-4 text-[11px] text-secondary">
             <div className="flex items-center gap-1.5">
-              <span className="text-[#6B7F95]">Lat:</span>
-              <span className="text-[#10233F] font-bold">{cursorGeo.lat.toFixed(4)}°N</span>
+              <span className="text-muted-foreground">Lat:</span>
+              <span className="text-primary font-bold">{cursorGeo.lat.toFixed(4)}°N</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="text-[#6B7F95]">Lon:</span>
-              <span className="text-[#10233F] font-bold">{cursorGeo.lon.toFixed(4)}°E</span>
+              <span className="text-muted-foreground">Lon:</span>
+              <span className="text-primary font-bold">{cursorGeo.lon.toFixed(4)}°E</span>
             </div>
             <div className="hidden md:flex items-center gap-1.5">
-              <span className="text-[#6B7F95]">Pixel:</span>
+              <span className="text-muted-foreground">Pixel:</span>
               <span className="text-cyan-700">({cursorGeo.pixelX}, {cursorGeo.pixelY})</span>
             </div>
-            <div className="hidden lg:flex items-center gap-1.5 text-[#6B7F95]">
+            <div className="hidden lg:flex items-center gap-1.5 text-muted-foreground">
               <span>CRS:</span>
               <span className="text-emerald-600">{crs}</span>
             </div>
@@ -520,7 +520,7 @@ export const InteractiveComparisonViewer: React.FC<InteractiveComparisonViewerPr
         )}
 
         {/* Right: Slider Position */}
-        <div className="text-[11px] text-[#526A82]">
+        <div className="text-[11px] text-secondary">
           Split: <span className="text-cyan-700 font-bold">{Math.round(position)}%</span>
         </div>
       </div>

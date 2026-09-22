@@ -33,18 +33,18 @@ export const Hero: React.FC = () => {
     <section
       ref={containerRef}
       id="hero"
-      className="relative min-h-screen w-full flex items-center pt-32 pb-16 lg:pt-40 lg:pb-24 overflow-hidden bg-background text-foreground"
+      className="relative min-h-screen w-full flex items-center pt-32 pb-16 lg:pt-40 lg:pb-24 overflow-hidden text-foreground"
     >
       {/* Deep Space Ambient Glow */}
       <div className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
-      
+
       <div className="relative z-10 max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center min-h-[calc(100vh-6rem)]">
 
           {/* Left: Copy */}
-          <div className="flex flex-col justify-center text-left pt-6 lg:pt-0 lg:pr-8">
+          <div className="flex flex-col justify-center text-left pt-6 lg:pt-0 lg:pr-8 glass-panel p-8 sm:p-10 rounded-[2rem]">
             <div className="hero-badge mb-6">
-              <Badge variant="secondary" className="px-3 py-1 text-sm bg-secondary/50 text-secondary-foreground border border-border/50">
+              <Badge variant="secondary" className="px-3 py-1 text-sm bg-secondary/50 text-foreground border border-border/50">
                 <span className="flex items-center gap-1.5">
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
@@ -68,7 +68,7 @@ export const Hero: React.FC = () => {
                 variant="outline" 
                 size="lg" 
                 onClick={scrollToHowItWorks}
-                className="h-14 px-8 text-base font-semibold bg-background/50 backdrop-blur-sm border-border/50 hover:bg-muted/50 transition-colors"
+                className="h-14 px-8 text-base font-semibold bg-background/50 backdrop-blur-sm border-border/50 hover:bg-muted transition-colors text-foreground"
               >
                 See How It Works
               </Button>
@@ -78,15 +78,15 @@ export const Hero: React.FC = () => {
             <div className="hero-social flex items-center gap-6 pt-6 border-t border-border/40">
               <div className="flex flex-col gap-2">
                 <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest font-bold">Powered By</span>
-                <div className="flex flex-wrap items-center gap-4 text-muted-foreground/80">
+                <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
                   <div className="flex items-center gap-1.5 bg-secondary/30 px-3 py-1.5 rounded-md border border-border/50 text-sm font-medium hover:text-foreground hover:bg-secondary/50 transition-colors">
-                    <span className="text-blue-400">PyTorch</span>
+                    <span className="text-blue-600 dark:text-blue-400">PyTorch</span>
                   </div>
                   <div className="flex items-center gap-1.5 bg-secondary/30 px-3 py-1.5 rounded-md border border-border/50 text-sm font-medium hover:text-foreground hover:bg-secondary/50 transition-colors">
-                    <span className="text-teal-400">FastAPI</span>
+                    <span className="text-teal-600 dark:text-teal-400">FastAPI</span>
                   </div>
                   <div className="flex items-center gap-1.5 bg-secondary/30 px-3 py-1.5 rounded-md border border-border/50 text-sm font-medium hover:text-foreground hover:bg-secondary/50 transition-colors">
-                    <span className="text-sky-400">React</span>
+                    <span className="text-sky-600 dark:text-sky-400">React</span>
                   </div>
                 </div>
               </div>

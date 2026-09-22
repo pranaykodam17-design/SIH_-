@@ -11,11 +11,11 @@ interface TelemetryPanelProps {
 
 export const TelemetryPanel: React.FC<TelemetryPanelProps> = ({ telemetry }) => {
   return (
-    <Card className="border-cyan-200 bg-white/90 font-mono text-xs shadow-xl">
+    <Card className="border-cyan-200 bg-surface/90 font-mono text-xs shadow-xl">
       <div className="flex items-center justify-between border-b border-blue-100 pb-3 mb-4">
         <div className="flex items-center gap-2">
-          <Terminal className="h-4 w-4 text-[#1677FF]" />
-          <span className="font-bold text-[#10233F] tracking-wider text-xs">
+          <Terminal className="h-4 w-4 text-accent" />
+          <span className="font-bold text-primary tracking-wider text-xs">
             LIVE RECONSTRUCTION TELEMETRY
           </span>
         </div>
@@ -29,58 +29,58 @@ export const TelemetryPanel: React.FC<TelemetryPanelProps> = ({ telemetry }) => 
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         
-        <div className="p-2.5 rounded bg-white border border-blue-100/60">
-          <span className="text-[10px] text-[#6B7F95] block uppercase mb-1">Architecture</span>
-          <span className="font-bold text-[#10233F] text-[11px] truncate block" title={telemetry.model}>
+        <div className="p-2.5 rounded glass-panel border border-blue-100/60">
+          <span className="text-[10px] text-muted-foreground block uppercase mb-1">Architecture</span>
+          <span className="font-bold text-primary text-[11px] truncate block" title={telemetry.model}>
             {telemetry.model || 'SwinIR-SRM'}
           </span>
         </div>
 
-        <div className="p-2.5 rounded bg-white border border-blue-100/60">
-          <span className="text-[10px] text-[#6B7F95] block uppercase mb-1">Resolution Shift</span>
+        <div className="p-2.5 rounded glass-panel border border-blue-100/60">
+          <span className="text-[10px] text-muted-foreground block uppercase mb-1">Resolution Shift</span>
           <span className="font-bold text-cyan-700 text-[11px]">
             {telemetry.inputGsd} → {telemetry.targetGsd}
           </span>
         </div>
 
-        <div className="p-2.5 rounded bg-white border border-blue-100/60">
-          <span className="text-[10px] text-[#6B7F95] block uppercase mb-1">Compute Device</span>
+        <div className="p-2.5 rounded glass-panel border border-blue-100/60">
+          <span className="text-[10px] text-muted-foreground block uppercase mb-1">Compute Device</span>
           <span className="font-bold text-emerald-600 text-[11px]">
             {telemetry.device || 'CUDA GPU / CPU'}
           </span>
         </div>
 
-        <div className="p-2.5 rounded bg-white border border-blue-100/60">
-          <span className="text-[10px] text-[#6B7F95] block uppercase mb-1">Elapsed Duration</span>
+        <div className="p-2.5 rounded glass-panel border border-blue-100/60">
+          <span className="text-[10px] text-muted-foreground block uppercase mb-1">Elapsed Duration</span>
           <span className="font-bold text-amber-700 text-[11px]">
             {formatDuration(telemetry.elapsedSeconds)}
           </span>
         </div>
 
-        <div className="p-2.5 rounded bg-white border border-blue-100/60">
-          <span className="text-[10px] text-[#6B7F95] block uppercase mb-1">Tile Blending</span>
-          <span className="font-bold text-[#10233F] text-[11px]">
+        <div className="p-2.5 rounded glass-panel border border-blue-100/60">
+          <span className="text-[10px] text-muted-foreground block uppercase mb-1">Tile Blending</span>
+          <span className="font-bold text-primary text-[11px]">
             {telemetry.tileProgress || 'N/A'}
           </span>
         </div>
 
-        <div className="p-2.5 rounded bg-white border border-blue-100/60">
-          <span className="text-[10px] text-[#6B7F95] block uppercase mb-1">Spectral Channels</span>
-          <span className="font-bold text-[#10233F] text-[11px]">
+        <div className="p-2.5 rounded glass-panel border border-blue-100/60">
+          <span className="text-[10px] text-muted-foreground block uppercase mb-1">Spectral Channels</span>
+          <span className="font-bold text-primary text-[11px]">
             {telemetry.bandCount} Channels (B02-B08)
           </span>
         </div>
 
-        <div className="p-2.5 rounded bg-white border border-blue-100/60">
-          <span className="text-[10px] text-[#6B7F95] block uppercase mb-1">Memory Allocation</span>
-          <span className="font-bold text-[#10233F] text-[11px]">
+        <div className="p-2.5 rounded glass-panel border border-blue-100/60">
+          <span className="text-[10px] text-muted-foreground block uppercase mb-1">Memory Allocation</span>
+          <span className="font-bold text-primary text-[11px]">
             {telemetry.memoryAllocated || 'N/A'}
           </span>
         </div>
 
-        <div className="p-2.5 rounded bg-white border border-blue-100/60">
-          <span className="text-[10px] text-[#6B7F95] block uppercase mb-1">Active Operation</span>
-          <span className="font-bold text-[#1677FF] text-[11px] truncate block" title={telemetry.activeOperation}>
+        <div className="p-2.5 rounded glass-panel border border-blue-100/60">
+          <span className="text-[10px] text-muted-foreground block uppercase mb-1">Active Operation</span>
+          <span className="font-bold text-accent text-[11px] truncate block" title={telemetry.activeOperation}>
             {telemetry.activeOperation || 'Standing by'}
           </span>
         </div>

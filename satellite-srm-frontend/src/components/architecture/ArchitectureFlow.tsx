@@ -91,13 +91,13 @@ export const ArchitectureFlow: React.FC = () => {
   const [selectedNode, setSelectedNode] = useState<ArchNode>(nodes[3]); // default SwinIR
 
   return (
-    <Card className="border-blue-100 bg-white p-6 shadow-sm">
+    <Card className="border-blue-100 glass-panel p-6 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-blue-100 mb-6">
         <div>
-          <h3 className="text-base font-bold font-mono text-[#10233F]">
+          <h3 className="text-base font-bold font-mono text-primary">
             END-TO-END NEURAL & GEOSPATIAL PIPELINE FLOW
           </h3>
-          <p className="text-xs text-[#526A82] mt-0.5">
+          <p className="text-xs text-secondary mt-0.5">
             Click any node in the system diagram to view internal operational parameters.
           </p>
         </div>
@@ -116,16 +116,16 @@ export const ArchitectureFlow: React.FC = () => {
               className={`p-3 rounded-xl border text-left flex flex-col items-center justify-center gap-2 transition-all ${
                 isSelected
                   ? 'border-cyan-400 bg-cyan-950/50 shadow-lg shadow-cyan-500/20'
-                  : 'border-blue-100 bg-white hover:bg-white'
+                  : 'border-blue-100 glass-panel hover:glass-panel'
               }`}
             >
               <div className={`h-8 w-8 rounded-lg flex items-center justify-center ${
-                isSelected ? 'bg-[#1677FF]/20 text-cyan-700' : 'bg-white text-[#526A82]'
+                isSelected ? 'bg-accent/20 text-cyan-700' : 'glass-panel text-secondary'
               }`}>
                 <Icon className="h-4 w-4" />
               </div>
               <span className={`text-[11px] font-mono font-bold text-center ${
-                isSelected ? 'text-[#10233F]' : 'text-[#425873]'
+                isSelected ? 'text-primary' : 'text-secondary'
               }`}>
                 {node.name}
               </span>
@@ -135,11 +135,11 @@ export const ArchitectureFlow: React.FC = () => {
       </div>
 
       {/* Selected Node Details Box */}
-      <div className="rounded-xl border border-cyan-200 bg-white p-6 font-mono text-xs">
+      <div className="rounded-xl border border-cyan-200 glass-panel p-6 font-mono text-xs">
         <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-blue-100 mb-4">
           <div className="flex items-center gap-2">
-            <selectedNode.icon className="h-5 w-5 text-[#1677FF]" />
-            <span className="text-base font-bold text-[#10233F] uppercase">{selectedNode.name}</span>
+            <selectedNode.icon className="h-5 w-5 text-accent" />
+            <span className="text-base font-bold text-primary uppercase">{selectedNode.name}</span>
           </div>
           <Badge variant="emerald">{selectedNode.status}</Badge>
         </div>
@@ -147,24 +147,24 @@ export const ArchitectureFlow: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
             <div>
-              <span className="text-[10px] text-[#6B7F95] uppercase block mb-0.5">Primary Purpose:</span>
-              <p className="text-[#425873] leading-relaxed font-sans text-xs">
+              <span className="text-[10px] text-muted-foreground uppercase block mb-0.5">Primary Purpose:</span>
+              <p className="text-secondary leading-relaxed font-sans text-xs">
                 {selectedNode.purpose}
               </p>
             </div>
             <div>
-              <span className="text-[10px] text-[#6B7F95] uppercase block mb-0.5">Underlying Technology:</span>
+              <span className="text-[10px] text-muted-foreground uppercase block mb-0.5">Underlying Technology:</span>
               <span className="text-cyan-700 font-bold">{selectedNode.technology}</span>
             </div>
           </div>
 
           <div className="space-y-3">
             <div>
-              <span className="text-[10px] text-[#6B7F95] uppercase block mb-0.5">Input Specification:</span>
+              <span className="text-[10px] text-muted-foreground uppercase block mb-0.5">Input Specification:</span>
               <span className="text-amber-700 block">{selectedNode.input}</span>
             </div>
             <div>
-              <span className="text-[10px] text-[#6B7F95] uppercase block mb-0.5">Output Artifact:</span>
+              <span className="text-[10px] text-muted-foreground uppercase block mb-0.5">Output Artifact:</span>
               <span className="text-emerald-600 block">{selectedNode.output}</span>
             </div>
           </div>
