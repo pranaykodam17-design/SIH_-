@@ -328,7 +328,7 @@ export const ProceduralSatellite: React.FC = () => {
         [0.11, -0.10, 0.14],
         [-0.11, -0.10, 0.14],
       ].map((pos, i) => (
-        <mesh key={i} position={pos as [number,number,number]}>
+        <mesh key={i} position={pos as [number, number, number]}>
           <boxGeometry args={[0.012, 0.012, 0.012]} />
           <meshStandardMaterial {...CHROME as any} />
         </mesh>

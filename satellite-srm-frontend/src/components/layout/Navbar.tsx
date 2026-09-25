@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Satellite, Search, HelpCircle, Menu, X, ChevronRight, Bell } from 'lucide-react';
+import { Satellite, Menu, X, ChevronRight } from 'lucide-react';
 import { ThemeToggle } from '../theme/ThemeToggle';
 
 const NAV_LINKS = [
@@ -80,26 +80,7 @@ export const Navbar: React.FC = () => {
           {/* Right Actions */}
           <div className="hidden lg:flex items-center gap-1.5">
             <ThemeToggle />
-            <div className="w-px h-4 bg-border mx-1" />
-            <button
-              className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors duration-150"
-              title="Search"
-            >
-              <Search size={15} />
-            </button>
-            <button
-              className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors duration-150 relative"
-              title="Notifications"
-            >
-              <Bell size={15} />
-            </button>
-            <button
-              className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors duration-150"
-              title="Help"
-            >
-              <HelpCircle size={15} />
-            </button>
-            <div className="w-px h-4 bg-border mx-1" />
+            <div className="w-px h-4 bg-border mx-2" />
             <button
               onClick={() => navigate('/platform')}
               className="btn-primary text-[13px] py-2 px-4"

@@ -19,15 +19,15 @@ const PhotorealisticGlobe: React.FC = () => {
 
   useEffect(() => {
     const maxAnisotropy = gl.capabilities.getMaxAnisotropy();
-    
+
     dayMap.colorSpace = THREE.SRGBColorSpace;
     dayMap.anisotropy = maxAnisotropy;
     dayMap.minFilter = THREE.LinearMipmapLinearFilter;
     dayMap.needsUpdate = true;
-    
+
     cloudsMap.anisotropy = maxAnisotropy;
     cloudsMap.needsUpdate = true;
-    
+
     specularMap.anisotropy = maxAnisotropy;
     specularMap.needsUpdate = true;
   }, [dayMap, cloudsMap, specularMap, gl]);
