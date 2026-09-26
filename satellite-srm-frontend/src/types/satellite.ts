@@ -147,11 +147,10 @@ export interface MetricEntry {
 }
 
 export interface ValidationMetrics {
-  psnr_db: MetricEntry;
-  ssim: MetricEntry;
-  sam_deg: MetricEntry;
-  ergas: MetricEntry;
-  ndvi_correlation: MetricEntry;
+  l1_loss: MetricEntry;
+  perceptual_loss: MetricEntry;
+  spectral_loss: MetricEntry;
+  ndvi_loss: MetricEntry;
   ndvi_mae: MetricEntry;
   uncertainty?: {
     mean: number;

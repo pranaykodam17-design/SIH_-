@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, Info, Cpu, Target, FileOutput, Shield, Layers, Gauge } from 'lucide-react';
+import { ChevronDown, Info, Cpu, Target, FileOutput, Shield, Layers, Gauge, X } from 'lucide-react';
 
 export interface ModelSettingsValues {
   model: string;
@@ -17,10 +17,42 @@ interface ModelSettingsProps {
 }
 
 const MODELS = [
-  { id: 'SwinIR-SRM',  label: 'SwinIR-SRM',        badge: 'Recommended', desc: 'Swin Transformer-based SR — best quality & spectral consistency' },
-  { id: 'SRGAN',       label: 'SRGAN',               badge: 'Fast',        desc: 'GAN-based super-resolution — faster inference, good perceptual quality' },
-  { id: 'ESRGAN',      label: 'ESRGAN',              badge: '',            desc: 'Enhanced SRGAN with RRDB blocks — sharper textures' },
-  { id: 'Bicubic-3x',  label: 'Bicubic Baseline',    badge: 'Baseline',   desc: 'Classic bicubic interpolation — used as benchmark comparison' },
+  { 
+    id: 'SwinIR-SRM',  
+    label: 'SwinIR-SRM',        
+    badge: 'Recommended', 
+    desc: 'Swin Transformer-based SR — best quality & spectral consistency',
+    fullDesc: 'A state-of-the-art transformer model optimized for multispectral satellite imagery. It uses shifted window attention to reconstruct high-frequency details while strictly maintaining radiometric fidelity.',
+    inputs: '10m Sentinel-2 (B02, B03, B04, B08)',
+    outputs: '~3.33m Super-Resolved 4-Band GeoTIFF'
+  },
+  { 
+    id: 'SRGAN',       
+    label: 'SRGAN',               
+    badge: 'Fast',        
+    desc: 'GAN-based super-resolution — faster inference, good perceptual quality',
+    fullDesc: 'Generative Adversarial Network architecture that prioritizes visually pleasing textures and sharp edges over strict spectral preservation. Excellent for visual analysis and rapid inference.',
+    inputs: '10m Sentinel-2 (B02, B03, B04, B08)',
+    outputs: '~3.33m Super-Resolved 4-Band GeoTIFF'
+  },
+  { 
+    id: 'ESRGAN',      
+    label: 'ESRGAN',              
+    badge: '',            
+    desc: 'Enhanced SRGAN with RRDB blocks — sharper textures',
+    fullDesc: 'Enhanced Super-Resolution Generative Adversarial Network utilizing Residual-in-Residual Dense Blocks (RRDB) to hallucinate highly realistic textures. Can sometimes alter radiometry.',
+    inputs: '10m Sentinel-2 (B02, B03, B04, B08)',
+    outputs: '~3.33m Super-Resolved 4-Band GeoTIFF'
+  },
+  { 
+    id: 'Bicubic-3x',  
+    label: 'Bicubic Baseline',    
+    badge: 'Baseline',   
+    desc: 'Classic bicubic interpolation — used as benchmark comparison',
+    fullDesc: 'Standard mathematical interpolation without deep learning. It upsamples the image by smoothing pixel values. Used as the baseline to measure the AI models against.',
+    inputs: '10m Sentinel-2 (B02, B03, B04, B08)',
+    outputs: '~3.33m Smoothed 4-Band GeoTIFF'
+  },
 ];
 
 const SCALE_OPTIONS = [
@@ -43,16 +75,110 @@ const Toggle: React.FC<{
   />
 );
 
+const ModelPreviewOverlay: React.FC<{ modelId: string | null; onClose: () => void; onSelect: () => void }> = ({ modelId, onClose, onSelect }) => {
+  if (!modelId) return null;
+  const m = MODELS.find(x => x.id === modelId);
+  if (!m) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] md:absolute md:inset-auto md:right-[calc(100%+20px)] md:-top-4 md:w-[600px] lg:w-[650px] flex items-center justify-center p-4 md:p-0 pointer-events-none">
+      {/* Background overlay - only blocks clicks on mobile. On desktop, it is transparent and non-blocking */}
+      <div 
+        className="absolute inset-0 bg-background/80 md:hidden backdrop-blur-sm pointer-events-auto transition-opacity" 
+        onClick={onClose} 
+      />
+      
+      {/* Panel */}
+      <div className="relative bg-white dark:bg-slate-950 text-foreground w-full max-w-3xl md:w-full rounded-3xl border border-slate-200 dark:border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.8)] overflow-hidden pointer-events-auto md:pointer-events-none animate-in md:slide-in-from-right-4 zoom-in-95 duration-200">
+        <div className="p-6 sm:p-8">
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-black text-primary flex items-center gap-3">
+                {m.label} 
+                {m.badge && (
+                  <span className={`text-xs px-2 py-1 rounded-md border font-bold tracking-wide ${
+                    m.badge === 'Recommended' ? 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border-cyan-500/25' :
+                    m.badge === 'Fast'        ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/25' :
+                    m.badge === 'Baseline'    ? 'bg-slate-500/10 text-secondary border-slate-900/10 dark:border-white/10' :
+                    'bg-violet-500/15 text-violet-700 dark:text-violet-400 border-violet-500/25'
+                  }`}>
+                    {m.badge}
+                  </span>
+                )}
+              </h2>
+              <p className="text-sm sm:text-base text-secondary mt-3 leading-relaxed max-w-2xl">{m.fullDesc}</p>
+            </div>
+            <button onClick={onClose} className="md:hidden p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-muted-foreground transition-colors">
+              <X size={20} />
+            </button>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4 mb-6">
+            <div className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-white/5">
+              <div className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground mb-1.5">Expected Inputs</div>
+              <div className="text-sm font-semibold text-primary">{m.inputs}</div>
+            </div>
+            <div className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-white/5">
+              <div className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground mb-1.5">Generated Output</div>
+              <div className="text-sm font-semibold text-primary">{m.outputs}</div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-widest text-secondary mb-3">Evaluation Metrics (Reported After Inference)</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="p-3 bg-cyan-500/5 rounded-xl border border-cyan-500/15">
+                <div className="text-cyan-600 dark:text-cyan-400 font-bold text-sm mb-1">L1 Loss</div>
+                <div className="text-[10px] text-cyan-800/70 dark:text-cyan-300/70 leading-tight">Pixel-level reconstruction difference</div>
+              </div>
+              <div className="p-3 bg-violet-500/5 rounded-xl border border-violet-500/15">
+                <div className="text-violet-600 dark:text-violet-400 font-bold text-sm mb-1">Perceptual Loss</div>
+                <div className="text-[10px] text-violet-800/70 dark:text-violet-300/70 leading-tight">Feature/visual reconstruction similarity</div>
+              </div>
+              <div className="p-3 bg-blue-500/5 rounded-xl border border-blue-500/15">
+                <div className="text-blue-600 dark:text-blue-400 font-bold text-sm mb-1">Spectral Loss</div>
+                <div className="text-[10px] text-blue-800/70 dark:text-blue-300/70 leading-tight">Spectral fidelity preservation</div>
+              </div>
+              <div className="p-3 bg-emerald-500/5 rounded-xl border border-emerald-500/15">
+                <div className="text-emerald-600 dark:text-emerald-400 font-bold text-sm mb-1">NDVI Loss</div>
+                <div className="text-[10px] text-emerald-800/70 dark:text-emerald-300/70 leading-tight">Vegetation/NDVI consistency</div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Mobile select button */}
+          <div className="mt-6 md:hidden pointer-events-auto">
+            <button 
+              onClick={onSelect} 
+              className="w-full py-3.5 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl font-bold transition-colors shadow-lg shadow-cyan-500/20"
+            >
+              Select {m.label}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const ModelSettings: React.FC<ModelSettingsProps> = ({ values, onChange, disabled }) => {
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [previewModelId, setPreviewModelId] = useState<string | null>(null);
 
   const update = <K extends keyof ModelSettingsValues>(key: K, val: ModelSettingsValues[K]) =>
     onChange({ ...values, [key]: val });
 
-  const selectedModel = MODELS.find((m) => m.id === values.model) ?? MODELS[0];
-
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 relative">
+      <ModelPreviewOverlay 
+        modelId={previewModelId} 
+        onClose={() => setPreviewModelId(null)} 
+        onSelect={() => {
+          if (previewModelId) update('model', previewModelId);
+          setPreviewModelId(null);
+        }}
+      />
+
       {/* Model Selection */}
       <div>
         <label className="flex items-center gap-2 text-xs font-bold text-secondary uppercase tracking-widest mb-3">
@@ -60,35 +186,56 @@ export const ModelSettings: React.FC<ModelSettingsProps> = ({ values, onChange, 
         </label>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {MODELS.map((m) => (
-            <button
+            <div
               key={m.id}
-              type="button"
-              disabled={disabled}
-              onClick={() => update('model', m.id)}
-              className={`relative p-3.5 rounded-xl border text-left transition-all duration-200 ${
-                values.model === m.id
-                  ? 'bg-cyan-500/10 border-cyan-500/35 shadow-[0_0_16px_rgba(0,212,255,0.08)]'
-                  : 'bg-white/60 dark:bg-slate-950/60 border-slate-900/10 dark:border-white/15 hover:bg-white/80 dark:hover:bg-slate-950/80 backdrop-blur-md'
-              } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+              onMouseEnter={() => {
+                if (window.innerWidth >= 768 && !disabled) setPreviewModelId(m.id);
+              }}
+              onMouseLeave={() => {
+                if (window.innerWidth >= 768) setPreviewModelId(null);
+              }}
+              className="relative"
             >
-              <div className="flex items-center justify-between mb-1">
-                <span className={`text-sm font-semibold ${values.model === m.id ? 'text-cyan-700 dark:text-cyan-400' : 'text-primary'}`}>
-                  {m.label}
-                </span>
-                {m.badge && (
-                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
-                    m.badge === 'Recommended' ? 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border border-cyan-500/25' :
-                    m.badge === 'Fast'        ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/25' :
-                    m.badge === 'Baseline'    ? 'bg-slate-500/10 text-secondary border border-slate-900/10 dark:border-white/10' :
-                    'bg-violet-500/15 text-violet-700 dark:text-violet-400 border border-violet-500/25'
-                  }`}>{m.badge}</span>
+              <button
+                type="button"
+                disabled={disabled}
+                onClick={() => {
+                  if (window.innerWidth < 768) {
+                    setPreviewModelId(m.id);
+                  } else {
+                    update('model', m.id);
+                  }
+                }}
+                className={`w-full p-3.5 rounded-xl border text-left transition-all duration-200 ${
+                  values.model === m.id
+                    ? 'bg-cyan-500/10 border-cyan-500/35 shadow-[0_0_16px_rgba(0,212,255,0.08)]'
+                    : 'bg-white/60 dark:bg-slate-950/60 border-slate-900/10 dark:border-white/15 hover:bg-white/80 dark:hover:bg-slate-950/80 backdrop-blur-md'
+                } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} ${previewModelId === m.id ? 'opacity-0 md:opacity-100' : ''}`}
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className={`text-sm font-semibold ${values.model === m.id ? 'text-cyan-700 dark:text-cyan-400' : 'text-primary'}`}>
+                    {m.label}
+                  </span>
+                  {m.badge && (
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                      m.badge === 'Recommended' ? 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border border-cyan-500/25' :
+                      m.badge === 'Fast'        ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/25' :
+                      m.badge === 'Baseline'    ? 'bg-slate-500/10 text-secondary border border-slate-900/10 dark:border-white/10' :
+                      'bg-violet-500/15 text-violet-700 dark:text-violet-400 border border-violet-500/25'
+                    }`}>{m.badge}</span>
+                  )}
+                </div>
+                <p className="text-[11px] text-secondary leading-relaxed">{m.desc}</p>
+                {values.model === m.id && (
+                  <div className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-cyan-400" />
                 )}
-              </div>
-              <p className="text-[11px] text-secondary leading-relaxed">{m.desc}</p>
-              {values.model === m.id && (
-                <div className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-cyan-400" />
-              )}
-            </button>
+                
+                {/* Mobile Info Hint */}
+                <div className="md:hidden mt-2 text-[10px] text-cyan-600 font-semibold flex items-center gap-1">
+                  <Info size={10} /> Tap for details
+                </div>
+              </button>
+            </div>
           ))}
         </div>
       </div>

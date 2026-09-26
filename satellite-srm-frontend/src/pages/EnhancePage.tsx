@@ -510,8 +510,6 @@ export const EnhancePage: React.FC = () => {
             <ResultsViewer
               job={activeJob}
               onNewEnhancement={() => requestConfirmation(executeNewAnalysis)}
-              onViewAnalysis={() => navigate('/analysis')}
-              onViewCompare={() => navigate('/compare')}
             />
           </div>
         )}

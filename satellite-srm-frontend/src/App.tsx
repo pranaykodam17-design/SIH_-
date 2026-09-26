@@ -8,8 +8,6 @@ import { Footer } from './components/layout/Footer';
 import { LandingPage } from './pages/LandingPage';
 import { HomePage } from './pages/HomePage';
 import { EnhancePage } from './pages/EnhancePage';
-import { ComparePage } from './pages/ComparePage';
-import { AnalysisPage } from './pages/AnalysisPage';
 import { GalleryPage } from './pages/GalleryPage';
 import { UseCasesPage } from './pages/UseCasesPage';
 import { AboutPage } from './pages/AboutPage';
@@ -51,22 +49,7 @@ const App: React.FC = () => {
             </PlatformLayout>
           }
         />
-        <Route
-          path="/compare"
-          element={
-            <PlatformLayout>
-              <ComparePage />
-            </PlatformLayout>
-          }
-        />
-        <Route
-          path="/analysis"
-          element={
-            <PlatformLayout>
-              <AnalysisPage />
-            </PlatformLayout>
-          }
-        />
+
         <Route
           path="/use-cases"
           element={

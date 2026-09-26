@@ -190,14 +190,13 @@ export const UncertaintyAnalysisViewer: React.FC<UncertaintyAnalysisViewerProps>
             <div className="flex items-center gap-2 text-[10px] text-secondary">
               <span className="text-muted-foreground">Confidence Field:</span>
               <div className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-accent" title="Low Variance / High Confidence" />
-                <span className="text-secondary">Low</span>
-                <span className="text-secondary">→</span>
-                <span className="w-2 h-2 rounded-full bg-amber-400" title="Medium Variance" />
-                <span className="text-secondary">Mid</span>
-                <span className="text-secondary">→</span>
-                <span className="w-2 h-2 rounded-full bg-pink-500" title="Edge Variance" />
-                <span className="text-pink-300 font-semibold">High Variance</span>
+                <span className="w-3 h-3 rounded-sm bg-blue-900" title="0.0 (Very Low)" />
+                <span className="w-3 h-3 rounded-sm bg-cyan-400" title="0.2 (Low)" />
+                <span className="w-3 h-3 rounded-sm bg-emerald-400" title="0.4 (Low-Mid)" />
+                <span className="w-3 h-3 rounded-sm bg-yellow-400" title="0.6 (Mid)" />
+                <span className="w-3 h-3 rounded-sm bg-orange-500" title="0.8 (High)" />
+                <span className="w-3 h-3 rounded-sm bg-red-600" title="1.0 (Very High)" />
+                <span className="text-secondary font-semibold ml-1.5">0.0 (Low) → 1.0 (High)</span>
               </div>
             </div>
           </div>

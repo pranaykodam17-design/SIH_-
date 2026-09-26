@@ -23,42 +23,33 @@ export const DEMO_METADATA: SatelliteMetadata = {
 };
 
 export const DEMO_METRICS: ValidationMetrics = {
-  psnr_db: {
-    bicubic: 28.85,
-    model: 35.42,
-    gain: 6.57,
-    description: "Peak Signal-to-Noise Ratio (dB)",
-    unit: "dB",
-    higherIsBetter: true
-  },
-  ssim: {
-    bicubic: 0.7850,
-    model: 0.9320,
-    gain: 0.1470,
-    description: "Structural Similarity Index",
-    higherIsBetter: true
-  },
-  sam_deg: {
-    bicubic: 4.6200,
-    model: 1.7400,
-    gain: -2.8800,
-    description: "Spectral Angle Mapper",
-    unit: "deg",
+  l1_loss: {
+    bicubic: 0.1250,
+    model: 0.0210,
+    gain: -0.1040,
+    description: "L1 Pixel Loss",
     higherIsBetter: false
   },
-  ergas: {
-    bicubic: 4.1800,
-    model: 1.4500,
-    gain: -2.7300,
-    description: "Erreur Relative Globale Adimensionnelle de Synthèse",
+  perceptual_loss: {
+    bicubic: 0.3540,
+    model: 0.0820,
+    gain: -0.2720,
+    description: "VGG Perceptual Loss",
     higherIsBetter: false
   },
-  ndvi_correlation: {
-    bicubic: 0.8840,
-    model: 0.9760,
-    gain: 0.0920,
-    description: "NDVI Pearson Correlation",
-    higherIsBetter: true
+  spectral_loss: {
+    bicubic: 0.1420,
+    model: 0.0350,
+    gain: -0.1070,
+    description: "Spectral Consistency Loss",
+    higherIsBetter: false
+  },
+  ndvi_loss: {
+    bicubic: 0.0980,
+    model: 0.0150,
+    gain: -0.0830,
+    description: "NDVI Preservation Loss",
+    higherIsBetter: false
   },
   ndvi_mae: {
     bicubic: 0.0680,

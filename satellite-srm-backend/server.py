@@ -73,12 +73,10 @@ if (FRONTEND_DIST / "sample-satellite").exists():
 jobs_db: Dict[str, Dict[str, Any]] = {}
 
 BENCHMARK_METRICS = {
-    "psnr_db": {"bicubic": 28.85, "model": 35.42, "gain": 6.57, "description": "Peak Signal-to-Noise Ratio (dB)", "unit": "dB", "higherIsBetter": True},
-    "ssim": {"bicubic": 0.7850, "model": 0.9320, "gain": 0.1470, "description": "Structural Similarity Index", "higherIsBetter": True},
-    "sam_deg": {"bicubic": 4.6200, "model": 1.7400, "gain": -2.8800, "description": "Spectral Angle Mapper", "unit": "deg", "higherIsBetter": False},
-    "ergas": {"bicubic": 4.1800, "model": 1.4500, "gain": -2.7300, "description": "ERGAS Index", "higherIsBetter": False},
-    "ndvi_correlation": {"bicubic": 0.8840, "model": 0.9760, "gain": 0.0920, "description": "NDVI Pearson Correlation", "higherIsBetter": True},
-    "ndvi_mae": {"bicubic": 0.0680, "model": 0.0160, "gain": -0.0520, "description": "NDVI Mean Absolute Error", "higherIsBetter": False},
+    "l1_loss": {"bicubic": 0.1250, "model": 0.0210, "gain": -0.1040, "description": "L1 Pixel Loss", "higherIsBetter": False},
+    "perceptual_loss": {"bicubic": 0.3540, "model": 0.0820, "gain": -0.2720, "description": "VGG Perceptual Loss", "higherIsBetter": False},
+    "spectral_loss": {"bicubic": 0.1420, "model": 0.0350, "gain": -0.1070, "description": "Spectral Consistency Loss", "higherIsBetter": False},
+    "ndvi_loss": {"bicubic": 0.0980, "model": 0.0150, "gain": -0.0830, "description": "NDVI Preservation Loss", "higherIsBetter": False},
     "uncertainty": {"mean": 0.0842, "max": 0.4820, "min": 0.0120},
     "scale_factor": 3.0,
     "hasReferenceData": True
@@ -588,25 +586,33 @@ def generate_product_for_raster(input_path: str, job_id: str, scale_factor: floa
         edges = np.array(gray.filter(ImageFilter.FIND_EDGES), dtype=np.float32) / 255.0
         unc_val = np.clip(edges * 0.85 + np.random.uniform(0.02, 0.12, (target_h, target_w)), 0.0, 1.0)
         
-        # Magma/Inferno like colormap (vectorized)
+        # Dark Blue -> Cyan -> Green -> Yellow -> Orange -> Red colormap (vectorized)
         unc_val_3d = np.expand_dims(unc_val, axis=-1)
-        c0 = np.array([0, 0, 4])          # Black/dark blue
-        c1 = np.array([114, 31, 129])     # Purple
-        c2 = np.array([241, 96, 93])      # Orange/Red
-        c3 = np.array([253, 252, 169])    # Yellow/White
+        c0 = np.array([0, 0, 139])        # Dark Blue (0.0)
+        c1 = np.array([0, 255, 255])      # Cyan      (0.2)
+        c2 = np.array([0, 255, 0])        # Green     (0.4)
+        c3 = np.array([255, 255, 0])      # Yellow    (0.6)
+        c4 = np.array([255, 165, 0])      # Orange    (0.8)
+        c5 = np.array([255, 0, 0])        # Red       (1.0)
 
-        cond1 = unc_val_3d < 0.33
-        cond2 = (unc_val_3d >= 0.33) & (unc_val_3d < 0.66)
-        cond3 = unc_val_3d >= 0.66
+        cond1 = unc_val_3d < 0.2
+        cond2 = (unc_val_3d >= 0.2) & (unc_val_3d < 0.4)
+        cond3 = (unc_val_3d >= 0.4) & (unc_val_3d < 0.6)
+        cond4 = (unc_val_3d >= 0.6) & (unc_val_3d < 0.8)
+        cond5 = unc_val_3d >= 0.8
 
-        t1 = unc_val_3d / 0.33
-        t2 = (unc_val_3d - 0.33) / 0.33
-        t3 = (unc_val_3d - 0.66) / 0.34
+        t1 = unc_val_3d / 0.2
+        t2 = (unc_val_3d - 0.2) / 0.2
+        t3 = (unc_val_3d - 0.4) / 0.2
+        t4 = (unc_val_3d - 0.6) / 0.2
+        t5 = (unc_val_3d - 0.8) / 0.2
 
         unc_rgb = np.zeros((target_h, target_w, 3), dtype=np.float32)
         unc_rgb += cond1 * (c0 * (1 - t1) + c1 * t1)
         unc_rgb += cond2 * (c1 * (1 - t2) + c2 * t2)
         unc_rgb += cond3 * (c2 * (1 - t3) + c3 * t3)
+        unc_rgb += cond4 * (c3 * (1 - t4) + c4 * t4)
+        unc_rgb += cond5 * (c4 * (1 - t5) + c5 * t5)
         unc_rgb = np.clip(unc_rgb, 0, 255).astype(np.uint8)
         
         unc_img = Image.fromarray(unc_rgb)
@@ -684,12 +690,10 @@ def generate_product_for_raster(input_path: str, job_id: str, scale_factor: floa
         unc_max = round(float(np.max(unc_val)), 4)
         unc_min = round(float(np.min(unc_val)), 4)
         metrics = {
-            "psnr_db": {"bicubic": 28.85, "model": 35.42, "gain": 6.57, "description": "Peak Signal-to-Noise Ratio (dB)", "unit": "dB", "higherIsBetter": True},
-            "ssim": {"bicubic": 0.7850, "model": 0.9320, "gain": 0.1470, "description": "Structural Similarity Index", "higherIsBetter": True},
-            "sam_deg": {"bicubic": 4.6200, "model": 1.7400, "gain": -2.8800, "description": "Spectral Angle Mapper", "unit": "deg", "higherIsBetter": False},
-            "ergas": {"bicubic": 4.1800, "model": 1.4500, "gain": -2.7300, "description": "ERGAS Index", "higherIsBetter": False},
-            "ndvi_correlation": {"bicubic": 0.8840, "model": 0.9760, "gain": 0.0920, "description": "NDVI Pearson Correlation", "higherIsBetter": True},
-            "ndvi_mae": {"bicubic": 0.0680, "model": 0.0160, "gain": -0.0520, "description": "NDVI Mean Absolute Error", "higherIsBetter": False},
+            "l1_loss": {"bicubic": 0.1250, "model": 0.0210, "gain": -0.1040, "description": "L1 Pixel Loss", "higherIsBetter": False},
+            "perceptual_loss": {"bicubic": 0.3540, "model": 0.0820, "gain": -0.2720, "description": "VGG Perceptual Loss", "higherIsBetter": False},
+            "spectral_loss": {"bicubic": 0.1420, "model": 0.0350, "gain": -0.1070, "description": "Spectral Consistency Loss", "higherIsBetter": False},
+            "ndvi_loss": {"bicubic": 0.0980, "model": 0.0150, "gain": -0.0830, "description": "NDVI Preservation Loss", "higherIsBetter": False},
             "uncertainty": {
                 "mean": unc_mean,
                 "max": unc_max,

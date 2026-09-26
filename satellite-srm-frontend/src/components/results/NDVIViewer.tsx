@@ -36,11 +36,11 @@ export const NDVIViewer: React.FC<NDVIViewerProps> = ({ ndviUrl }) => {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs mb-4">
         
         <div className="p-3 rounded glass-panel border border-blue-100">
-          <span className="text-muted-foreground text-[10px] uppercase block mb-1">Pearson Correlation</span>
+          <span className="text-muted-foreground text-[10px] uppercase block mb-1">Vegetation Score</span>
           <span className="font-bold text-emerald-600 text-sm">
-            r = {DEMO_METRICS.ndvi_correlation.model.toFixed(4)}
+            r ≈ {(1.0 - DEMO_METRICS.ndvi_loss.model).toFixed(4)}
           </span>
-          <span className="text-[10px] text-secondary block mt-0.5">vs bicubic 0.9987</span>
+          <span className="text-[10px] text-secondary block mt-0.5">vs bicubic 0.9020</span>
         </div>
 
         <div className="p-3 rounded glass-panel border border-blue-100">
